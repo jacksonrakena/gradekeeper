@@ -60,6 +60,7 @@ const SubjectCreationPage: NextPage = () => {
         });
     }
   }, [router.isReady]);
+  const tablecolor = useColorModeValue("bg-gray-50", "");
   if (isLoading) return <div>Loading..</div>;
   return (
     <div>
@@ -182,7 +183,7 @@ const SubjectCreationPage: NextPage = () => {
                   <TableContainer>
                     <Table>
                       <Thead>
-                        <Tr className={useColorModeValue("bg-gray-50", "")}>
+                        <Tr className={tablecolor}>
                           <Th className="p-2">Name</Th>
                           <Th className="p-2">Number of pieces</Th>
                           <Th className="p-2">Weighting</Th>
