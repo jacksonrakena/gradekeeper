@@ -258,7 +258,7 @@ const SubjectCreationPage: NextPage = () => {
                 </div>
               </div>
               <Text mb={4} color={"gray.600"}>
-                On the next screen, you'll be able to record your results so far.
+                On the next screen, you&apos;ll be able to record your results so far.
               </Text>
 
               <Button type="submit" isLoading={isSubmitting} colorScheme="teal">
