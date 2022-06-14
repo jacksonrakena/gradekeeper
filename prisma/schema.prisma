@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+model User {
+  id          String       @id
+  gradeMap    Json
+  studyBlocks StudyBlock[]
+}
+
+model StudyBlock {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  name      String   @default("")
+  startDate DateTime
+  endDate   DateTime
+
+  subjects Subject[]
+}
+
+model Subject {
+  id String @id @default(cuid())
+
+  studyBlock   StudyBlock @relation(fields: [studyBlockId], references: [id])
+  studyBlockId String
+
+  longName         String
+  courseCodeName   String
+  courseCodeNumber String
+  color            String @default("")
+
+  components SubjectComponent[]
+}
+
+model SubjectComponent {
+  id String @id @default(cuid())
+
+  subject   Subject @relation(fields: [subjectId], references: [id])
+  subjectId String
+
+  name                       String
+  nameOfSubcomponentSingular String
+  subjectWeighting           Float
+
+  numberOfSubComponentsToDrop_Lowest Int
+  subcomponents                      SubjectSubcomponent[]
+}
+
+model SubjectSubcomponent {
+  id String @id @default(cuid())
+
+  component   SubjectComponent @relation(fields: [componentId], references: [id])
+  componentId String
+
+  numberInSequence     Int?
+  overrideName         String?
+  isCompleted          Boolean
+  gradeValuePercentage Float
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
