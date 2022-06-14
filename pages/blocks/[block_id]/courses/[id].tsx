@@ -260,7 +260,7 @@ const SubjectPage: NextPage = () => {
                         }}
                         className="text-xs md:text-base"
                         fontWeight={"semibold"}
-                        color={"gray.600"}
+                        color={"CaptionText"}
                       >
                         {(gradeNumber * 100).toFixed(0)} <br />
                         {(gradeMap ?? {})[gradeNumber]}
@@ -312,7 +312,7 @@ const SubjectPage: NextPage = () => {
                         }}
                         className="text-xs md:text-base"
                         fontWeight={"semibold"}
-                        color={"gray.600"}
+                        color={"CaptionText"}
                       >
                         {(gradeNumber * 100).toFixed(0)} <br />
                         {(gradeMap ?? {})[gradeNumber]}
