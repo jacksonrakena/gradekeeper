@@ -1,28 +1,34 @@
 import { ChevronDownIcon, CloseIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
+  Avatar,
+  Button,
+  Flex,
   Menu,
   MenuButton,
-  SkeletonText,
-  useColorMode,
-  Button,
-  MenuList,
+  MenuDivider,
+  MenuGroup,
   MenuItem,
+  MenuList,
+  SkeletonText,
   Text,
-  Avatar,
-  Flex,
-  AvatarBadge,
+  useColorMode,
 } from "@chakra-ui/react";
-import { Subject } from "@prisma/client";
+import { StudyBlock, Subject } from "@prisma/client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-export const TopBar = (props: { currentSubjectId?: string; otherSubjects?: Subject[] }) => {
+export const TopBar = (props: { currentSubjectId?: string; otherSubjects?: (Subject & { studyBlock: StudyBlock })[] }) => {
   const sessiondata = useSession();
   const session = sessiondata.data;
   const router = useRouter();
   const cm = useColorMode();
   const currentSubject =
     props.otherSubjects && props.currentSubjectId ? props.otherSubjects.filter((d) => d.id === props.currentSubjectId)[0] : null;
+  const blockMap = props.otherSubjects?.reduce((block, course) => {
+    block[course.studyBlock.name] = block[course.studyBlock.name] ?? [];
+    block[course.studyBlock.name].push(course);
+    return block;
+  }, {});
   return (
     <div>
       <div className="w-full p-2 flex flex-row">
@@ -40,19 +46,28 @@ export const TopBar = (props: { currentSubjectId?: string; otherSubjects?: Subje
                 >
                   <Text fontWeight="semibold">Home</Text>
                 </MenuItem>
-                {props.otherSubjects
-                  ?.filter((e: Subject) => e.id !== props.currentSubjectId)
-                  .map((d: Subject) => (
-                    <MenuItem
-                      onClick={() => {
-                        router.push(`/blocks/${d.studyBlockId}/courses/${d.id}`);
-                      }}
-                      key={d.id}
-                    >
-                      <Text fontWeight={"semibold"} color={d.color}>
-                        {d.courseCodeName} {d.courseCodeNumber}: {d.longName}
-                      </Text>
-                    </MenuItem>
+                <MenuDivider />
+                {Object.keys(blockMap)
+                  .filter((blockName) => blockMap[blockName].filter((gg) => gg.id !== currentSubject.id).length !== 0)
+                  .map((block) => (
+                    <MenuGroup key={block} title={block}>
+                      {props.otherSubjects
+                        ?.filter(
+                          (e: Subject & { studyBlock: StudyBlock }) => e.id !== props.currentSubjectId && e.studyBlock.name === block
+                        )
+                        .map((d: Subject) => (
+                          <MenuItem
+                            onClick={() => {
+                              router.push(`/blocks/${d.studyBlockId}/courses/${d.id}`);
+                            }}
+                            key={d.id}
+                          >
+                            <Text fontWeight={"semibold"} color={d.color}>
+                              {d.courseCodeName} {d.courseCodeNumber}: {d.longName}
+                            </Text>
+                          </MenuItem>
+                        ))}
+                    </MenuGroup>
                   ))}
               </MenuList>
             </Menu>
@@ -81,7 +96,9 @@ export const TopBar = (props: { currentSubjectId?: string; otherSubjects?: Subje
                     <MenuItem
                       icon={<CloseIcon />}
                       onClick={() => {
-                        signOut();
+                        signOut({ redirect: false }).then(() => {
+                          router.push("/");
+                        });
                       }}
                     >
                       Log out

@@ -20,7 +20,10 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
         studyBlock: { select: { name: true, user: { select: { gradeMap: true } } } },
       },
     });
-    const otherSubjects = await primsa.subject.findMany({ where: { studyBlock: { userId: session.user.email } } });
+    const otherSubjects = await primsa.subject.findMany({
+      where: { studyBlock: { userId: session.user.email } },
+      include: { studyBlock: true },
+    });
     if (data) return res.status(200).json({ ...data, otherSubjects: otherSubjects });
     return res.status(404);
   }
