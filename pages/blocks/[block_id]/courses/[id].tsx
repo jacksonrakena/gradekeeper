@@ -10,6 +10,7 @@ import {
   IconButton,
   Skeleton,
   Stat,
+  StatHelpText,
   StatLabel,
   StatNumber,
   Table,
@@ -220,10 +221,9 @@ const SubjectPage: NextPage = () => {
           </div>
           <div className="lg:flex mt-6 wrap">
             <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
-              <StatLabel>Projected grade:</StatLabel>
-              <StatNumber>
-                {projected?.letter} ({((projected?.numerical ?? 0) * 100).toPrecision(4)}%)
-              </StatNumber>
+              <StatLabel>Projected grade</StatLabel>
+              <StatNumber>{projected?.letter}</StatNumber>
+              <StatHelpText>{((projected?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
             </Stat>
             <div className="py-3 px-4 flex grow mb-6">
               <div style={{ position: "relative", backgroundColor: "#D9D9D9" }} className="rounded flex grow">
@@ -256,7 +256,7 @@ const SubjectPage: NextPage = () => {
                         style={{
                           position: "absolute",
                           left: gradeNumber * 100 + "%",
-                          top: "25px",
+                          top: "40px",
                         }}
                         fontSize={"sm"}
                         fontWeight={"semibold"}
@@ -273,10 +273,9 @@ const SubjectPage: NextPage = () => {
 
           <div className="lg:flex mt-6">
             <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
-              <StatLabel>Actual progress so far:</StatLabel>
-              <StatNumber>
-                {grade?.letter} ({((grade?.numerical ?? 0) * 100).toPrecision(4)}%)
-              </StatNumber>
+              <StatLabel>Actual progress so far</StatLabel>
+              <StatNumber>{grade?.letter}</StatNumber>
+              <StatHelpText>{((grade?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
             </Stat>
             <div className="py-3 px-4 flex grow mb-6">
               <div style={{ position: "relative", backgroundColor: "#D9D9D9" }} className="rounded flex grow">
@@ -309,7 +308,7 @@ const SubjectPage: NextPage = () => {
                         style={{
                           position: "absolute",
                           left: gradeNumber * 100 + "%",
-                          top: "25px",
+                          top: "40px",
                         }}
                         fontSize={"sm"}
                         fontWeight={"semibold"}
