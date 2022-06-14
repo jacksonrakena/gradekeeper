@@ -258,7 +258,7 @@ const SubjectPage: NextPage = () => {
                           left: gradeNumber * 100 + "%",
                           top: "110%",
                         }}
-                        fontSize={"sm"}
+                        className="text-xs md:text-base"
                         fontWeight={"semibold"}
                         color={"gray.600"}
                       >
@@ -310,7 +310,7 @@ const SubjectPage: NextPage = () => {
                           left: gradeNumber * 100 + "%",
                           top: "110%",
                         }}
-                        fontSize={"sm"}
+                        className="text-xs md:text-base"
                         fontWeight={"semibold"}
                         color={"gray.600"}
                       >
