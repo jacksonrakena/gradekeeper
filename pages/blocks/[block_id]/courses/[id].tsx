@@ -225,7 +225,7 @@ const SubjectPage: NextPage = () => {
               <StatNumber>{projected?.letter}</StatNumber>
               <StatHelpText>{((projected?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
             </Stat>
-            <div className="py-3 px-4 flex grow mb-6">
+            <div className="py-3 flex grow mb-6">
               <div style={{ position: "relative", backgroundColor: "#D9D9D9" }} className="rounded flex grow">
                 <div
                   style={{
@@ -256,7 +256,7 @@ const SubjectPage: NextPage = () => {
                         style={{
                           position: "absolute",
                           left: gradeNumber * 100 + "%",
-                          top: "40px",
+                          top: "110%",
                         }}
                         fontSize={"sm"}
                         fontWeight={"semibold"}
@@ -271,13 +271,13 @@ const SubjectPage: NextPage = () => {
             </div>
           </div>
 
-          <div className="lg:flex mt-6">
+          <div className="lg:flex mt-12">
             <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
               <StatLabel>Actual progress so far</StatLabel>
               <StatNumber>{grade?.letter}</StatNumber>
               <StatHelpText>{((grade?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
             </Stat>
-            <div className="py-3 px-4 flex grow mb-6">
+            <div className="py-3 flex grow mb-6">
               <div style={{ position: "relative", backgroundColor: "#D9D9D9" }} className="rounded flex grow">
                 <div
                   style={{
@@ -308,7 +308,7 @@ const SubjectPage: NextPage = () => {
                         style={{
                           position: "absolute",
                           left: gradeNumber * 100 + "%",
-                          top: "40px",
+                          top: "110%",
                         }}
                         fontSize={"sm"}
                         fontWeight={"semibold"}
