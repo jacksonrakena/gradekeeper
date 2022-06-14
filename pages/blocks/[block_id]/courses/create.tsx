@@ -14,6 +14,7 @@ import {
   Th,
   Thead,
   Tr,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { StudyBlock } from "@prisma/client";
 import { Field, Form, Formik } from "formik";
@@ -111,7 +112,7 @@ const SubjectCreationPage: NextPage = () => {
                     {({ field, form }: { field: any; form: any }) => (
                       <FormControl isInvalid={form.errors.codeName && form.touched.codeName}>
                         <FormLabel htmlFor="name">Course code name</FormLabel>
-                        <Input bg="white" htmlSize={8} width="auto" size="md" placeholder="ENGR" {...field} id="codeName" type="text" />
+                        <Input htmlSize={8} width="auto" size="md" placeholder="ENGR" {...field} id="codeName" type="text" />
                         <FormErrorMessage>{form.errors.codeName}</FormErrorMessage>
                       </FormControl>
                     )}
@@ -120,7 +121,7 @@ const SubjectCreationPage: NextPage = () => {
                     {({ field, form }: { field: any; form: any }) => (
                       <FormControl isInvalid={form.errors.codeNo && form.touched.codeNo}>
                         <FormLabel htmlFor="codeNo">Course code number</FormLabel>
-                        <Input bg="white" htmlSize={8} width="auto" size="md" placeholder="101" {...field} id="codeNo" type="text" />
+                        <Input htmlSize={8} width="auto" size="md" placeholder="101" {...field} id="codeNo" type="text" />
                         <FormErrorMessage>{form.errors.codeNo}</FormErrorMessage>
                       </FormControl>
                     )}
@@ -130,16 +131,7 @@ const SubjectCreationPage: NextPage = () => {
                     {({ field, form }: { field: any; form: any }) => (
                       <FormControl isInvalid={form.errors.name && form.touched.name}>
                         <FormLabel htmlFor="name">Course code name</FormLabel>
-                        <Input
-                          bg="white"
-                          htmlSize={16}
-                          width="auto"
-                          size="md"
-                          placeholder="Engineering Design"
-                          {...field}
-                          id="name"
-                          type="text"
-                        />
+                        <Input htmlSize={16} width="auto" size="md" placeholder="Engineering Design" {...field} id="name" type="text" />
                         <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                       </FormControl>
                     )}
@@ -172,7 +164,7 @@ const SubjectCreationPage: NextPage = () => {
                   <TableContainer>
                     <Table>
                       <Thead>
-                        <Tr className="bg-gray-50">
+                        <Tr className={useColorModeValue("bg-gray-50", "")}>
                           <Th className="p-2">Name</Th>
                           <Th className="p-2">Number of pieces</Th>
                           <Th className="p-2">Weighting</Th>
