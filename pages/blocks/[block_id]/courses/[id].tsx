@@ -53,6 +53,7 @@ const SubjectPage: NextPage = () => {
   const isLoading = courseData.isLoading;
   const [component, setTargetComponent] = useState(_null<FullSubjectComponent>());
   const [deleting, isDeleting] = useState(false);
+  const captionColor = useColorModeValue("gray.700", "gray.200");
   const disc = useDisclosure();
   const cancelref = useRef();
   const toast = useToast();
@@ -260,7 +261,7 @@ const SubjectPage: NextPage = () => {
                         }}
                         className="text-xs md:text-base"
                         fontWeight={"semibold"}
-                        color={"CaptionText"}
+                        color={captionColor}
                       >
                         {(gradeNumber * 100).toFixed(0)} <br />
                         {(gradeMap ?? {})[gradeNumber]}
@@ -312,7 +313,7 @@ const SubjectPage: NextPage = () => {
                         }}
                         className="text-xs md:text-base"
                         fontWeight={"semibold"}
-                        color={"CaptionText"}
+                        color={captionColor}
                       >
                         {(gradeNumber * 100).toFixed(0)} <br />
                         {(gradeMap ?? {})[gradeNumber]}
