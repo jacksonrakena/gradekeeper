@@ -179,7 +179,7 @@ const SubjectPage: NextPage = () => {
                         >
                           {(grade.value * 100).toFixed(2)}%{grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
                         </Td>
-                        <Td style={{ minWidth: "150px" }} className="text-center">
+                        <Td style={{ minWidth: "150px" }} fontWeight={"semibold"} className="text-center">
                           {calculateLetterGrade(grade.value, gradeMap)}
                         </Td>
                         <Td style={{ minWidth: "150px" }} className="text-center">
