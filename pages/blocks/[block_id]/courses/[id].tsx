@@ -218,7 +218,7 @@ const SubjectPage: NextPage = () => {
           <div style={{ color: subject?.color }} className="text-2xl font-bold">
             Projections
           </div>
-          <div className="flex mt-6 wrap">
+          <div className="lg:flex mt-6 wrap">
             <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
               <StatLabel>Projected grade:</StatLabel>
               <StatNumber>
@@ -239,7 +239,7 @@ const SubjectPage: NextPage = () => {
                 {Object.keys(gradeMap ?? {})
                   .map((e) => Number.parseFloat(e))
                   .map((gradeNumber) => (
-                    <>
+                    <div key={gradeNumber}>
                       <div
                         style={{
                           borderColor: adjust(subject?.color ?? "", -50),
@@ -258,17 +258,20 @@ const SubjectPage: NextPage = () => {
                           left: gradeNumber * 100 + "%",
                           top: "25px",
                         }}
+                        fontSize={"sm"}
+                        fontWeight={"semibold"}
+                        color={"gray.600"}
                       >
-                        {(gradeNumber * 100).toFixed(0)}% <br />
+                        {(gradeNumber * 100).toFixed(0)} <br />
                         {(gradeMap ?? {})[gradeNumber]}
                       </Text>
-                    </>
+                    </div>
                   ))}
               </div>
             </div>
           </div>
 
-          <div className="flex mt-6 wrap">
+          <div className="lg:flex mt-6">
             <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
               <StatLabel>Actual progress so far:</StatLabel>
               <StatNumber>
@@ -308,8 +311,11 @@ const SubjectPage: NextPage = () => {
                           left: gradeNumber * 100 + "%",
                           top: "25px",
                         }}
+                        fontSize={"sm"}
+                        fontWeight={"semibold"}
+                        color={"gray.600"}
                       >
-                        {(gradeNumber * 100).toFixed(0)}% <br />
+                        {(gradeNumber * 100).toFixed(0)} <br />
                         {(gradeMap ?? {})[gradeNumber]}
                       </Text>
                     </>
