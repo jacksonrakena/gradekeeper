@@ -256,7 +256,7 @@ const SubjectPage: NextPage = () => {
                       <Text
                         style={{
                           position: "absolute",
-                          left: gradeNumber * 100 + "%",
+                          left: gradeNumber * 100 - 1 + "%",
                           top: "110%",
                         }}
                         className="text-xs md:text-base"
@@ -308,7 +308,7 @@ const SubjectPage: NextPage = () => {
                       <Text
                         style={{
                           position: "absolute",
-                          left: gradeNumber * 100 + "%",
+                          left: gradeNumber * 100 - 1 + "%",
                           top: "110%",
                         }}
                         className="text-xs md:text-base"
