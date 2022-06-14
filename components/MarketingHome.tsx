@@ -1,8 +1,9 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { Button, Container, Heading, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Container, Heading, Img, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";
+import themeConstants from "../themeConstants";
 
 const MarketingHome = () => {
   const [loadingApp, setLoadingApp] = useState(false);
@@ -31,6 +32,17 @@ const MarketingHome = () => {
           >
             Get started <ArrowForwardIcon ml={2} />
           </Button>
+          <Heading size="lg" align="center">
+            What can you do with Gradekeeper?
+          </Heading>
+          <Box p={8} style={{ borderRadius: 25 }} bgColor={useColorModeValue("white", themeConstants.darkModeContrastingColor)}>
+            <Stack align="center">
+              <Heading size="md" mb={4}>
+                View all your classes
+              </Heading>
+              <Img src="https://i.imgur.com/PUxo2sF.jpg" />
+            </Stack>
+          </Box>
         </Stack>
         <Text color="#555555" textAlign={"center"} fontSize="sm">
           Copyright &copy; 2022 Jackson Rakena <br />
