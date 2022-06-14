@@ -31,7 +31,13 @@ import { useRef, useState } from "react";
 import ComponentEditModal from "../../../../components/app/course/ComponentEditModal";
 import { TopBar } from "../../../../components/TopBar";
 import { useFullCourse } from "../../../../lib/dataHooks";
-import { adjust, calculateLetterGrade, calculateProjectedGradeForComponent, _null } from "../../../../lib/logic";
+import {
+  adjust,
+  calculateLetterGrade,
+  calculateProjectedGradeForComponent,
+  pickTextColorBasedOnBgColorAdvanced,
+  _null,
+} from "../../../../lib/logic";
 import themeConstants from "../../../../themeConstants";
 import { FullSubjectComponent } from "../../lib/fullEntities";
 
@@ -74,7 +80,7 @@ const SubjectPage: NextPage = () => {
       )}
       <Skeleton isLoaded={!isLoading}>
         <div style={{ backgroundColor: subject?.color }} className="p-8">
-          <div className="text-3xl">
+          <div className="text-3xl" style={{ color: pickTextColorBasedOnBgColorAdvanced(subject?.color ?? "", "white", "") }}>
             <span className="mr-4">
               {subject?.courseCodeName} {subject?.courseCodeNumber}
             </span>
@@ -169,7 +175,7 @@ const SubjectPage: NextPage = () => {
                         </Td>
                         <Td
                           style={{ color: subject?.color, minWidth: "150px" }}
-                          className={grade.isAverage ? "flex flex-col text-center" : "text-center"}
+                          className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}
                         >
                           {(grade.value * 100).toFixed(2)}%{grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
                         </Td>
