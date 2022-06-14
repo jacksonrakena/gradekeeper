@@ -25,6 +25,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import ComponentEditModal from "../../../../components/app/course/ComponentEditModal";
@@ -51,6 +52,9 @@ const SubjectPage: NextPage = () => {
 
   return (
     <div>
+      <Head>
+        <title>{subject?.longName ?? "Loading..."}</title>
+      </Head>
       <TopBar otherSubjects={courseData.otherSubjects} currentSubjectId={id} />
       {component !== null ? (
         <ComponentEditModal
