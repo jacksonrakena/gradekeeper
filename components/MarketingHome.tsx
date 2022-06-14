@@ -1,5 +1,5 @@
-import { ArrowForwardIcon, ArrowRightIcon, LockIcon } from "@chakra-ui/icons";
-import { Button, Container, Heading, Text, Tag, TagLabel, TagLeftIcon, Stack } from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { Button, Container, Heading, Stack, Text } from "@chakra-ui/react";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";
@@ -14,9 +14,10 @@ const MarketingHome = () => {
       <Container>
         <Stack mb={12} spacing={8}>
           <Heading size="4xl">
-            <Heading size="4xl" bgClip="text" bgGradient="linear(to-r, green.200, pink.500)">
+            <Text as={"span"} size="4xl" bgClip="text" bgGradient="linear(to-r, green.200, pink.500)">
               Stay ahead
-            </Heading>
+            </Text>
+            <br />
             of your grades
           </Heading>
           <Text fontSize="2xl">The (other) only free app built by students to simplify grade tracking</Text>
