@@ -176,23 +176,23 @@ const SubjectPage: NextPage = () => {
                     const grade = calculateProjectedGradeForComponent(e);
                     return (
                       <Tr key={e.name}>
-                        <Td className="p-2 text-center" style={{ minWidth: "250px" }}>
+                        <Td className="p-2 text-center" style={{}}>
                           <span style={{ fontWeight: "bold" }}>{e.name}</span>{" "}
                           {e.subcomponents?.length > 1 ? <span>({e.subcomponents.length})</span> : ""}
                         </Td>
-                        <Td className="text-center" style={{ minWidth: "150px" }}>
+                        <Td className="text-center" style={{}}>
                           {e.subjectWeighting * 100}%
                         </Td>
                         <Td
-                          style={{ color: subject?.color, minWidth: "150px" }}
+                          style={{ color: subject?.color }}
                           className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}
                         >
                           {(grade.value * 100).toFixed(2)}%{grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
                         </Td>
-                        <Td style={{ minWidth: "150px" }} fontWeight={"semibold"} className="text-center">
+                        <Td style={{}} fontWeight={"semibold"} className="text-center">
                           {calculateLetterGrade(grade.value, gradeMap)}
                         </Td>
-                        <Td style={{ minWidth: "150px" }} className="text-center">
+                        <Td style={{}} className="text-center">
                           <IconButton
                             onClick={() => {
                               setTargetComponent(e);
