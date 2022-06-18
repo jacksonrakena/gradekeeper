@@ -51,7 +51,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
                 </MenuItem>
                 <MenuDivider />
                 {Object.keys(blockMap)
-                  .filter((blockName) => blockMap[blockName].filter((gg) => gg.id !== currentSubject.id).length !== 0)
+                  .filter((blockName) => blockMap[blockName].filter((gg) => gg.id !== currentSubject?.id).length !== 0)
                   .map((block) => (
                     <MenuGroup key={block} title={studyBlocks?.filter((d) => d.id === block)[0].name}>
                       {subjects

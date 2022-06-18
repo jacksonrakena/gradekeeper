@@ -19,14 +19,14 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { StudyBlock } from "@prisma/client";
 import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SliderPicker } from "react-color";
 import { TopBar } from "../../../../components/TopBar";
-import { randomColor, _null } from "../../../../lib/logic";
+import { randomColor } from "../../../../lib/logic";
+import { useUserContext } from "../../../UserContext";
 
 export type ComponentDto = {
   id: string;
@@ -39,9 +39,6 @@ export type ComponentDto = {
 const SubjectCreationPage: NextPage = () => {
   const router = useRouter();
   const { block_id } = router.query;
-  const [studyBlock, setStudyBlock] = useState(_null<StudyBlock>());
-  const [isLoading, setLoading] = useState(true);
-
   const emptyComponents: Partial<ComponentDto>[] = [
     {
       id: randomColor(),
@@ -51,19 +48,10 @@ const SubjectCreationPage: NextPage = () => {
     },
   ];
   const [components, setComponents] = useState(emptyComponents);
-
-  useEffect(() => {
-    if (router.isReady) {
-      fetch(`/api/block/${block_id}`)
-        .then((e) => e.json())
-        .then((f) => {
-          setStudyBlock(f);
-          setLoading(false);
-        });
-    }
-  }, [router.isReady, block_id]);
+  const userContext = useUserContext();
+  const studyBlock = userContext.user?.studyBlocks.filter((d) => d.id === block_id?.toString())[0];
   const tablecolor = useColorModeValue("bg-gray-50", "");
-  if (isLoading) return <div>Loading..</div>;
+  if (!userContext.user) return <div>Loading</div>;
   return (
     <div>
       <TopBar />
@@ -102,6 +90,7 @@ const SubjectCreationPage: NextPage = () => {
               .then((e) => e.json())
               .then((f) => {
                 setSubmitting(false);
+                userContext.updateCourse(f.id, f);
                 router.push(`/blocks/${block_id}/courses/${f.id}`);
               });
           }}

@@ -33,6 +33,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
                 studyBlocks:
                   user?.studyBlocks.map((sb) => {
                     if (sb.id === replacementCourse.studyBlockId) {
+                      if (sb.subjects.filter((aa) => aa.id === courseId).length === 0) {
+                        sb.subjects.push(replacementCourse);
+                        return sb;
+                      }
                       return {
                         ...sb,
                         subjects: sb.subjects.map((subj) => {
