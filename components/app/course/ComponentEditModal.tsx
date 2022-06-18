@@ -1,7 +1,7 @@
 import { SubjectSubcomponent } from ".prisma/client";
 import { Button } from "@chakra-ui/button";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
-import { Input } from "@chakra-ui/react";
+import { Input, useColorModeValue } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import { useRef, useState } from "react";
 import { FullSubjectComponent } from "../../../lib/fullEntities";
@@ -17,6 +17,7 @@ const ComponentEditModal = (props: {
   subject?: FullSubject;
   onReceiveUpdatedData: (data: FullSubjectComponent) => void;
 }) => {
+  const captionColor = useColorModeValue("gray.700", "gray.200");
   const userContext = useUserContext();
   const [subcomponents, setSubcomponents] = useState(props.component?.subcomponents ?? []);
   const [loading, setLoading] = useState(false);
@@ -111,9 +112,11 @@ const ComponentEditModal = (props: {
                       <Td className="text-center" style={{ color: "", minWidth: "150px" }}>
                         {e.isCompleted ? (
                           <>
-                            {isActiveSubcomponent(props.component!!, e, subcomponents)
-                              ? calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)
-                              : "Dropped"}
+                            {isActiveSubcomponent(props.component!!, e, subcomponents) ? (
+                              calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)
+                            ) : (
+                              <>Dropped ({calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)})</>
+                            )}
                           </>
                         ) : (
                           <></>
