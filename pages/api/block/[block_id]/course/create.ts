@@ -55,6 +55,7 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
             componentId: inputdto.components[i2].id,
             isCompleted: false,
             numberInSequence: i3 + 1,
+            id: cuid(),
             gradeValuePercentage: inputdto.components[i2].weighting / inputdto.components[i2].numberOfSubcomponents,
           });
         }

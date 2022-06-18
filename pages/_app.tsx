@@ -42,6 +42,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
                   }) ?? [],
               });
             },
+            redownload: async () => {
+              const d = await fetch("/api/user");
+              const e = await d.json();
+              setUser(e);
+            },
             updateCourse: (courseId, replacementCourse) => {
               setUser({
                 ...user,

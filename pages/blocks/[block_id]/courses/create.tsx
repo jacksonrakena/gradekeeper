@@ -89,9 +89,10 @@ const SubjectCreationPage: NextPage = () => {
             })
               .then((e) => e.json())
               .then((f) => {
-                setSubmitting(false);
-                userContext.updateCourse(f.id, f);
-                router.push(`/blocks/${block_id}/courses/${f.id}`);
+                userContext.redownload().then(() => {
+                  setSubmitting(false);
+                  router.push(`/blocks/${block_id}/courses/${f.id}`);
+                });
               });
           }}
         >
