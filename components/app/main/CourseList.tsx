@@ -7,7 +7,6 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  Container,
   Heading,
   IconButton,
   Skeleton,
@@ -19,14 +18,15 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { mutate } from "swr";
-import { useFullUser } from "../../../lib/dataHooks";
 import { _null } from "../../../lib/logic";
 import { getUserQuery } from "../../../pages/api/user";
+import { useUserContext } from "../../../pages/UserContext";
 import { TopBar } from "../../TopBar";
 import CoursePill from "./CoursePill";
 
 const CourseList = () => {
-  const { user, error, isLoading } = useFullUser();
+  const { user } = useUserContext();
+  const isLoading = !user;
   const cancelRef = useRef<any>();
   const [deleteStudyBlock, setDeleteStudyBlock] = useState(_null<any>());
   const toast = useToast();

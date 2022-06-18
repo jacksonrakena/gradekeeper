@@ -31,26 +31,32 @@ import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import ComponentEditModal from "../../../../components/app/course/ComponentEditModal";
 import { TopBar } from "../../../../components/TopBar";
-import { useFullCourse } from "../../../../lib/dataHooks";
 import {
   adjust,
+  calculateActualCourseProgressGrade,
   calculateLetterGrade,
+  calculateProjectedCourseGrade,
   calculateProjectedGradeForComponent,
   pickTextColorBasedOnBgColorAdvanced,
   _null,
 } from "../../../../lib/logic";
 import themeConstants from "../../../../themeConstants";
+import { useUserContext } from "../../../UserContext";
 import { FullSubjectComponent } from "../../lib/fullEntities";
 
 const SubjectPage: NextPage = () => {
   const router = useRouter();
   const { block_id, id } = router.query;
-  const courseData = useFullCourse(block_id?.toString() ?? "", id?.toString() ?? "");
-  const subject = courseData.subject;
-  const grade = courseData.actualGrade;
-  const projected = courseData.projectedGrade;
-  const gradeMap = courseData.gradeMap;
-  const isLoading = courseData.isLoading;
+  const user = useUserContext();
+  const studyBlock = user.user?.studyBlocks.filter((e) => e.id === block_id)[0];
+  const course0 = studyBlock?.subjects.filter((d) => d.id === id)[0];
+  const subject = course0;
+  const actualGrade = user && course0 && calculateActualCourseProgressGrade(course0, user?.user?.gradeMap ?? {});
+  const projectedGrade = user && course0 && calculateProjectedCourseGrade(course0, user?.user?.gradeMap ?? {});
+  const projected = projectedGrade;
+  const grade = actualGrade;
+  const gradeMap = user.user?.gradeMap;
+  const isLoading = !course0;
   const [component, setTargetComponent] = useState(_null<FullSubjectComponent>());
   const [deleting, isDeleting] = useState(false);
   const captionColor = useColorModeValue("gray.700", "gray.200");
@@ -63,9 +69,10 @@ const SubjectPage: NextPage = () => {
       <Head>
         <title>{subject?.longName ?? "Loading..."}</title>
       </Head>
-      <TopBar otherSubjects={courseData.otherSubjects} currentSubjectId={id} />
+      <TopBar currentSubjectId={id?.toString()} />
       {component !== null ? (
         <ComponentEditModal
+          subject={subject}
           blockId={subject?.studyBlockId ?? ""}
           onReceiveUpdatedData={(newcomp) => {
             setTargetComponent(null);
@@ -90,7 +97,7 @@ const SubjectPage: NextPage = () => {
           </div>
           <div className="text-xl" style={{ color: "#DDDDDD" }}>
             <span className="mr-4">
-              <span style={{ fontWeight: "" }}>Block:</span> <span>{subject?.studyBlock.name}</span>
+              <span style={{ fontWeight: "" }}>Block:</span> <span>{studyBlock?.name}</span>
               <IconButton
                 onClick={() => {
                   disc.onOpen();

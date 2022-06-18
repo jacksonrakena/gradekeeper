@@ -5,6 +5,10 @@ export function _null<T>(): T | null {
   return null;
 }
 
+export function _undefined<T>(): T | undefined {
+  return undefined;
+}
+
 const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json());
 export { fetcher };
 

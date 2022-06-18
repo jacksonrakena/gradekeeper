@@ -13,27 +13,30 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import { StudyBlock, Subject } from "@prisma/client";
+import { Subject } from "@prisma/client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useUserContext } from "../pages/UserContext";
 
-export const TopBar = (props: { currentSubjectId?: string; otherSubjects?: (Subject & { studyBlock: StudyBlock })[] }) => {
+export const TopBar = (props: { currentSubjectId?: string }) => {
   const sessiondata = useSession();
   const session = sessiondata.data;
   const router = useRouter();
+  const user = useUserContext();
   const cm = useColorMode();
-  const currentSubject =
-    props.otherSubjects && props.currentSubjectId ? props.otherSubjects.filter((d) => d.id === props.currentSubjectId)[0] : null;
-  const blockMap = props.otherSubjects?.reduce((block, course) => {
-    block[course.studyBlock.name] = block[course.studyBlock.name] ?? [];
-    block[course.studyBlock.name].push(course);
+  const studyBlocks = user.user?.studyBlocks;
+  const subjects = user.user?.studyBlocks.flatMap((d) => d.subjects);
+  const currentSubject = subjects && props.currentSubjectId ? subjects.filter((d) => d.id === props.currentSubjectId)[0] : null;
+  const blockMap = subjects?.reduce((block, course) => {
+    block[course.studyBlockId] = block[course.studyBlockId] ?? [];
+    block[course.studyBlockId].push(course);
     return block;
   }, {});
   return (
     <div>
       <div className="w-full p-2 flex flex-row">
         <div className="grow">
-          {props.otherSubjects && props.currentSubjectId && (
+          {subjects && props.currentSubjectId && (
             <Menu>
               <MenuButton colorScheme={"teal"} as={Button} rightIcon={<ChevronDownIcon />}>
                 {currentSubject?.courseCodeName} {currentSubject?.courseCodeNumber}
@@ -50,11 +53,9 @@ export const TopBar = (props: { currentSubjectId?: string; otherSubjects?: (Subj
                 {Object.keys(blockMap)
                   .filter((blockName) => blockMap[blockName].filter((gg) => gg.id !== currentSubject.id).length !== 0)
                   .map((block) => (
-                    <MenuGroup key={block} title={block}>
-                      {props.otherSubjects
-                        ?.filter(
-                          (e: Subject & { studyBlock: StudyBlock }) => e.id !== props.currentSubjectId && e.studyBlock.name === block
-                        )
+                    <MenuGroup key={block} title={studyBlocks?.filter((d) => d.id === block)[0].name}>
+                      {subjects
+                        ?.filter((e) => e.id !== props.currentSubjectId && e.studyBlockId === block)
                         .map((d: Subject) => (
                           <MenuItem
                             onClick={() => {

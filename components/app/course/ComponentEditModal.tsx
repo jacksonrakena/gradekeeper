@@ -4,9 +4,9 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHea
 import { Input } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import { useRef, useState } from "react";
-import { mutate } from "swr";
 import { FullSubjectComponent } from "../../../lib/fullEntities";
 import { calculateLetterGrade, isActiveSubcomponent } from "../../../lib/logic";
+import { useUserContext } from "../../../pages/UserContext";
 
 const ComponentEditModal = (props: {
   blockId: string;
@@ -14,8 +14,10 @@ const ComponentEditModal = (props: {
   showing: boolean;
   component: FullSubjectComponent | null;
   onClose: () => void;
+  subject?: FullSubject;
   onReceiveUpdatedData: (data: FullSubjectComponent) => void;
 }) => {
+  const userContext = useUserContext();
   const [subcomponents, setSubcomponents] = useState(props.component?.subcomponents ?? []);
   const [loading, setLoading] = useState(false);
   const previousValueRef = useRef<SubjectSubcomponent[]>(subcomponents);
@@ -128,27 +130,25 @@ const ComponentEditModal = (props: {
           <Button
             isLoading={loading}
             colorScheme="teal"
-            onClick={() => {
+            onClick={async () => {
               setLoading(true);
-              mutate(`/api/block/${props.blockId}/course/${props.component?.subjectId}`, async (subject) => {
-                const updatedComponent = await (
-                  await fetch(`/api/block/${props.blockId}/course/${props.component?.subjectId}/component/${props.component?.id}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      ...props.component,
-                      subcomponents: subcomponents,
-                    }),
-                  })
-                ).json();
-                props.onReceiveUpdatedData();
-                return {
-                  ...subject,
-                  components: subject.components.map((f) => {
-                    if (f.id === updatedComponent.id) return updatedComponent;
-                    return f;
+              const updatedComponent = await (
+                await fetch(`/api/block/${props.blockId}/course/${props.component?.subjectId}/component/${props.component?.id}`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    ...props.component,
+                    subcomponents: subcomponents,
                   }),
-                };
+                })
+              ).json();
+              props.onReceiveUpdatedData(updatedComponent);
+              userContext.updateCourse(props.component?.subjectId, {
+                ...props.subject,
+                components: props?.subject.components.map((f) => {
+                  if (f.id === updatedComponent.id) return updatedComponent;
+                  return f;
+                }),
               });
             }}
           >
