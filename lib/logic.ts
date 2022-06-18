@@ -57,8 +57,13 @@ export function randomColor(): string {
   return color;
 }
 
-export function isActiveSubcomponent(component: FullSubjectComponent, subcomponent: SubjectSubcomponent): boolean {
-  var sorted = component.subcomponents
+export function isActiveSubcomponent(
+  component: FullSubjectComponent,
+  subcomponent: SubjectSubcomponent,
+  overrideSubcomponents?: SubjectSubcomponent[]
+): boolean {
+  const subcomponents = overrideSubcomponents ?? component.subcomponents;
+  var sorted = subcomponents
     .filter((d) => d.isCompleted)
     .sort((first, second) => {
       if (first.gradeValuePercentage < second.gradeValuePercentage) return 1;

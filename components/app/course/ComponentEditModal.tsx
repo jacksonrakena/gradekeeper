@@ -111,7 +111,7 @@ const ComponentEditModal = (props: {
                       <Td className="text-center" style={{ color: "", minWidth: "150px" }}>
                         {e.isCompleted ? (
                           <>
-                            {isActiveSubcomponent(props.component!!, e)
+                            {isActiveSubcomponent(props.component!!, e, subcomponents)
                               ? calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)
                               : "Dropped"}
                           </>
