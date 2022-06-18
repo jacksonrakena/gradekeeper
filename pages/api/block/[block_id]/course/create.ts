@@ -50,13 +50,13 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
       if (!componentData) return res.status(500).send({});
       const subcomponents: Partial<SubjectSubcomponent>[] = [];
       for (var i2 = 0; i2 < inputdto.components.length; i2++) {
-        for (var i3 = 0; i3 < inputdto.components[i2].numberOfSubcomponents; i3++) {
+        for (var i3 = 0; i3 < Number.parseInt(inputdto.components[i2].numberOfSubcomponents); i3++) {
           subcomponents.push({
             componentId: inputdto.components[i2].id,
             isCompleted: false,
             numberInSequence: i3 + 1,
             id: cuid(),
-            gradeValuePercentage: inputdto.components[i2].weighting / inputdto.components[i2].numberOfSubcomponents,
+            gradeValuePercentage: inputdto.components[i2].weighting / Number.parseInt(inputdto.components[i2].numberOfSubcomponents),
           });
         }
       }

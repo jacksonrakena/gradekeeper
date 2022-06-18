@@ -33,7 +33,7 @@ export type ComponentDto = {
   weighting: number;
   dropLowest: number;
   name: string;
-  numberOfSubcomponents: number;
+  numberOfSubcomponents: string;
 };
 
 const SubjectCreationPage: NextPage = () => {
@@ -287,9 +287,10 @@ const SubjectComponentRow = (props: {
         <NumberInput
           variant="filled"
           onChange={(e, a) => {
+            console.log(a);
             props.onUpdate({
               ...props.original,
-              numberOfSubcomponents: a,
+              numberOfSubcomponents: e,
             });
           }}
           value={props.original.numberOfSubcomponents ?? 1}
