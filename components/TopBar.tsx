@@ -25,7 +25,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
   const user = useUserContext();
   const cm = useColorMode();
   const studyBlocks = user.user?.studyBlocks;
-  const subjects = user.user?.studyBlocks.flatMap((d) => d.subjects);
+  const subjects = user.user?.studyBlocks?.flatMap((d) => d.subjects);
   const currentSubject = subjects && props.currentSubjectId ? subjects.filter((d) => d.id === props.currentSubjectId)[0] : null;
   const blockMap = subjects?.reduce((block, course) => {
     block[course.studyBlockId] = block[course.studyBlockId] ?? [];
