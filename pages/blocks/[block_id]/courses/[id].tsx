@@ -41,7 +41,7 @@ import {
   _null,
 } from "../../../../lib/logic";
 import themeConstants from "../../../../themeConstants";
-import { useUserContext } from "../../../UserContext";
+import { useUserContext } from "../../../../UserContext";
 import { FullSubjectComponent } from "../../lib/fullEntities";
 
 const SubjectPage: NextPage = () => {

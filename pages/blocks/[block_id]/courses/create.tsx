@@ -26,7 +26,7 @@ import { useState } from "react";
 import { SliderPicker } from "react-color";
 import { TopBar } from "../../../../components/TopBar";
 import { randomColor } from "../../../../lib/logic";
-import { useUserContext } from "../../../UserContext";
+import { useUserContext } from "../../../../UserContext";
 
 export type ComponentDto = {
   id: string;

@@ -16,7 +16,7 @@ import {
 import { Subject } from "@prisma/client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useUserContext } from "../pages/UserContext";
+import { useUserContext } from "../UserContext";
 
 export const TopBar = (props: { currentSubjectId?: string }) => {
   const sessiondata = useSession();

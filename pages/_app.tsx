@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { Chakra } from "../Chakra";
 import { _undefined } from "../lib/logic";
 import "../styles/globals.css";
+import { UserContext } from "../UserContext";
 import { getUserQuery } from "./api/user";
-import { UserContext } from "./UserContext";
 
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppProps) {
   const [user, setUser] = useState(_undefined<Prisma.UserGetPayload<typeof getUserQuery>>());

@@ -6,7 +6,7 @@ import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/tabl
 import { useRef, useState } from "react";
 import { FullSubjectComponent } from "../../../lib/fullEntities";
 import { calculateLetterGrade, isActiveSubcomponent } from "../../../lib/logic";
-import { useUserContext } from "../../../pages/UserContext";
+import { useUserContext } from "../../../UserContext";
 
 const ComponentEditModal = (props: {
   blockId: string;
