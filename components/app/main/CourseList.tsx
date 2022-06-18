@@ -95,7 +95,7 @@ const CourseList = () => {
         <div>
           <div className={"flex flex-col px-12"}>
             <Skeleton isLoaded={(user && !isLoading) ?? false}>
-              {user?.studyBlocks && user?.studyBlocks.length === 0 && (
+              {user?.studyBlocks && user?.studyBlocks?.length === 0 && (
                 <div>
                   <div>
                     <Box mb={6}>
@@ -183,7 +183,7 @@ const CourseList = () => {
                     </div>
                   );
                 })}
-              {user?.studyBlocks.length > 0 && (
+              {user?.studyBlocks && user?.studyBlocks.length > 0 && (
                 <Link key={"new-block"} href={"/blocks/create"}>
                   <Button colorScheme="orange" size="sm">
                     + New trimester/semester
