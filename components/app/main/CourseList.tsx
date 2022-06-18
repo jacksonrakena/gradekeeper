@@ -102,16 +102,16 @@ const CourseList = () => {
                       <Heading as="h2" size="md">
                         Welcome to Gradekeeper.
                       </Heading>
-                      <Heading size="sm">Let's get you set up.</Heading>
+                      <Heading size="sm">Let&apos;s get you set up.</Heading>
                     </Box>
                     <Box mb={6}>
-                      Gradekeeper is organised around a system of "study blocks", which can be trimesters, semesters, or terms, depending on
-                      your university.
+                      Gradekeeper is organised around a system of &lsquo;study blocks&rsquo;, which can be trimesters, semesters, or terms,
+                      depending on your university.
                     </Box>
                     <Box mb={6}>
                       <Alert>
                         <AlertIcon />
-                        <AlertDescription>Let's start by making a study block.</AlertDescription>
+                        <AlertDescription>Let&apos;s start by making a study block.</AlertDescription>
                       </Alert>
                     </Box>
                     <Link key={"new-block"} href={"/blocks/create"}>
@@ -159,7 +159,7 @@ const CourseList = () => {
                           <Alert>
                             <AlertIcon />
                             <AlertTitle>Great job!</AlertTitle>
-                            <AlertDescription>Now, let's make a course in {studyBlock.name}.</AlertDescription>
+                            <AlertDescription>Now, let&apos;s make a course in {studyBlock.name}.</AlertDescription>
                           </Alert>
                         </Box>
                       )}
