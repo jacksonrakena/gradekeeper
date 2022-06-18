@@ -26,6 +26,22 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
           value={{
             user: user,
             setUser: setUser,
+            deleteCourse: (courseId) => {
+              setUser({
+                ...user,
+                gradeMap: user?.gradeMap ?? {},
+                studyBlocks:
+                  user?.studyBlocks.map((sb) => {
+                    if (sb.subjects.filter((d) => d.id === courseId).length > 0) {
+                      return {
+                        ...sb,
+                        subjects: sb.subjects.filter((subj) => subj.id !== courseId),
+                      };
+                    }
+                    return sb;
+                  }) ?? [],
+              });
+            },
             updateCourse: (courseId, replacementCourse) => {
               setUser({
                 ...user,

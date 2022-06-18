@@ -128,6 +128,7 @@ const SubjectPage: NextPage = () => {
                       onClick={() => {
                         isDeleting(true);
                         fetch(`/api/block/${subject?.studyBlockId}/course/${subject?.id}`, { method: "DELETE" }).then(() => {
+                          user.deleteCourse(subject?.id);
                           toast({
                             title: "Course deleted.",
                             description: subject?.courseCodeName + " " + subject?.courseCodeNumber + " deleted.",
