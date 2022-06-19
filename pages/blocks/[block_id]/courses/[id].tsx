@@ -212,7 +212,7 @@ const SubjectPage: NextPage = () => {
           </div>
 
           <div
-            className="shadow-md w-full m-4 p-6 shadow-md rounded-md"
+            className="w-full m-4 p-6 shadow-md rounded-md"
             style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
           >
             <div style={{ color: subject?.color }} className="text-2xl mb-2 font-bold">

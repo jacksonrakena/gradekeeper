@@ -62,7 +62,7 @@ export function isActiveSubcomponent(
   subcomponent: SubjectSubcomponent,
   overrideSubcomponents?: SubjectSubcomponent[]
 ): boolean {
-  const subcomponents = overrideSubcomponents ?? component.subcomponents;
+  const subcomponents = overrideSubcomponents ?? component.subcomponentsArray ?? [];
   var sorted = subcomponents
     .filter((d) => d.isCompleted)
     .sort((first, second) => {

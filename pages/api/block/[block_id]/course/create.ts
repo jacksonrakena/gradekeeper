@@ -43,24 +43,20 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
             nameOfSubcomponentSingular: subc.name,
             numberOfSubComponentsToDrop_Lowest: subc.dropLowest,
             subjectWeighting: subc.weighting,
+            subcomponentsArray: Array.of<Partial<SubjectSubcomponent>>(),
           };
+          for (var iz = 0; iz < Number.parseInt(subc.numberOfSubcomponents); iz++) {
+            insdata.subcomponentsArray.push({
+              isCompleted: false,
+              numberInSequence: iz + 1,
+              id: cuid(),
+              gradeValuePercentage: subc.weighting / Number.parseInt(subc.numberOfSubcomponents),
+            });
+          }
           return insdata;
         }),
       });
       if (!componentData) return res.status(500).send({});
-      const subcomponents: Partial<SubjectSubcomponent>[] = [];
-      for (var i2 = 0; i2 < inputdto.components.length; i2++) {
-        for (var i3 = 0; i3 < Number.parseInt(inputdto.components[i2].numberOfSubcomponents); i3++) {
-          subcomponents.push({
-            componentId: inputdto.components[i2].id,
-            isCompleted: false,
-            numberInSequence: i3 + 1,
-            id: cuid(),
-            gradeValuePercentage: inputdto.components[i2].weighting / Number.parseInt(inputdto.components[i2].numberOfSubcomponents),
-          });
-        }
-      }
-      await primsa.subjectSubcomponent.createMany({ data: subcomponents });
     }
     if (data) return res.status(200).json(data);
     return res.status(404);

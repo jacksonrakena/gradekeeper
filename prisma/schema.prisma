@@ -45,6 +45,7 @@ model SubjectComponent {
 
   numberOfSubComponentsToDrop_Lowest Int
   subcomponents                      SubjectSubcomponent[]
+  subcomponentsArray                 Json?
 }
 
 model SubjectSubcomponent {
