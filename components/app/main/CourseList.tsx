@@ -95,7 +95,7 @@ const CourseList = () => {
         <div>
           <div className={"flex flex-col px-12"}>
             <Skeleton isLoaded={(user && !isLoading) ?? false}>
-              {user?.studyBlocks && user?.studyBlocks?.length === 0 && (
+              {(!user?.studyBlocks || user?.studyBlocks?.length === 0) && (
                 <div>
                   <div>
                     <Box mb={6}>
