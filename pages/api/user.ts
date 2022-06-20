@@ -41,7 +41,7 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
       for (var s = 0; s < data.studyBlocks[i].subjects.length; s++) {
         for (var c = 0; c < data.studyBlocks[i].subjects[s].components.length; c++) {
           const component = data.studyBlocks[i].subjects[s].components[c];
-          if (component.subcomponents.length === 0 && component.subcomponentsArray.length !== 0) {
+          if ((!component.subcomponents || component.subcomponents.length === 0) && component.subcomponentsArray.length !== 0) {
             component.subcomponents = component.subcomponentsArray;
           }
         }
