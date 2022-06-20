@@ -9,8 +9,13 @@ import {
   NumberInput,
   NumberInputField,
   Stack,
+  Tab,
   Table,
   TableContainer,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Tbody,
   Td,
   Text,
@@ -36,9 +41,9 @@ export type ComponentDto = {
   numberOfSubcomponents: string;
 };
 
-const SubjectCreationPage: NextPage = () => {
+export const SubjectCreationComponent = (props: { block_id: string }) => {
+  const block_id = props.block_id;
   const router = useRouter();
-  const { block_id } = router.query;
   const emptyComponents: Partial<ComponentDto>[] = [
     {
       id: randomColor(),
@@ -51,56 +56,59 @@ const SubjectCreationPage: NextPage = () => {
   const userContext = useUserContext();
   const studyBlock = userContext.user?.studyBlocks.filter((d) => d.id === block_id?.toString())[0];
   const tablecolor = useColorModeValue("bg-gray-50", "");
+  const [tabIndex, setTabIndex] = useState(0);
   if (!userContext.user) return <div>Loading</div>;
   return (
     <div>
-      <TopBar />
-      <div className="p-8">
-        <div className="font-bold text-2xl">Add a new course to {studyBlock?.name}</div>
-        <div>Currently, Gradekeeper only supports the grade boundaries at Victoria University of Wellington.</div>
+      <div>Currently, Gradekeeper only supports the grade boundaries at Victoria University of Wellington.</div>
 
-        <Formik
-          initialValues={{
-            name: "",
-            codeName: "",
-            codeNo: "",
-            color: randomColor(),
-            components: [
-              {
-                id: randomColor(),
-                dropLowest: 0,
-                weighting: 0.2,
-                numberOfSubcomponents: 1,
-              },
-            ],
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
-            fetch(`/api/block/${block_id}/course/create`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                name: values.name,
-                codeName: values.codeName,
-                codeNo: values.codeNo,
-                color: values.color,
-                components: components,
-              }),
-            })
-              .then((e) => e.json())
-              .then((f) => {
-                userContext.redownload().then(() => {
-                  setSubmitting(false);
-                  router.push(`/blocks/${block_id}/courses/${f.id}`);
-                });
+      <Formik
+        initialValues={{
+          name: "",
+          codeName: "",
+          codeNo: "",
+          color: randomColor(),
+          components: [
+            {
+              id: randomColor(),
+              dropLowest: 0,
+              weighting: 0.2,
+              numberOfSubcomponents: 1,
+            },
+          ],
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(true);
+          fetch(`/api/block/${block_id}/course/create`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: values.name,
+              codeName: values.codeName,
+              codeNo: values.codeNo,
+              color: values.color,
+              components: components,
+            }),
+          })
+            .then((e) => e.json())
+            .then((f) => {
+              userContext.redownload().then(() => {
+                setSubmitting(false);
+                router.push(`/blocks/${block_id}/courses/${f.id}`);
               });
-          }}
-        >
-          {({ values, handleSubmit, isSubmitting }) => (
-            <Form className="mt-4" onSubmit={handleSubmit}>
-              <div className="mb-4 flex flex-wrap">
-                <div className="mb-8 basis-1/4">
-                  <div className="mb-4 text-xl font-semibold">Information</div>
+            });
+        }}
+      >
+        {({ values, handleSubmit, isSubmitting }) => (
+          <Form className="mt-4" onSubmit={handleSubmit}>
+            <Tabs index={tabIndex} onChange={setTabIndex} variant='enclosed'>
+              <TabList>
+                <Tab>1. Information</Tab>
+                <Tab>2. Components</Tab>
+                <Tab>3. Create</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
                   <Stack spacing={4}>
                     <Field name="codeName">
                       {({ field, form }: { field: any; form: any }) => (
@@ -180,86 +188,102 @@ const SubjectCreationPage: NextPage = () => {
                       )}
                     </Field>
                   </Stack>
-                </div>
-                <div style={{ maxWidth: "95%" }}>
-                  <div className="mb-2 text-xl font-semibold">Components</div>
-                  <div className="text-sm mb-4">
-                    Components are pieces of work that contribute to your grade. <br />
-                    For example, assignments and tests are components. <br />
-                    Each component can have subcomponents, for example Test 1. <br />
-                  </div>
-                  <div>
-                    <TableContainer>
-                      <Table>
-                        <Thead>
-                          <Tr className={tablecolor}>
-                            <Th className="p-2">Name</Th>
-                            <Th className="p-2">Number of pieces</Th>
-                            <Th className="p-2">Weighting</Th>
-                            <Th className="p-2">Drop lowest</Th>
-                            <Th className="p-2"></Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {components.map((comp) => (
-                            <SubjectComponentRow
-                              key={comp.id}
-                              onDelete={() => {
-                                setComponents(components.filter((a) => a.id !== comp.id));
-                              }}
-                              original={comp}
-                              onUpdate={(f) => {
-                                setComponents(
-                                  components.map((ff) => {
-                                    if (f.id === ff.id) return f;
-                                    return ff;
-                                  })
-                                );
-                              }}
-                            />
-                          ))}
-                          <Tr key="add">
-                            <Td>
-                              <Button
-                                colorScheme="blue"
-                                aria-label="Add row"
-                                size="sm"
-                                onClick={() => {
-                                  setComponents([
-                                    ...components,
-                                    {
-                                      id: Math.random().toString(),
-                                      dropLowest: 0,
-                                      weighting: 0.2,
-                                      numberOfSubcomponents: 1,
-                                    },
-                                  ]);
+                  <Button mt={4} colorScheme={"teal"} onClick={() => setTabIndex(1)}>
+                    Next
+                  </Button>
+                </TabPanel>
+                <TabPanel>
+                  <div style={{ maxWidth: "95%" }}>
+                    <div className="mb-2 text-xl font-semibold">Components</div>
+                    <div className="text-sm mb-4">
+                      Components are pieces of work that contribute to your grade. <br />
+                      For example, assignments and tests are components. <br />
+                      Each component can have subcomponents, for example Test 1. <br />
+                    </div>
+                    <div>
+                      <TableContainer>
+                        <Table>
+                          <Thead>
+                            <Tr className={tablecolor}>
+                              <Th className="p-2">Name</Th>
+                              <Th className="p-2">Number of pieces</Th>
+                              <Th className="p-2">Weighting</Th>
+                              <Th className="p-2">Drop lowest</Th>
+                              <Th className="p-2"></Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {components.map((comp) => (
+                              <SubjectComponentRow
+                                key={comp.id}
+                                onDelete={() => {
+                                  setComponents(components.filter((a) => a.id !== comp.id));
                                 }}
-                                leftIcon={<AddIcon />}
-                              >
-                                Add component
-                              </Button>
-                            </Td>
-                          </Tr>
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
+                                original={comp}
+                                onUpdate={(f) => {
+                                  setComponents(
+                                    components.map((ff) => {
+                                      if (f.id === ff.id) return f;
+                                      return ff;
+                                    })
+                                  );
+                                }}
+                              />
+                            ))}
+                            <Tr key="add">
+                              <Td>
+                                <Button
+                                  colorScheme="blue"
+                                  aria-label="Add row"
+                                  size="sm"
+                                  onClick={() => {
+                                    setComponents([
+                                      ...components,
+                                      {
+                                        id: Math.random().toString(),
+                                        dropLowest: 0,
+                                        weighting: 0.2,
+                                        numberOfSubcomponents: 1,
+                                      },
+                                    ]);
+                                  }}
+                                  leftIcon={<AddIcon />}
+                                >
+                                  Add component
+                                </Button>
+                              </Td>
+                            </Tr>
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <Text mb={4} color={"gray.600"}>
-                On the next screen, you&apos;ll be able to record your results so far.
-              </Text>
+                  <Button mt={4} colorScheme={"teal"} onClick={() => setTabIndex(2)}>
+                    Next
+                  </Button>
+                </TabPanel>
+                <TabPanel>
+                  <Text mb={4} color={"gray.600"}>
+                    On the next screen, you&apos;ll be able to record your results so far.
+                  </Text>
 
-              <Button type="submit" isLoading={isSubmitting} colorScheme="teal">
-                Create
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </div>
+                  <Button type="submit" isLoading={isSubmitting} colorScheme="teal">
+                    Create
+                  </Button>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
+};
+
+const SubjectCreationPage: NextPage = () => {
+  const router = useRouter();
+  const { block_id } = router.query;
+  return <SubjectCreationComponent block_id={block_id?.toString()} />;
 };
 
 const SubjectComponentRow = (props: {

@@ -14,7 +14,13 @@ import {
   Button,
   Heading,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Skeleton,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
@@ -22,6 +28,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { _null } from "../../../lib/logic";
+import { BlockCreationComponent } from "../../../pages/blocks/create";
+import { SubjectCreationComponent } from "../../../pages/blocks/[block_id]/courses/create";
 import { useUserContext } from "../../../UserContext";
 import { TopBar } from "../../TopBar";
 import CoursePill from "./CoursePill";
@@ -35,6 +43,8 @@ const CourseList = () => {
   const router = useRouter();
   const [isDeletingStudyBlock, setIsDeletingSb] = useState(false);
   const context = useUserContext();
+  const [courseCreateBlockId, setCourseCreateBlockId] = useState("");
+  const createBlockDisclosure = useDisclosure();
   return (
     <div className="mb-12">
       <TopBar />
@@ -92,6 +102,8 @@ const CourseList = () => {
             </AlertDialogContent>
           </AlertDialogOverlay>
         </AlertDialog>
+        <CreateCourseModal blockId={courseCreateBlockId} isOpen={!!courseCreateBlockId} onClose={() => setCourseCreateBlockId("")} />
+        <CreateBlockModal isOpen={createBlockDisclosure.isOpen} onClose={createBlockDisclosure.onClose} />
         <div>
           <div className={"flex flex-col px-12"}>
             <Skeleton isLoaded={(user && !isLoading) ?? false}>
@@ -114,11 +126,9 @@ const CourseList = () => {
                         <AlertDescription>Let&apos;s start by making a study block.</AlertDescription>
                       </Alert>
                     </Box>
-                    <Link key={"new-block"} href={"/blocks/create"}>
-                      <Button colorScheme="orange" size="sm">
-                        + New study block
-                      </Button>
-                    </Link>
+                    <Button colorScheme="orange" size="sm" onClick={createBlockDisclosure.onOpen}>
+                      + New study block
+                    </Button>
                   </div>
                 </div>
               )}
@@ -175,26 +185,54 @@ const CourseList = () => {
                         />
                       ))}
 
-                      <Link key={"new-" + studyBlock.id} href={"/blocks/" + studyBlock.id + "/courses/create"}>
-                        <Button mt={4} colorScheme="teal" size="sm">
-                          + New course in {studyBlock.name}
-                        </Button>
-                      </Link>
+                      <Button onClick={() => setCourseCreateBlockId(studyBlock.id)} mt={4} colorScheme="teal" size="sm">
+                        + New course in {studyBlock.name}
+                      </Button>
                     </div>
                   );
                 })}
               {user?.studyBlocks && user?.studyBlocks.length > 0 && (
-                <Link key={"new-block"} href={"/blocks/create"}>
-                  <Button colorScheme="orange" size="sm">
-                    + New trimester/semester
-                  </Button>
-                </Link>
+                <Button colorScheme="orange" size="sm" onClick={createBlockDisclosure.onOpen}>
+                  + New trimester/semester
+                </Button>
               )}
             </Skeleton>
           </div>
         </div>
       </>
     </div>
+  );
+};
+
+const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
+  return (
+    <>
+      <Modal size="xl" isOpen={props.isOpen} onClose={props.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create a new study block</ModalHeader>
+          <ModalBody>
+            <BlockCreationComponent />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
+
+const CreateCourseModal = (props: { isOpen: boolean; onClose: () => void; blockId: string }) => {
+  return (
+    <>
+      <Modal size="xl" isOpen={props.isOpen} onClose={props.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create a course</ModalHeader>
+          <ModalBody>
+            <SubjectCreationComponent block_id={props.blockId} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
