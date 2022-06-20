@@ -22,7 +22,7 @@ import {
 import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { SliderPicker } from "react-color";
 import { TopBar } from "../../../../components/TopBar";
 import { randomColor, singularMap } from "../../../../lib/logic";
@@ -267,6 +267,7 @@ const SubjectComponentRow = (props: {
   onUpdate: (e: Partial<ComponentDto>) => void;
   onDelete: () => void;
 }) => {
+  const componentNamePlaceholder = useMemo(() => Object.keys(singularMap)[Math.floor(Object.keys(singularMap).length * Math.random())], []);
   return (
     <Tr key={props.original.id}>
       <Td className="p-2">
@@ -279,7 +280,7 @@ const SubjectComponentRow = (props: {
           value={props.original.name ?? ""}
           id="courseCodeName"
           minW={"150px"}
-          placeholder={Object.keys(singularMap)[Math.floor(Object.keys(singularMap).length * Math.random())]}
+          placeholder={componentNamePlaceholder}
           required={true}
         />
       </Td>
