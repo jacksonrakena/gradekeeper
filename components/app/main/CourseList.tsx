@@ -24,14 +24,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { _null } from "../../../lib/logic";
-import { CreateBlock } from "../block/CreateBlock";
-import { CreateCourse } from "../course/CreateCourse";
 import { useUserContext } from "../../../UserContext";
 import { TopBar } from "../../TopBar";
+import { CreateBlock } from "../block/CreateBlock";
+import { CreateCourse } from "../course/CreateCourse";
 import CoursePill from "./CoursePill";
 
 const CourseList = () => {
@@ -164,7 +163,7 @@ const CourseList = () => {
                         {dtf.format(sbStart)} &#8212; {dtf.format(sbEnd)}
                       </div>
 
-                      {studyBlock.subjects.length === 0 && (
+                      {user.studyBlocks.length === 1 && studyBlock.subjects.length === 0 && (
                         <Box mt={4}>
                           <Alert>
                             <AlertIcon />

@@ -132,6 +132,7 @@ const SubjectPage: NextPage = () => {
                         isDeleting(true);
                         fetch(`/api/block/${subject?.studyBlockId}/course/${subject?.id}`, { method: "DELETE" }).then(() => {
                           user.deleteCourse(subject?.id);
+                          isDeleting(false);
                           toast({
                             title: "Course deleted.",
                             description: subject?.courseCodeName + " " + subject?.courseCodeNumber + " deleted.",
@@ -139,7 +140,6 @@ const SubjectPage: NextPage = () => {
                             isClosable: true,
                             status: "success",
                           });
-                          isDeleting(true);
                           router.push("/");
                         });
                       }}

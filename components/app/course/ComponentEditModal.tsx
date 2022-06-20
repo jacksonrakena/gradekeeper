@@ -78,7 +78,7 @@ const ComponentEditModal = (props: {
                             type="number"
                             id="courseCodeName"
                             size={"sm"}
-                            defaultValue={e.isCompleted ? e.gradeValuePercentage * 100 : 0}
+                            defaultValue={e.isCompleted ? e.gradeValuePercentage * 100 : ""}
                             onChange={(newGradeResult) => {
                               if (!newGradeResult.target.value) {
                                 setSubcomponents(
