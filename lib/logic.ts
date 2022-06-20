@@ -24,6 +24,13 @@ export function calculateMaximumPossibleCourseGrade(subject: FullSubject, gradeM
   return { numerical: numericalvalue, letter: calculateLetterGrade(numericalvalue, gradeMap) };
 }
 
+export type CalculatedGrade = {
+  numerical: number;
+  letter: string;
+  isUnknown: boolean;
+  isAverage: boolean;
+};
+
 export function calculateActualCourseProgressGrade(subject: FullSubject, gradeMap: object): { numerical: number; letter: string } {
   if (!subject || !subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z" };
   const numericalvalue = subject.components

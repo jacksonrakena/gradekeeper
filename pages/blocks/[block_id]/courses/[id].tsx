@@ -6,9 +6,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  Box,
   Button,
+  Editable,
+  EditableInput,
+  EditablePreview,
   IconButton,
   Skeleton,
+  Spinner,
   Stat,
   StatHelpText,
   StatLabel,
@@ -32,6 +37,7 @@ import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import ComponentEditModal from "../../../../components/app/course/ComponentEditModal";
 import { TopBar } from "../../../../components/TopBar";
+import { FullSubject, FullSubjectComponent } from "../../../../lib/fullEntities";
 import {
   adjust,
   calculateActualCourseProgressGrade,
@@ -44,7 +50,6 @@ import {
 } from "../../../../lib/logic";
 import themeConstants from "../../../../themeConstants";
 import { useUserContext } from "../../../../UserContext";
-import { FullSubjectComponent } from "../../lib/fullEntities";
 
 const SubjectPage: NextPage = () => {
   const router = useRouter();
@@ -171,7 +176,7 @@ const SubjectPage: NextPage = () => {
                     <Th className="p-2">Weight</Th>
                     <Th className="p-2">Score</Th>
                     <Th className="p-2">Grade</Th>
-                    <Th className="p-2">Actions</Th>
+                    {false && <Th className="p-2">Actions</Th>}
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -179,42 +184,15 @@ const SubjectPage: NextPage = () => {
                     console.log(e);
                     const grade = calculateProjectedGradeForComponent(e);
                     return (
-                      <Tr key={e.name}>
-                        <Td className="p-2 text-center" style={{}}>
-                          <span style={{ fontWeight: "bold" }}>{e.name}</span>{" "}
-                          {e.subcomponents?.length > 1 ? <span>({e.subcomponents.length})</span> : ""}
-                        </Td>
-                        <Td className="text-center" style={{}}>
-                          {e.subjectWeighting * 100}%
-                        </Td>
-                        <Td
-                          style={{ color: subject?.color }}
-                          className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}
-                        >
-                          {!grade.isUnknown ? (
-                            <>
-                              {(grade.value * 100).toFixed(2)}%
-                              {grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
-                            </>
-                          ) : (
-                            <></>
-                          )}
-                        </Td>
-                        <Td style={{}} fontWeight={"semibold"} className="text-center">
-                          {!grade.isUnknown && calculateLetterGrade(grade.value, gradeMap)}
-                        </Td>
-                        <Td style={{}} className="text-center">
-                          <IconButton
-                            onClick={() => {
-                              setTargetComponent(e);
-                            }}
-                            colorScheme="teal"
-                            size="sm"
-                            aria-label={`Edit ${e.name}`}
-                            icon={<EditIcon />}
-                          />
-                        </Td>
-                      </Tr>
+                      <ComponentRow
+                        onRequestModalOpen={() => {
+                          setTargetComponent(e);
+                        }}
+                        subject={subject}
+                        key={e.id}
+                        component={e}
+                        componentGrade={grade}
+                      />
                     );
                   })}
                 </Tbody>
@@ -341,6 +319,132 @@ const SubjectPage: NextPage = () => {
         </div>
       </Skeleton>
     </div>
+  );
+};
+
+const ComponentRow = (props: {
+  component: FullSubjectComponent;
+  subject: FullSubject;
+  componentGrade: { value: number; isUnknown: boolean; isAverage: boolean };
+  onRequestModalOpen: () => void;
+}) => {
+  const user = useUserContext();
+  const e = props.component;
+  const subject = props.subject;
+  const grade = props.componentGrade;
+  const [singularValue, setSingularValue] = useState((grade.value * 100).toFixed(2).toString() + "%");
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+  const [touched, setTouched] = useState(false);
+  return (
+    <Tr key={e.name}>
+      <Td className="p-2 text-center" style={{}}>
+        <span style={{ fontWeight: "bold" }}>{e.name}</span> {e.subcomponents?.length > 1 ? <span>({e.subcomponents.length})</span> : ""}
+      </Td>
+      <Td className="text-center" style={{}}>
+        {e.subjectWeighting * 100}%
+      </Td>
+      <Td
+        style={{ color: subject?.color }}
+        className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}
+      >
+        {isLoadingUpdate ? (
+          <>
+            <Spinner color={subject.color} size="sm" />
+          </>
+        ) : (
+          <>
+            {e.subcomponents?.length === 1 ? (
+              <Editable
+                cursor={"pointer"}
+                onSubmit={async (e) => {
+                  if (touched) {
+                    const actualGradeValue = Number.parseFloat(e.replaceAll("%", "")) / 100.0;
+                    setSingularValue(e ? Number.parseFloat(e).toFixed(2).toString() + "%" : "");
+
+                    setIsLoadingUpdate(true);
+                    const response = await fetch(
+                      `/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`,
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          subcomponents: [
+                            {
+                              ...props.component.subcomponents[0],
+                              gradeValuePercentage: !!e ? actualGradeValue : 0,
+                              isCompleted: !!e,
+                            },
+                          ],
+                        }),
+                      }
+                    );
+                    const data = await response.json();
+                    user.updateCourse(props.subject.id, {
+                      ...props.subject,
+                      components: props.subject.components.map((cc) => {
+                        if (cc.id !== props.component.id) return cc;
+                        return data;
+                      }),
+                    });
+                    setIsLoadingUpdate(false);
+                    setTouched(false);
+                  }
+                }}
+                onChange={(f) => {
+                  setTouched(true);
+                  setSingularValue(f);
+                }}
+                value={singularValue}
+              >
+                <Box minW={"50px"}>
+                  <EditablePreview cursor={"pointer"} />
+                  <EditableInput />
+                </Box>
+              </Editable>
+            ) : (
+              <>
+                {" "}
+                {!grade.isUnknown ? (
+                  <>
+                    <Box
+                      cursor="pointer"
+                      className="flex"
+                      flexDirection={"column"}
+                      onClick={() => {
+                        props.onRequestModalOpen();
+                      }}
+                    >
+                      {" "}
+                      {(grade.value * 100).toFixed(2)}%{grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
+                    </Box>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
+          </>
+        )}
+      </Td>
+      <Td style={{}} fontWeight={"semibold"} className="text-center">
+        {!grade.isUnknown && calculateLetterGrade(grade.value, user.user?.gradeMap)}
+      </Td>
+      {false && (
+        <Td style={{}} className="text-center">
+          <IconButton
+            onClick={() => {
+              setTargetComponent(e);
+            }}
+            colorScheme="teal"
+            size="sm"
+            aria-label={`Edit ${e.name}`}
+            icon={<EditIcon />}
+          />
+        </Td>
+      )}
+    </Tr>
   );
 };
 
