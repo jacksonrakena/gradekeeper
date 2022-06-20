@@ -479,7 +479,16 @@ const ComponentRow = (props: {
                     </Box>
                   </>
                 ) : (
-                  <></>
+                  <Box
+                    cursor="pointer"
+                    className="flex"
+                    flexDirection={"column"}
+                    onClick={() => {
+                      props.onRequestModalOpen();
+                    }}
+                  >
+                    Edit
+                  </Box>
                 )}
               </>
             )}
