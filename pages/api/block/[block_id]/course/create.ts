@@ -4,6 +4,7 @@ import cuid from "cuid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { gkRoute } from "../../../../../lib/api/gkRoute";
+import { singularMap } from "../../../../../lib/logic";
 import { ComponentDto } from "../../../../blocks/[block_id]/courses/create";
 
 export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>) => {
@@ -36,16 +37,8 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
       var componentData = await primsa.subjectComponent.createMany({
         data: inputdto.components.map((subc) => {
           const emptysubcarr: any[] = [];
-          const singularMap = {
-            'assignments': 'Assignment',
-            'labs': 'Lab',
-            'lectures': 'Lecture',
-            'projects': 'Project',
-            'quizzes': 'Quiz',
-            'tests': 'Test',
-            'exams': 'Exam'
-          }
-          const nameOfSubcomponentSingular: string = Object.keys(singularMap).includes(subc.name.toLowerCase()) ? singularMap[subc.name.toLowerCase()] : subc.name;
+          const lowerCaseSingulars = Object.keys(singularMap).map(d => d.toLowerCase());
+          const nameOfSubcomponentSingular = lowerCaseSingulars.includes(subc.name.toLowerCase()) ? Object.values(singularMap)[lowerCaseSingulars.indexOf(subc.name.toLowerCase())] : subc.name;
           var insdata = {
             subjectId: data.id,
             name: subc.name,

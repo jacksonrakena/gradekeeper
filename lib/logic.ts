@@ -48,6 +48,16 @@ export function calculateProjectedCourseGrade(
   };
 }
 
+export const singularMap = {
+  'Assignments': 'Assignment',
+  'Labs': 'Lab',
+  'Lectures': 'Lecture',
+  'Projects': 'Project',
+  'Quizzes': 'Quiz',
+  'Tests': 'Test',
+  'Exams': 'Exam'
+}
+
 export function randomColor(): string {
   var letters = "0123456789ABCDEF";
   var color = "#";

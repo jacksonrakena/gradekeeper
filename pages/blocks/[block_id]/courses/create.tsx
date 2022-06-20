@@ -25,7 +25,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { SliderPicker } from "react-color";
 import { TopBar } from "../../../../components/TopBar";
-import { randomColor } from "../../../../lib/logic";
+import { randomColor, singularMap } from "../../../../lib/logic";
 import { useUserContext } from "../../../../UserContext";
 
 export type ComponentDto = {
@@ -279,7 +279,7 @@ const SubjectComponentRow = (props: {
           value={props.original.name ?? ""}
           id="courseCodeName"
           minW={"150px"}
-          placeholder="Labs"
+          placeholder={Object.keys(singularMap)[Math.floor(Object.keys(singularMap).length * Math.random())]}
           required={true}
         />
       </Td>
