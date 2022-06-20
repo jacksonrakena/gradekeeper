@@ -47,15 +47,19 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
         for (var c = 0; c < data.studyBlocks[i].subjects[s].components.length; c++) {
           const component = data.studyBlocks[i].subjects[s].components[c];
           if (!component.subcomponentsArray && component.subcomponents.length > 0) {
-            const updated = await primsa.subjectComponent.update({
-              where: {
-                id: component.id,
-              },
-              data: {
-                subcomponentsArray: component.subcomponents,
-              },
-            });
-            component.subcomponents = updated.subcomponentsArray;
+            try {
+              const updated = await primsa.subjectComponent.update({
+                where: {
+                  id: component.id,
+                },
+                data: {
+                  subcomponentsArray: component.subcomponents,
+                },
+              });
+              component.subcomponents = updated.subcomponentsArray;
+            } catch(e) {
+              
+            }
           }
           else {
             component.subcomponents = component.subcomponentsArray;
