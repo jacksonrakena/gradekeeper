@@ -57,7 +57,7 @@ const ComponentEditModal = (props: {
             <Table variant="striped" size="sm">
               <Thead>
                 <Tr>
-                  <Th>Name</Th>
+                  <Th>#</Th>
                   <Th>Score</Th>
                   <Th>Grade</Th>
                 </Tr>
@@ -68,10 +68,16 @@ const ComponentEditModal = (props: {
                   .map((e, i) => {
                     return (
                       <Tr key={e.id}>
-                        <Td className="p-2" style={{ minWidth: "200px" }}>
+                        {/* <Td className="p-2" style={{ minWidth: "200px" }}>
                           <span style={{ fontWeight: "bold" }}>
                             {props.component?.nameOfSubcomponentSingular} {!isSingular && e.numberInSequence}
                           </span>
+                        </Td> */}
+                        <Td className="p-2">
+                          <span className="hidden md:inline" style={{ fontWeight: "bold" }}>
+                            {props.component?.nameOfSubcomponentSingular}{" "}
+                          </span>
+                          <span style={{ fontWeight: "bold" }}>{e.numberInSequence}</span>
                         </Td>
                         <Td>
                           <Input
