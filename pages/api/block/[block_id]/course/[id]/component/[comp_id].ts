@@ -13,16 +13,32 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
 
     const targetComponent = await primsa.subjectComponent.findFirst({
       where: { id: comp_id.toString(), subject: { studyBlock: { userId: session.user?.email } } },
+      include: { subcomponents: true },
     });
     if (!targetComponent) return res.status(400);
 
     const replacementSubcomponents = req.body.subcomponents.map((e: Partial<SubjectSubcomponent>) => {
-      e.componentId = undefined;
       return {
         where: { id: e.id },
-        data: e,
+        data: { ...e, componentId: undefined },
       };
     });
+    if (targetComponent.subcomponents.length === 0) {
+      const resultdata = await primsa.subjectComponent.update({
+        where: { id: targetComponent.id },
+        data: {
+          subcomponents: {
+            createMany: {
+              data: req.body.subcomponents,
+            },
+          },
+        },
+        include: { subcomponents: true },
+      });
+
+      if (resultdata) return res.status(200).json(resultdata);
+      return res.status(500);
+    }
     const resultdata = await primsa.subjectComponent.update({
       where: { id: comp_id.toString() },
       data: {
