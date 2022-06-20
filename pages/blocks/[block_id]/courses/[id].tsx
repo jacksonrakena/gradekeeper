@@ -332,7 +332,9 @@ const ComponentRow = (props: {
   const e = props.component;
   const subject = props.subject;
   const grade = props.componentGrade;
-  const [singularValue, setSingularValue] = useState((grade.value * 100).toFixed(2).toString() + "%");
+  const [singularValue, setSingularValue] = useState(
+    props.component.subcomponents[0].isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "Edit"
+  );
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [touched, setTouched] = useState(false);
   return (
