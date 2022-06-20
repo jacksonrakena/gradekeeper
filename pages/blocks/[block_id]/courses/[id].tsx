@@ -176,6 +176,7 @@ const SubjectPage: NextPage = () => {
                 </Thead>
                 <Tbody>
                   {subject?.components?.map((e, i) => {
+                    console.log(e);
                     const grade = calculateProjectedGradeForComponent(e);
                     return (
                       <Tr key={e.name}>

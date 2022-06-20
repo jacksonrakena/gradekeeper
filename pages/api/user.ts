@@ -37,28 +37,16 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
       });
       return res.status(200).json(data ?? {});
     }
-    // for (var i = 0; i < data.studyBlocks.length; i++) {
-    //   for (var s = 0; s < data.studyBlocks[i].subjects.length; s++) {
-    //     for (var c = 0; c < data.studyBlocks[i].subjects[s].components.length; c++) {
-    //       const component = data.studyBlocks[i].subjects[s].components[c];
-    //       if (!component.subcomponentsArray && component.subcomponents.length > 0) {
-    //         try {
-    //           const updated = await primsa.subjectComponent.update({
-    //             where: {
-    //               id: component.id,
-    //             },
-    //             data: {
-    //               subcomponentsArray: component.subcomponents,
-    //             },
-    //           });
-    //           component.subcomponents = updated.subcomponentsArray;
-    //         } catch (e) {}
-    //       } else {
-    //         component.subcomponents = component.subcomponentsArray;
-    //       }
-    //     }
-    //   }
-    // }
+    for (var i = 0; i < data.studyBlocks.length; i++) {
+      for (var s = 0; s < data.studyBlocks[i].subjects.length; s++) {
+        for (var c = 0; c < data.studyBlocks[i].subjects[s].components.length; c++) {
+          const component = data.studyBlocks[i].subjects[s].components[c];
+          if (component.subcomponents.length === 0 && component.subcomponentsArray.length !== 0) {
+            component.subcomponents = component.subcomponentsArray;
+          }
+        }
+      }
+    }
     return res.status(200).json(data ?? {});
   }
 });
