@@ -335,12 +335,67 @@ const ComponentRow = (props: {
   const [singularValue, setSingularValue] = useState(
     props.component.subcomponents[0].isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "Edit"
   );
-  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+  const [name, setName] = useState(props.component.name);
+  const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
   const [touched, setTouched] = useState(false);
   return (
     <Tr key={e.name}>
       <Td className="p-2 text-center" style={{}}>
-        <span style={{ fontWeight: "bold" }}>{e.name}</span> {e.subcomponents?.length > 1 ? <span>({e.subcomponents.length})</span> : ""}
+        {sectionLoadingUpdate !== "name" ? (
+          <>
+            {e.subcomponents.length === 1 ? (
+              <span style={{ fontWeight: "bold" }}>
+                <Editable
+                  value={name}
+                  onChange={(e) => {
+                    setName(e);
+                    setTouched(true);
+                  }}
+                  onSubmit={async () => {
+                    if (touched) {
+                      setSectionLoadingUpdate("name");
+                      const response = await fetch(
+                        `/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`,
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            name: name,
+                          }),
+                        }
+                      );
+                      const data = await response.json();
+                      user.updateCourse(props.subject.id, {
+                        ...props.subject,
+                        components: props.subject.components.map((cc) => {
+                          if (cc.id !== props.component.id) return cc;
+                          return { ...cc, name: name };
+                        }),
+                      });
+                      setSectionLoadingUpdate("");
+                      setTouched(false);
+                    }
+                  }}
+                >
+                  <EditablePreview />
+                  <EditableInput />
+                </Editable>
+              </span>
+            ) : (
+              <>
+                <span style={{ fontWeight: "bold" }}>{e.name}</span>{" "}
+                {e.subcomponents?.length > 1 ? <span>({e.subcomponents.length})</span> : ""}
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            {" "}
+            <Spinner color={subject.color} size="sm" />
+          </>
+        )}
       </Td>
       <Td className="text-center" style={{}}>
         {e.subjectWeighting * 100}%
@@ -349,7 +404,7 @@ const ComponentRow = (props: {
         style={{ color: subject?.color }}
         className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}
       >
-        {isLoadingUpdate ? (
+        {sectionLoadingUpdate === "score" ? (
           <>
             <Spinner color={subject.color} size="sm" />
           </>
@@ -363,7 +418,7 @@ const ComponentRow = (props: {
                     const actualGradeValue = Number.parseFloat(e.replaceAll("%", "")) / 100.0;
                     setSingularValue(e ? Number.parseFloat(e).toFixed(2).toString() + "%" : "");
 
-                    setIsLoadingUpdate(true);
+                    setSectionLoadingUpdate("score");
                     const response = await fetch(
                       `/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`,
                       {
@@ -391,7 +446,7 @@ const ComponentRow = (props: {
                       }),
                     });
                     if (!singularValue) setSingularValue("Edit");
-                    setIsLoadingUpdate(false);
+                    setSectionLoadingUpdate("");
                     setTouched(false);
                   }
                 }}

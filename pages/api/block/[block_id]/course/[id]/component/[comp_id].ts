@@ -17,39 +17,52 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
     });
     if (!targetComponent) return res.status(400);
 
-    const replacementSubcomponents = req.body.subcomponents.map((e: Partial<SubjectSubcomponent>) => {
-      return {
-        where: { id: e.id },
-        data: { ...e, componentId: undefined },
-      };
+    const initupd = await primsa.subjectComponent.update({
+      where: {
+        id: comp_id.toString(),
+      },
+      data: {
+        ...req.body,
+        subcomponents: undefined,
+      },
     });
-    if (targetComponent.subcomponents.length === 0) {
-      const resultdata = await primsa.subjectComponent.update({
-        where: { id: targetComponent.id },
-        data: {
-          subcomponents: {
-            createMany: {
-              data: req.body.subcomponents,
+    if (req.body.subcomponents) {
+      const replacementSubcomponents = req.body.subcomponents.map((e: Partial<SubjectSubcomponent>) => {
+        return {
+          where: { id: e.id },
+          data: { ...e, componentId: undefined },
+        };
+      });
+      if (targetComponent.subcomponents.length === 0) {
+        const resultdata = await primsa.subjectComponent.update({
+          where: { id: targetComponent.id },
+          data: {
+            subcomponents: {
+              createMany: {
+                data: req.body.subcomponents,
+              },
             },
+          },
+          include: { subcomponents: true },
+        });
+
+        if (resultdata) return res.status(200).json(resultdata);
+        return res.status(500);
+      }
+      const resultdata = await primsa.subjectComponent.update({
+        where: { id: comp_id.toString() },
+        data: {
+          ...req.body,
+          subcomponents: {
+            updateMany: replacementSubcomponents,
           },
         },
         include: { subcomponents: true },
       });
-
       if (resultdata) return res.status(200).json(resultdata);
       return res.status(500);
+    } else {
+      return res.status(200).json(initupd);
     }
-    const resultdata = await primsa.subjectComponent.update({
-      where: { id: comp_id.toString() },
-      data: {
-        ...req.body,
-        subcomponents: {
-          updateMany: replacementSubcomponents,
-        },
-      },
-      include: { subcomponents: true },
-    });
-    if (resultdata) return res.status(200).json(resultdata);
-    return res.status(500);
   }
 });
