@@ -27,6 +27,7 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useClipboard,
   useColorModeValue,
   useDisclosure,
   useToast,
@@ -65,6 +66,7 @@ const SubjectPage: NextPage = () => {
   const grade = actualGrade;
   const gradeMap = user.user?.gradeMap;
   const isLoading = !course0;
+  const cb = useClipboard(id?.toString() || "");
   const [component, setTargetComponent] = useState(_null<FullSubjectComponent>());
   const [deleting, isDeleting] = useState(false);
   const captionColor = useColorModeValue("gray.700", "gray.200");
@@ -116,6 +118,9 @@ const SubjectPage: NextPage = () => {
                 aria-label={"Delete"}
                 colorScheme="teal"
               />
+              <Button size="xs" ml={2} onClick={cb.onCopy} colorScheme="teal" disabled={cb.hasCopied}>
+                {cb.hasCopied ? "Copied" : "Copy share code"}
+              </Button>
             </span>
             <AlertDialog isOpen={disc.isOpen} leastDestructiveRef={cancelref} onClose={disc.onClose}>
               <AlertDialogOverlay>

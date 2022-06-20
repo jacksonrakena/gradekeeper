@@ -1,4 +1,4 @@
-import { ChevronDownIcon, CloseIcon, SettingsIcon } from "@chakra-ui/icons";
+import { AddIcon, ChevronDownIcon, CloseIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Button,
@@ -12,11 +12,13 @@ import {
   SkeletonText,
   Text,
   useColorMode,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Subject } from "@prisma/client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useUserContext } from "../UserContext";
+import { CourseImportModal } from "./app/CourseImportModal";
 
 export const TopBar = (props: { currentSubjectId?: string }) => {
   const sessiondata = useSession();
@@ -27,6 +29,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
   const studyBlocks = user.user?.studyBlocks;
   const subjects = user.user?.studyBlocks?.flatMap((d) => d.subjects);
   const currentSubject = subjects && props.currentSubjectId ? subjects.filter((d) => d.id === props.currentSubjectId)[0] : null;
+  const importModal = useDisclosure();
   const blockMap = subjects?.reduce((block, course) => {
     block[course.studyBlockId] = block[course.studyBlockId] ?? [];
     block[course.studyBlockId].push(course);
@@ -34,6 +37,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
   }, {});
   return (
     <div>
+      <CourseImportModal disclosure={importModal} />
       <div className="w-full p-2 flex flex-row">
         <div className="grow">
           {subjects && props.currentSubjectId && (
@@ -87,6 +91,9 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
                   </MenuButton>
                   <MenuList>
                     <MenuItem onClick={() => router.push("/")}>Home</MenuItem>
+                    <MenuItem onClick={() => importModal.onOpen()} icon={<AddIcon />}>
+                      Import a course
+                    </MenuItem>
                     <MenuItem
                       onClick={() => {
                         router.push("/account");
