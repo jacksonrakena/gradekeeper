@@ -1,8 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { Prisma, PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
-import { gkAuthorizedRoute, gkRoute } from "../../lib/api/gkRoute";
+import { gkAuthorizedRoute } from "../../lib/api/gkRoute";
 
 export const getUserQuery = Prisma.validator<Prisma.UserArgs>()({
   select: { gradeMap: true, studyBlocks: { include: { subjects: { include: { components: { include: { subcomponents: true } } } } } } },
@@ -53,11 +52,8 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
                 },
               });
               component.subcomponents = updated.subcomponentsArray;
-            } catch(e) {
-              
-            }
-          }
-          else {
+            } catch (e) {}
+          } else {
             component.subcomponents = component.subcomponentsArray;
           }
         }

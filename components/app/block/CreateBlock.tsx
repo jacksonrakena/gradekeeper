@@ -5,7 +5,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useUserContext } from "../../../UserContext";
 
-
 export const CreateBlock = () => {
   const router = useRouter();
   const context = useUserContext();

@@ -49,14 +49,14 @@ export function calculateProjectedCourseGrade(
 }
 
 export const singularMap = {
-  'Assignments': 'Assignment',
-  'Labs': 'Lab',
-  'Lectures': 'Lecture',
-  'Projects': 'Project',
-  'Quizzes': 'Quiz',
-  'Tests': 'Test',
-  'Exams': 'Exam'
-}
+  Assignments: "Assignment",
+  Labs: "Lab",
+  Lectures: "Lecture",
+  Projects: "Project",
+  Quizzes: "Quiz",
+  Tests: "Test",
+  Exams: "Exam",
+};
 
 export function randomColor(): string {
   var letters = "0123456789ABCDEF";
@@ -72,7 +72,7 @@ export function isActiveSubcomponent(
   subcomponent: SubjectSubcomponent,
   overrideSubcomponents?: SubjectSubcomponent[]
 ): boolean {
-  const subcomponents: SubjectSubcomponent[] = overrideSubcomponents ?? component.subcomponentsArray as SubjectSubcomponent[] ?? [];
+  const subcomponents: SubjectSubcomponent[] = overrideSubcomponents ?? (component.subcomponentsArray as SubjectSubcomponent[]) ?? [];
   var sorted = subcomponents
     .filter((d) => d.isCompleted)
     .sort((first, second) => {

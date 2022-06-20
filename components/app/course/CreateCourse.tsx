@@ -1,13 +1,10 @@
-import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  IconButton,
   Input,
-  NumberInput,
-  NumberInputField,
   Stack,
   Tab,
   Table,
@@ -25,14 +22,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
-import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { SliderPicker } from "react-color";
-import { TopBar } from "../../TopBar";
-import { randomColor, singularMap } from "../../../lib/logic";
+import { randomColor } from "../../../lib/logic";
 import { useUserContext } from "../../../UserContext";
-import { CreateCourseComponentRow} from "./CreateCourseComponentRow";
+import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
   id: string;
@@ -102,7 +97,7 @@ export const CreateCourse = (props: { block_id: string }) => {
       >
         {({ values, handleSubmit, isSubmitting }) => (
           <Form className="mt-4" onSubmit={handleSubmit}>
-            <Tabs index={tabIndex} onChange={setTabIndex} variant='enclosed'>
+            <Tabs index={tabIndex} onChange={setTabIndex} variant="enclosed">
               <TabList>
                 <Tab>1. Information</Tab>
                 <Tab>2. Components</Tab>
