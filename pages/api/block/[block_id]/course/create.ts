@@ -3,9 +3,9 @@ import { PrismaClient, SubjectSubcomponent } from "@prisma/client";
 import cuid from "cuid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
+import { ComponentDto } from "../../../../../components/app/course/CreateCourse";
 import { gkRoute } from "../../../../../lib/api/gkRoute";
 import { singularMap } from "../../../../../lib/logic";
-import { ComponentDto } from "../../../../../components/app/course/CreateCourse";
 
 export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>) => {
   const session = await getSession({ req });
@@ -34,9 +34,9 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
       },
     });
     if (data) {
+      const emptysubcarr: any[] = [];
       var componentData = await primsa.subjectComponent.createMany({
         data: inputdto.components.map((subc) => {
-          const emptysubcarr: any[] = [];
           const lowerCaseSingulars = Object.keys(singularMap).map((d) => d.toLowerCase());
           const nameOfSubcomponentSingular = lowerCaseSingulars.includes(subc.name.toLowerCase())
             ? Object.values(singularMap)[lowerCaseSingulars.indexOf(subc.name.toLowerCase())]
@@ -51,16 +51,18 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
             subcomponentsArray: Array.of<Partial<SubjectSubcomponent>>(),
           };
           for (var iz = 0; iz < Number.parseInt(subc.numberOfSubcomponents); iz++) {
-            insdata.subcomponentsArray.push({
+            emptysubcarr.push({
               isCompleted: false,
               numberInSequence: iz + 1,
               id: cuid(),
+              componentId: subc.id,
               gradeValuePercentage: subc.weighting / Number.parseInt(subc.numberOfSubcomponents),
             });
           }
           return insdata;
         }),
       });
+      await primsa.subjectSubcomponent.createMany({ data: emptysubcarr });
       if (!componentData) return res.status(500).send({});
     }
     if (data) return res.status(200).json(data);
