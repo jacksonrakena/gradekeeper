@@ -9,7 +9,7 @@ model User {
 
 model StudyBlock {
   id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   name      String   @default("")
@@ -22,7 +22,7 @@ model StudyBlock {
 model Subject {
   id String @id @default(cuid())
 
-  studyBlock   StudyBlock @relation(fields: [studyBlockId], references: [id])
+  studyBlock   StudyBlock @relation(fields: [studyBlockId], references: [id], onDelete: Cascade)
   studyBlockId String
 
   longName         String
@@ -36,7 +36,7 @@ model Subject {
 model SubjectComponent {
   id String @id @default(cuid())
 
-  subject   Subject @relation(fields: [subjectId], references: [id])
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   subjectId String
 
   name                       String
@@ -51,7 +51,7 @@ model SubjectComponent {
 model SubjectSubcomponent {
   id String @id @default(cuid())
 
-  component   SubjectComponent @relation(fields: [componentId], references: [id])
+  component   SubjectComponent @relation(fields: [componentId], references: [id], onDelete: Cascade)
   componentId String
 
   numberInSequence     Int?

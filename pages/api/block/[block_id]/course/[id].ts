@@ -32,7 +32,7 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
       where: {
         id: req.query.id.toString(),
         studyBlock: { userId: session.user.email },
-      },
+      }
     });
     if (!query) return res.status(400).json({});
     await primsa.subject.delete({
