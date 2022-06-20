@@ -86,6 +86,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
                     </Flex>
                   </MenuButton>
                   <MenuList>
+                    <MenuItem onClick={() => router.push("/")}>Home</MenuItem>
                     <MenuItem
                       onClick={() => {
                         router.push("/account");
