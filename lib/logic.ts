@@ -12,6 +12,18 @@ export function _undefined<T>(): T | undefined {
 const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json());
 export { fetcher };
 
+export function calculateMaximumPossibleCourseGrade(subject: FullSubject, gradeMap: object): { numerical: number; letter: string } {
+  if (!subject || !subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z" };
+  const numericalvalue = subject.components
+    ?.map((g) => {
+      const grade = calculateMaximumPossibleComponentGrade(g);
+      console.log(g.name + ": " + grade.value * g.subjectWeighting);
+      return grade.value * g.subjectWeighting;
+    })
+    .reduce((a, b) => a + b);
+  return { numerical: numericalvalue, letter: calculateLetterGrade(numericalvalue, gradeMap) };
+}
+
 export function calculateActualCourseProgressGrade(subject: FullSubject, gradeMap: object): { numerical: number; letter: string } {
   if (!subject || !subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z" };
   const numericalvalue = subject.components
@@ -87,6 +99,21 @@ export function isActiveSubcomponent(
   return sorted.includes(subcomponent);
 }
 
+export function getUncompletedAndCompletedActiveSubcomponents(component: FullSubjectComponent): SubjectSubcomponent[] {
+  var sorted = component.subcomponents
+    .sort((first, second) => {
+      if (first.gradeValuePercentage < second.gradeValuePercentage) return 1;
+      if (first.gradeValuePercentage === second.gradeValuePercentage) return 0;
+      return -1;
+    })
+    .map((e) => e);
+
+  for (var i = 0; i < component.numberOfSubComponentsToDrop_Lowest; i++) {
+    sorted.pop();
+  }
+  return sorted;
+}
+
 export function getActiveSubcomponents(component: FullSubjectComponent): SubjectSubcomponent[] {
   var sorted = component.subcomponents
     .filter((d) => d.isCompleted)
@@ -94,7 +121,8 @@ export function getActiveSubcomponents(component: FullSubjectComponent): Subject
       if (first.gradeValuePercentage < second.gradeValuePercentage) return 1;
       if (first.gradeValuePercentage === second.gradeValuePercentage) return 0;
       return -1;
-    });
+    })
+    .map((e) => e);
 
   for (var i = 0; i < component.numberOfSubComponentsToDrop_Lowest; i++) {
     sorted.pop();
@@ -125,6 +153,22 @@ export function calculateActualGradeForComponent(component: FullSubjectComponent
   return {
     value:
       active.map((d) => d.gradeValuePercentage).reduce((a, b) => a + b) /
+      (component.subcomponents.length - component.numberOfSubComponentsToDrop_Lowest),
+    isAverage: component.subcomponents.filter((e) => !e.isCompleted).length != 0,
+    isUnknown: false,
+  };
+}
+
+export function calculateMaximumPossibleComponentGrade(component: FullSubjectComponent): {
+  value: number;
+  isAverage: boolean;
+  isUnknown: boolean;
+} {
+  const active = getUncompletedAndCompletedActiveSubcomponents(component);
+  if (active.length === 0) return { value: 0, isAverage: false, isUnknown: true };
+  return {
+    value:
+      active.map((d) => (d.isCompleted ? d.gradeValuePercentage : 1)).reduce((a, b) => a + b) /
       (component.subcomponents.length - component.numberOfSubComponentsToDrop_Lowest),
     isAverage: component.subcomponents.filter((e) => !e.isCompleted).length != 0,
     isUnknown: false,

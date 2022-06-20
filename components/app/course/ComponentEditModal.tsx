@@ -63,68 +63,70 @@ const ComponentEditModal = (props: {
                 </Tr>
               </Thead>
               <Tbody>
-                {subcomponents?.map((e, i) => {
-                  return (
-                    <Tr key={e.id}>
-                      <Td className="p-2" style={{ minWidth: "200px" }}>
-                        <span style={{ fontWeight: "bold" }}>
-                          {props.component?.nameOfSubcomponentSingular} {!isSingular && e.numberInSequence}
-                        </span>
-                      </Td>
-                      <Td>
-                        <Input
-                          type="number"
-                          id="courseCodeName"
-                          size={"sm"}
-                          defaultValue={e.isCompleted ? e.gradeValuePercentage * 100 : 0}
-                          onChange={(newGradeResult) => {
-                            if (!newGradeResult.target.value) {
-                              setSubcomponents(
-                                subcomponents.map((comp) => {
-                                  if (comp.id === e.id)
-                                    return {
-                                      ...comp,
-                                      gradeValuePercentage: 0,
-                                      isCompleted: false,
-                                    };
-                                  return comp;
-                                })
-                              );
-                            } else {
-                              var newgradepct = Number.parseFloat(newGradeResult.target.value) / 100;
-                              setSubcomponents(
-                                subcomponents.map((comp) => {
-                                  if (comp.id === e.id)
-                                    return {
-                                      ...comp,
-                                      gradeValuePercentage: newgradepct,
-                                      isCompleted: true,
-                                    };
-                                  return comp;
-                                })
-                              );
-                            }
-                          }}
-                          required={true}
-                        />
-                        %
-                      </Td>
-                      <Td className="text-center" style={{ color: "", minWidth: "150px" }}>
-                        {e.isCompleted ? (
-                          <>
-                            {isActiveSubcomponent(props.component!!, e, subcomponents) ? (
-                              calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)
-                            ) : (
-                              <>Dropped ({calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)})</>
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </Td>
-                    </Tr>
-                  );
-                })}
+                {subcomponents
+                  ?.sort((d, b) => d.numberInSequence - b.numberInSequence)
+                  .map((e, i) => {
+                    return (
+                      <Tr key={e.id}>
+                        <Td className="p-2" style={{ minWidth: "200px" }}>
+                          <span style={{ fontWeight: "bold" }}>
+                            {props.component?.nameOfSubcomponentSingular} {!isSingular && e.numberInSequence}
+                          </span>
+                        </Td>
+                        <Td>
+                          <Input
+                            type="number"
+                            id="courseCodeName"
+                            size={"sm"}
+                            defaultValue={e.isCompleted ? e.gradeValuePercentage * 100 : 0}
+                            onChange={(newGradeResult) => {
+                              if (!newGradeResult.target.value) {
+                                setSubcomponents(
+                                  subcomponents.map((comp) => {
+                                    if (comp.id === e.id)
+                                      return {
+                                        ...comp,
+                                        gradeValuePercentage: 0,
+                                        isCompleted: false,
+                                      };
+                                    return comp;
+                                  })
+                                );
+                              } else {
+                                var newgradepct = Number.parseFloat(newGradeResult.target.value) / 100;
+                                setSubcomponents(
+                                  subcomponents.map((comp) => {
+                                    if (comp.id === e.id)
+                                      return {
+                                        ...comp,
+                                        gradeValuePercentage: newgradepct,
+                                        isCompleted: true,
+                                      };
+                                    return comp;
+                                  })
+                                );
+                              }
+                            }}
+                            required={true}
+                          />
+                          %
+                        </Td>
+                        <Td className="text-center" style={{ color: "", minWidth: "150px" }}>
+                          {e.isCompleted ? (
+                            <>
+                              {isActiveSubcomponent(props.component!!, e, subcomponents) ? (
+                                calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)
+                              ) : (
+                                <>Dropped ({calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)})</>
+                              )}
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                        </Td>
+                      </Tr>
+                    );
+                  })}
               </Tbody>
             </Table>
           </TableContainer>

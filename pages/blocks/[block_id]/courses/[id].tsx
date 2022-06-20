@@ -1,4 +1,4 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -20,6 +20,7 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useColorModeValue,
   useDisclosure,
@@ -35,6 +36,7 @@ import {
   adjust,
   calculateActualCourseProgressGrade,
   calculateLetterGrade,
+  calculateMaximumPossibleCourseGrade,
   calculateProjectedCourseGrade,
   calculateProjectedGradeForComponent,
   pickTextColorBasedOnBgColorAdvanced,
@@ -53,6 +55,7 @@ const SubjectPage: NextPage = () => {
   const subject = course0;
   const actualGrade = user && course0 && calculateActualCourseProgressGrade(course0, user?.user?.gradeMap ?? {});
   const projectedGrade = user && course0 && calculateProjectedCourseGrade(course0, user?.user?.gradeMap ?? {});
+  const maximumPossibleGrade = user && course0 && calculateMaximumPossibleCourseGrade(course0, user?.user?.gradeMap ?? {});
   const projected = projectedGrade;
   const grade = actualGrade;
   const gradeMap = user.user?.gradeMap;
@@ -187,10 +190,17 @@ const SubjectPage: NextPage = () => {
                           style={{ color: subject?.color }}
                           className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}
                         >
-                          {(grade.value * 100).toFixed(2)}%{grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
+                          {!grade.isUnknown ? (
+                            <>
+                              {(grade.value * 100).toFixed(2)}%
+                              {grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </Td>
                         <Td style={{}} fontWeight={"semibold"} className="text-center">
-                          {calculateLetterGrade(grade.value, gradeMap)}
+                          {!grade.isUnknown && calculateLetterGrade(grade.value, gradeMap)}
                         </Td>
                         <Td style={{}} className="text-center">
                           <IconButton
@@ -287,52 +297,97 @@ const SubjectPage: NextPage = () => {
               <StatHelpText>{((grade?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
             </Stat>
             <div className="py-3 flex grow mb-6">
-              <div style={{ position: "relative", backgroundColor: "#D9D9D9" }} className="rounded flex grow">
-                <div
-                  style={{
-                    backgroundColor: subject?.color,
-                    width: "" + (grade?.numerical ?? 0) * 100 + "%",
-                  }}
-                  className="rounded"
-                >
-                  &nbsp;
-                </div>
+              <AmendableProgressBar
+                backgroundColor="#D9D9D9"
+                progressColor={subject?.color ?? ""}
+                percentageProgress={actualGrade?.numerical * 100}
+              >
                 {Object.keys(gradeMap ?? {})
                   .map((e) => Number.parseFloat(e))
                   .map((gradeNumber) => (
-                    <>
-                      <div
-                        style={{
-                          borderColor: adjust(subject?.color ?? "", -50),
-                          position: "absolute",
-                          height: "99%",
-                          width: "1px",
-                          left: gradeNumber * 100 + "%",
-                        }}
-                        className="border border-black"
-                      >
-                        &nbsp;
-                      </div>
-                      <Text
-                        style={{
-                          position: "absolute",
-                          left: gradeNumber * 100 - 1 + "%",
-                          top: "110%",
-                        }}
-                        className="text-xs md:text-base"
-                        fontWeight={"semibold"}
-                        color={captionColor}
-                      >
+                    <ProgressBarAmendment
+                      color={adjust(subject?.color ?? "", -50)}
+                      atProgressPercentage={gradeNumber * 100}
+                      position="bottom"
+                    >
+                      <Text color={captionColor}>
                         {(gradeNumber * 100).toFixed(0)} <br />
                         {(gradeMap ?? {})[gradeNumber]}
                       </Text>
-                    </>
+                    </ProgressBarAmendment>
                   ))}
-              </div>
+                <ProgressBarAmendment
+                  color={adjust(subject?.color ?? "", -90)}
+                  atProgressPercentage={maximumPossibleGrade?.numerical * 100}
+                  position="top"
+                >
+                  <Tooltip
+                    label={
+                      "Maximum possible grade: " +
+                      maximumPossibleGrade?.letter +
+                      " (" +
+                      (maximumPossibleGrade?.numerical * 100).toPrecision(3) +
+                      "%)"
+                    }
+                  >
+                    <InfoOutlineIcon w={4} h={4} />
+                  </Tooltip>
+                </ProgressBarAmendment>
+              </AmendableProgressBar>
             </div>
           </div>
         </div>
       </Skeleton>
+    </div>
+  );
+};
+
+const ProgressBarAmendment = (props: { color: string; atProgressPercentage: number; children; position: "top" | "bottom" }) => {
+  const topStyling: any = {};
+  if (props.position === "top") topStyling.bottom = "120%";
+  if (props.position === "bottom") topStyling.top = "110%";
+  return (
+    <>
+      <div
+        style={{
+          borderColor: props.color,
+          position: "absolute",
+          height: "99%",
+          width: "1px",
+          left: props.atProgressPercentage + "%",
+        }}
+        className="border border-black"
+      >
+        &nbsp;
+      </div>
+      <Text
+        style={{
+          position: "absolute",
+          left: props.atProgressPercentage - 1 + "%",
+          ...topStyling,
+        }}
+        className="text-xs md:text-base text-center"
+        fontWeight={"semibold"}
+      >
+        {props.children}
+      </Text>
+    </>
+  );
+};
+
+const AmendableProgressBar = (props: { backgroundColor: string; progressColor: string; percentageProgress: number; children }) => {
+  return (
+    <div style={{ position: "relative", backgroundColor: props.backgroundColor }} className="rounded flex grow">
+      <div
+        style={{
+          backgroundColor: props.progressColor,
+          width: "" + props.percentageProgress + "%",
+        }}
+        className="rounded"
+      >
+        &nbsp;
+      </div>
+      {props.children}
     </div>
   );
 };
