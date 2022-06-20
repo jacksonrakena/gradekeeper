@@ -12,10 +12,7 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
   if (req.method === "GET") {
     const data = await primsa.user.findUnique({
       where: { id: userEmail },
-      select: {
-        gradeMap: true,
-        studyBlocks: { include: { subjects: { include: { components: { include: { subcomponents: true } } } } } },
-      },
+      ...getUserQuery,
     });
     if (!data) {
       const data = await primsa.user.create({

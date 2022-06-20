@@ -1,7 +1,7 @@
 import { SubjectSubcomponent } from ".prisma/client";
 import { Button } from "@chakra-ui/button";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
-import { Input, useColorModeValue } from "@chakra-ui/react";
+import { Box, Input, Text, useColorModeValue } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import { useRef, useState } from "react";
 import { FullSubjectComponent } from "../../../lib/fullEntities";
@@ -117,7 +117,12 @@ const ComponentEditModal = (props: {
                               {isActiveSubcomponent(props.component!!, e, subcomponents) ? (
                                 calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)
                               ) : (
-                                <>Dropped ({calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)})</>
+                                <Box className="flex flex-col">
+                                  <span>{calculateLetterGrade(e.gradeValuePercentage, props.gradeMap)}</span>
+                                  <Text color="gray.500" fontSize="xs" fontWeight={"semibold"}>
+                                    Dropped
+                                  </Text>
+                                </Box>
                               )}
                             </>
                           ) : (

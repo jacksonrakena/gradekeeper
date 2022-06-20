@@ -333,7 +333,7 @@ const ComponentRow = (props: {
   const subject = props.subject;
   const grade = props.componentGrade;
   const [singularValue, setSingularValue] = useState(
-    props.component.subcomponents[0].isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "Edit"
+    props.component.subcomponents[0].isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
   );
   const [name, setName] = useState(props.component.name);
   const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
@@ -445,7 +445,7 @@ const ComponentRow = (props: {
                         return data;
                       }),
                     });
-                    if (!singularValue) setSingularValue("Edit");
+                    if (!singularValue) setSingularValue("0%");
                     setSectionLoadingUpdate("");
                     setTouched(false);
                   }
