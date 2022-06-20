@@ -219,7 +219,7 @@ const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
         <ModalContent>
           <ModalHeader>Create a new study block</ModalHeader>
           <ModalBody>
-            <CreateBlock />
+            <CreateBlock onClose={props.onClose} />
           </ModalBody>
         </ModalContent>
       </Modal>

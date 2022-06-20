@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useUserContext } from "../../../UserContext";
 
-export const CreateBlock = () => {
+export const CreateBlock = (props: { onClose: () => void }) => {
   const router = useRouter();
   const context = useUserContext();
 
@@ -27,7 +27,7 @@ export const CreateBlock = () => {
               context.redownload().then(() => {
                 console.log("created " + f.id);
                 setSubmitting(false);
-                router.push("/");
+                props.onClose();
               });
             });
         }}
