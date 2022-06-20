@@ -306,6 +306,7 @@ const SubjectPage: NextPage = () => {
                   .map((e) => Number.parseFloat(e))
                   .map((gradeNumber) => (
                     <ProgressBarAmendment
+                      key={gradeNumber}
                       color={adjust(subject?.color ?? "", -50)}
                       atProgressPercentage={gradeNumber * 100}
                       position="bottom"
