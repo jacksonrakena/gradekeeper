@@ -36,11 +36,21 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
       var componentData = await primsa.subjectComponent.createMany({
         data: inputdto.components.map((subc) => {
           const emptysubcarr: any[] = [];
+          const singularMap = {
+            'assignments': 'Assignment',
+            'labs': 'Lab',
+            'lectures': 'Lecture',
+            'projects': 'Project',
+            'quizzes': 'Quiz',
+            'tests': 'Test',
+            'exams': 'Exam'
+          }
+          const nameOfSubcomponentSingular: string = Object.keys(singularMap).includes(subc.name.toLowerCase()) ? singularMap[subc.name.toLowerCase()] : subc.name;
           var insdata = {
             subjectId: data.id,
             name: subc.name,
             id: subc.id,
-            nameOfSubcomponentSingular: subc.name,
+            nameOfSubcomponentSingular: nameOfSubcomponentSingular,
             numberOfSubComponentsToDrop_Lowest: subc.dropLowest,
             subjectWeighting: subc.weighting,
             subcomponentsArray: Array.of<Partial<SubjectSubcomponent>>(),
