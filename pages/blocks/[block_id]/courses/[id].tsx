@@ -388,6 +388,7 @@ const ComponentRow = (props: {
                         return data;
                       }),
                     });
+                    if (!singularValue) setSingularValue("Edit");
                     setIsLoadingUpdate(false);
                     setTouched(false);
                   }
