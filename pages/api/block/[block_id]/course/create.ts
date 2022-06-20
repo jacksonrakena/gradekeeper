@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { gkRoute } from "../../../../../lib/api/gkRoute";
 import { singularMap } from "../../../../../lib/logic";
-import { ComponentDto } from "../../../../blocks/[block_id]/courses/create";
+import { ComponentDto } from "../../../../../components/app/course/CreateCourse";
 
 export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>) => {
   const session = await getSession({ req });

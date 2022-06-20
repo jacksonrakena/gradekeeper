@@ -29,9 +29,10 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { SliderPicker } from "react-color";
-import { TopBar } from "../../../../components/TopBar";
-import { randomColor, singularMap } from "../../../../lib/logic";
-import { useUserContext } from "../../../../UserContext";
+import { TopBar } from "../../TopBar";
+import { randomColor, singularMap } from "../../../lib/logic";
+import { useUserContext } from "../../../UserContext";
+import { CreateCourseComponentRow} from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
   id: string;
@@ -41,7 +42,7 @@ export type ComponentDto = {
   numberOfSubcomponents: string;
 };
 
-export const SubjectCreationComponent = (props: { block_id: string }) => {
+export const CreateCourse = (props: { block_id: string }) => {
   const block_id = props.block_id;
   const router = useRouter();
   const emptyComponents: Partial<ComponentDto>[] = [
@@ -214,7 +215,7 @@ export const SubjectCreationComponent = (props: { block_id: string }) => {
                           </Thead>
                           <Tbody>
                             {components.map((comp) => (
-                              <SubjectComponentRow
+                              <CreateCourseComponentRow
                                 key={comp.id}
                                 onDelete={() => {
                                   setComponents(components.filter((a) => a.id !== comp.id));
@@ -279,97 +280,3 @@ export const SubjectCreationComponent = (props: { block_id: string }) => {
     </div>
   );
 };
-
-const SubjectCreationPage: NextPage = () => {
-  const router = useRouter();
-  const { block_id } = router.query;
-  return <SubjectCreationComponent block_id={block_id?.toString()} />;
-};
-
-const SubjectComponentRow = (props: {
-  original: Partial<ComponentDto>;
-  onUpdate: (e: Partial<ComponentDto>) => void;
-  onDelete: () => void;
-}) => {
-  const componentNamePlaceholder = useMemo(() => Object.keys(singularMap)[Math.floor(Object.keys(singularMap).length * Math.random())], []);
-  return (
-    <Tr key={props.original.id}>
-      <Td className="p-2">
-        <Input
-          type="text"
-          variant="filled"
-          onChange={(e) => {
-            props.onUpdate({ ...props.original, name: e.target.value });
-          }}
-          value={props.original.name ?? ""}
-          id="courseCodeName"
-          minW={"150px"}
-          placeholder={componentNamePlaceholder}
-          required={true}
-        />
-      </Td>
-      <Td className="p-2">
-        <NumberInput
-          variant="filled"
-          onChange={(e, a) => {
-            console.log(a);
-            props.onUpdate({
-              ...props.original,
-              numberOfSubcomponents: e,
-            });
-          }}
-          value={props.original.numberOfSubcomponents ?? 1}
-          id="courseCodeName"
-          placeholder="2"
-          min={1}
-        >
-          <NumberInputField />
-        </NumberInput>
-      </Td>
-      <Td className="p-2">
-        %
-        <input
-          type="number"
-          onChange={(e) => {
-            props.onUpdate({
-              ...props.original,
-              weighting: e.target.valueAsNumber / 100,
-            });
-          }}
-          value={(props.original.weighting ?? 0.2) * 100}
-          id="courseCodeName"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline w-16 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
-          placeholder="2"
-          required={true}
-        />
-      </Td>
-      <Td className="p-2">
-        <input
-          type="number"
-          onChange={(e) => {
-            props.onUpdate({
-              ...props.original,
-              dropLowest: Number.parseInt(e.target.value),
-            });
-          }}
-          value={props.original.dropLowest ?? 0}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline w-16 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
-          placeholder="0"
-          required={true}
-        />
-      </Td>
-      <Td className="p-2">
-        <IconButton
-          colorScheme="teal"
-          aria-label="Delete row"
-          icon={<DeleteIcon />}
-          onClick={() => {
-            props.onDelete();
-          }}
-        />
-      </Td>
-    </Tr>
-  );
-};
-
-export default SubjectCreationPage;

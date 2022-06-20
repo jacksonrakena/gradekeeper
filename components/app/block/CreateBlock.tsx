@@ -1,17 +1,12 @@
 import { Box, Button, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input } from "@chakra-ui/react";
 import { Field, Form, Formik, useField, useFormikContext } from "formik";
-import { NextPage } from "next";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { TopBar } from "../../components/TopBar";
-import { useUserContext } from "../../UserContext";
+import { useUserContext } from "../../../UserContext";
 
-const BlockCreationPage: NextPage = () => {
-  return <BlockCreationComponent />;
-};
 
-export const BlockCreationComponent = () => {
+export const CreateBlock = () => {
   const router = useRouter();
   const context = useUserContext();
 
@@ -100,4 +95,3 @@ const DatePickerField = ({ ...props }) => {
     />
   );
 };
-export default BlockCreationPage;

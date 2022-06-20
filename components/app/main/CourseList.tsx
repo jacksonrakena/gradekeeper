@@ -28,8 +28,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { _null } from "../../../lib/logic";
-import { BlockCreationComponent } from "../../../pages/blocks/create";
-import { SubjectCreationComponent } from "../../../pages/blocks/[block_id]/courses/create";
+import { CreateBlock } from "../block/CreateBlock";
+import { CreateCourse } from "../course/CreateCourse";
 import { useUserContext } from "../../../UserContext";
 import { TopBar } from "../../TopBar";
 import CoursePill from "./CoursePill";
@@ -212,7 +212,7 @@ const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
         <ModalContent>
           <ModalHeader>Create a new study block</ModalHeader>
           <ModalBody>
-            <BlockCreationComponent />
+            <CreateBlock />
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -228,7 +228,7 @@ const CreateCourseModal = (props: { isOpen: boolean; onClose: () => void; blockI
         <ModalContent>
           <ModalHeader>Create a course</ModalHeader>
           <ModalBody>
-            <SubjectCreationComponent block_id={props.blockId} />
+            <CreateCourse block_id={props.blockId} />
           </ModalBody>
         </ModalContent>
       </Modal>
