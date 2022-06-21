@@ -17,6 +17,8 @@ model StudyBlock {
   endDate   DateTime
 
   subjects Subject[]
+
+  @@index([userId])
 }
 
 model Subject {
@@ -31,6 +33,8 @@ model Subject {
   color            String @default("")
 
   components SubjectComponent[]
+
+  @@index([studyBlockId])
 }
 
 model SubjectComponent {
@@ -46,6 +50,8 @@ model SubjectComponent {
   numberOfSubComponentsToDrop_Lowest Int
   subcomponents                      SubjectSubcomponent[]
   subcomponentsArray                 Json?
+
+  @@index([subjectId])
 }
 
 model SubjectSubcomponent {
@@ -58,6 +64,8 @@ model SubjectSubcomponent {
   overrideName         String?
   isCompleted          Boolean
   gradeValuePercentage Float
+
+  @@index([componentId])
 }
 
 generator client {
