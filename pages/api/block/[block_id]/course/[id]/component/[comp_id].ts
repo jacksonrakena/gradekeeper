@@ -17,7 +17,7 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
     });
     if (!targetComponent) return res.status(400);
     if (req.body.subcomponents) {
-      const initupd = await primsa.subjectComponent.update({
+      const initupd = primsa.subjectComponent.update({
         where: {
           id: comp_id.toString(),
         },
@@ -30,7 +30,7 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
       const replacementSubcomponents = req.body.subcomponents.map((e: Partial<SubjectSubcomponent>) => {
         return { ...e, componentId: undefined };
       });
-      const resultdata = await primsa.subjectComponent.update({
+      const insertNewSubcomponents = primsa.subjectComponent.update({
         where: { id: targetComponent.id },
         data: {
           subcomponents: {
@@ -41,8 +41,9 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
         },
         include: { subcomponents: true },
       });
+      const resultdata = await primsa.$transaction([initupd, insertNewSubcomponents]);
 
-      if (resultdata) return res.status(200).json(resultdata);
+      if (resultdata) return res.status(200).json(resultdata[1]);
       return res.status(500);
     }
     return res.status(200).send({});
