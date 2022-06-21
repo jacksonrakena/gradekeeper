@@ -43,8 +43,15 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
             component.subcomponentsArray &&
             component.subcomponentsArray.length !== 0
           ) {
-            component.subcomponents = component.subcomponentsArray;
+            const subarr = component.subcomponentsArray as Prisma.JsonArray;
+            try {
+              await primsa.subjectSubcomponent.createMany({
+                data: subarr,
+              });
+            } catch (e) {}
+            component.subcomponents = subarr;
           }
+          component.subcomponentsArray = undefined;
         }
       }
     }
