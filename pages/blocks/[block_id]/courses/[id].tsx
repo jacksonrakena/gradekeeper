@@ -167,7 +167,7 @@ const SubjectPage: NextPage = () => {
 
         <div className="flex flex-wrap">
           <div
-            className="shadow-md m-4 p-6 shadow-md rounded-md overflow-auto"
+            className="m-4 p-6 shadow-md rounded-md overflow-auto"
             style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
           >
             <div style={{ color: subject?.color }} className="text-2xl mb-2 font-bold">
@@ -177,7 +177,7 @@ const SubjectPage: NextPage = () => {
               <Table variant="simple">
                 <Thead>
                   <Tr>
-                    <Th className="p-2">Name</Th>
+                    <Th pl={0}>Name</Th>
                     <Th className="p-2">Weight</Th>
                     <Th className="p-2">Score</Th>
                     <Th className="p-2">Grade</Th>
@@ -345,7 +345,7 @@ const ComponentRow = (props: {
   const [touched, setTouched] = useState(false);
   return (
     <Tr key={e.name}>
-      <Td className="p-2 text-center" style={{}}>
+      <Td pl={0} style={{}}>
         {sectionLoadingUpdate !== "name" ? (
           <>
             {e.subcomponents.length === 1 ? (
