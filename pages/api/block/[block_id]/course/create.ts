@@ -24,8 +24,10 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
       inputdto.components[iz].id = cuid();
     }
 
-    const data = await primsa.subject.create({
+    const newCourseId = cuid();
+    const subjectCreationQuery = primsa.subject.create({
       data: {
+        id: newCourseId,
         studyBlockId: req.query["block_id"].toString(),
         color: inputdto.color,
         courseCodeName: inputdto.codeName,
@@ -33,39 +35,40 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
         longName: inputdto.name,
       },
     });
-    if (data) {
-      const emptysubcarr: any[] = [];
-      var componentData = await primsa.subjectComponent.createMany({
-        data: inputdto.components.map((subc) => {
-          const lowerCaseSingulars = Object.keys(singularMap).map((d) => d.toLowerCase());
-          const nameOfSubcomponentSingular = lowerCaseSingulars.includes(subc.name.toLowerCase())
-            ? Object.values(singularMap)[lowerCaseSingulars.indexOf(subc.name.toLowerCase())]
-            : subc.name;
-          var insdata = {
-            subjectId: data.id,
-            name: subc.name,
-            id: subc.id,
-            nameOfSubcomponentSingular: nameOfSubcomponentSingular,
-            numberOfSubComponentsToDrop_Lowest: subc.dropLowest,
-            subjectWeighting: subc.weighting,
-            subcomponentsArray: Array.of<Partial<SubjectSubcomponent>>(),
-          };
-          for (var iz = 0; iz < Number.parseInt(subc.numberOfSubcomponents); iz++) {
-            emptysubcarr.push({
-              isCompleted: false,
-              numberInSequence: iz + 1,
-              id: cuid(),
-              componentId: subc.id,
-              gradeValuePercentage: subc.weighting / Number.parseInt(subc.numberOfSubcomponents),
-            });
-          }
-          return insdata;
-        }),
-      });
-      await primsa.subjectSubcomponent.createMany({ data: emptysubcarr });
-      if (!componentData) return res.status(500).send({});
-    }
-    if (data) return res.status(200).json(data);
+    const emptysubcarr: any[] = [];
+    const components = inputdto.components.map((subc) => {
+      const lowerCaseSingulars = Object.keys(singularMap).map((d) => d.toLowerCase());
+      const nameOfSubcomponentSingular = lowerCaseSingulars.includes(subc.name.toLowerCase())
+        ? Object.values(singularMap)[lowerCaseSingulars.indexOf(subc.name.toLowerCase())]
+        : subc.name;
+      var insdata = {
+        subjectId: newCourseId,
+        name: subc.name,
+        id: subc.id,
+        nameOfSubcomponentSingular: nameOfSubcomponentSingular,
+        numberOfSubComponentsToDrop_Lowest: subc.dropLowest,
+        subjectWeighting: subc.weighting,
+        subcomponentsArray: Array.of<Partial<SubjectSubcomponent>>(),
+      };
+      for (var iz = 0; iz < Number.parseInt(subc.numberOfSubcomponents); iz++) {
+        emptysubcarr.push({
+          isCompleted: false,
+          numberInSequence: iz + 1,
+          id: cuid(),
+          componentId: subc.id,
+          gradeValuePercentage: subc.weighting / Number.parseInt(subc.numberOfSubcomponents),
+        });
+      }
+      return insdata;
+    });
+    const componentCreationQuery = primsa.subjectComponent.createMany({
+      data: components,
+    });
+    const subcomponentCreationQuery = primsa.subjectSubcomponent.createMany({ data: emptysubcarr });
+    const transaction = await primsa.$transaction([subjectCreationQuery, componentCreationQuery, subcomponentCreationQuery]);
+    if (!transaction) return res.status(500).send({});
+
+    if (transaction[0]) return res.status(200).json(transaction[0]);
     return res.status(404);
   }
 });
