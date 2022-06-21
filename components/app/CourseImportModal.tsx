@@ -67,6 +67,8 @@ export const CourseImportModal = (props: { disclosure: UseDisclosureProps }) => 
               }).then((d) => d.json());
               await user.redownload();
               router.push(`/blocks/${targetStudyBlock}/courses/${course.id}`);
+              setLoading(false);
+              props.disclosure.onClose();
             }}
             colorScheme={"teal"}
           >
