@@ -204,7 +204,7 @@ const CourseList = () => {
       </div>
       <Box mx={12} mb={4} color={"GrayText"} fontSize={"sm"}>
         &copy; Animals With Cool Hats, Inc. <br />
-        <Link href="/legal/privacy">Privacy</Link> &bull; <Link href="/legal/feedback">Feedback</Link> &bull;{" "}
+        <Link href="/legal/privacy">Privacy</Link> &bull; <Link href="https://forms.office.com/r/rM3wq1QbH0">Feedback</Link> &bull;{" "}
         <Link href="/legal/donate">Donate</Link>
       </Box>
     </>
