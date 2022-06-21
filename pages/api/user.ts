@@ -45,9 +45,19 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
           ) {
             const subarr = component.subcomponentsArray as Prisma.JsonArray;
             try {
-              await primsa.subjectSubcomponent.createMany({
-                data: subarr,
-              });
+              await primsa.$transaction([
+                primsa.subjectSubcomponent.createMany({
+                  data: subarr,
+                }),
+                primsa.subjectComponent.update({
+                  where: {
+                    id: component.id,
+                  },
+                  data: {
+                    subcomponentsArray: undefined,
+                  },
+                }),
+              ]);
             } catch (e) {}
             component.subcomponents = subarr;
           }
