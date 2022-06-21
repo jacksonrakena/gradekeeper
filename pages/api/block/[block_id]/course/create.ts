@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { PrismaClient, SubjectSubcomponent } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import cuid from "cuid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
@@ -48,7 +48,6 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
         nameOfSubcomponentSingular: nameOfSubcomponentSingular,
         numberOfSubComponentsToDrop_Lowest: subc.dropLowest,
         subjectWeighting: subc.weighting,
-        subcomponentsArray: Array.of<Partial<SubjectSubcomponent>>(),
       };
       for (var iz = 0; iz < Number.parseInt(subc.numberOfSubcomponents); iz++) {
         emptysubcarr.push({

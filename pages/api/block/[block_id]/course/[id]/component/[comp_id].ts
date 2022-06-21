@@ -23,7 +23,6 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
         },
         data: {
           ...req.body,
-          subcomponentsArray: undefined,
           subcomponents: { deleteMany: [{ componentId: { not: "" } }] },
         },
       });
