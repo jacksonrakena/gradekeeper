@@ -46,7 +46,7 @@ export const CourseImportModal = (props: { disclosure: UseDisclosureProps }) => 
                   setTargetStudyBlock(e.target.value);
                 }}
               >
-                {user?.user?.studyBlocks.map((sb) => (
+                {user?.user?.studyBlocks?.map((sb) => (
                   <option value={sb.id}>{sb.name}</option>
                 ))}
               </Select>
