@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
   return (
     <>
       <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </Head>
       <SessionProvider session={session}>
         <Chakra cookies={pageProps.cookies}>
