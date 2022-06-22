@@ -51,21 +51,9 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
         },
         data: {
           ...req.body,
-          subcomponents: { deleteMany: [{ componentId: { not: "" } }] },
         },
       });
-      const newSubcomponentData: Partial<SubjectSubcomponent>[] = [];
-      for (var i = 0; i < targetComponent.subcomponents.length; i++) {
-        newSubcomponentData.push({
-          componentId: targetComponent.id,
-          gradeValuePercentage: req.body.subjectWeighting / targetComponent.subcomponents.length,
-          isCompleted: false,
-          numberInSequence: i + 1,
-          overrideName: null,
-        });
-      }
-      const createNewSubcomponents = primsa.subjectSubcomponent.createMany({ data: newSubcomponentData });
-      const result = await primsa.$transaction([initupd, createNewSubcomponents]);
+      const result = await primsa.$transaction([initupd]);
       return res.status(200).send({});
     }
     return res.status(200).send({});
