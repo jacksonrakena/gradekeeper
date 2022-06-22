@@ -211,7 +211,7 @@ const SubjectPage: NextPage = () => {
             <div style={{ color: subject?.color }} className="text-2xl mb-2 font-bold">
               Averages
             </div>
-            <div className="w-48">d</div>
+            <div className="w-48"></div>
           </Box>
         </div>
 
