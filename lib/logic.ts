@@ -21,10 +21,18 @@ export function processCourseData(course: FullSubject, gradeMap: object) {
     },
     status: {
       isCompleted: calculateIsCourseCompleted(course),
+      componentsRemaining: course.components.filter((d) => {
+        const grade = calculateActualGradeForComponent(d);
+        return grade.isAverage || grade.isUnknown;
+      }),
     },
   };
   return response;
 }
+
+export type ObjectGrade = { numerical: number; letter: string; isUnknown: boolean; isAverage: boolean };
+export type CourseGrade = { numerical: number; letter: string; isUnknown: true };
+export function new_calculateProjectedCourseGrade(course: FullSubject, gradeMap: object) {}
 
 export type ProcessedCourseData = ReturnType<typeof processCourseData>;
 
@@ -44,6 +52,50 @@ export function calculateMaximumPossibleCourseGrade(subject: FullSubject, gradeM
     })
     .reduce((a, b) => a + b);
   return { numerical: numericalvalue, letter: calculateLetterGrade(numericalvalue, gradeMap) };
+}
+
+export const UnknownCourseGrade: CourseGrade = { numerical: 0, letter: "U", isUnknown: true };
+export const UnknownGrade: ObjectGrade = { numerical: 0, letter: "U", isUnknown: true, isAverage: false };
+
+/**
+ * This function computes the projected grade of a course component.
+ */
+export function new_Component_calculateProjectedGrade(component: FullSubjectComponent, gradeMap: object): ObjectGrade {
+  const completedSubcomponents = component.subcomponents.filter((e) => e.isCompleted);
+
+  // The user has not completed any subcomponents.
+  if (completedSubcomponents.length === 0) return { numerical: 0, letter: "U", isUnknown: true, isAverage: false };
+
+  // Calculate the user's score on the subcomponents that they have completed.
+  const scoreOnCompletedSubcomponents =
+    completedSubcomponents.map((e) => e.gradeValuePercentage).reduce((a, b) => a + b, 0) / completedSubcomponents.length;
+
+  return {
+    numerical: scoreOnCompletedSubcomponents,
+    isAverage: true,
+    letter: calculateLetterGrade(scoreOnCompletedSubcomponents, gradeMap),
+    isUnknown: false,
+  };
+}
+
+export function new_Course_calculateProjectedGrade(course: FullSubject, gradeMap: object): CourseGrade {
+  const projectedComponents = course.components.map((d) => ({ ...d, ...new_Component_calculateProjectedGrade(d, gradeMap) }));
+  const knownComponents = projectedComponents.filter((e) => !e.isUnknown);
+  if (knownComponents.length === 0) return UnknownCourseGrade;
+
+  const projectedResult = knownComponents.map((e) => e.numerical).reduce((a, b) => a + b) / knownComponents.length;
+  return {
+    numerical: projectedResult,
+    letter: calculateLetterGrade(projectedResult, gradeMap),
+    isUnknown: true,
+  };
+}
+
+export function calculateAverageOfList(list: number[], drop: number): number | null {
+  if (list.length === 0) return 0;
+  if (list.length - drop <= 0) return null;
+  const sorted = list.sort((a, b) => b - a).slice(0, 0 - drop);
+  return sorted.reduce((a, b) => a + b, 0) / sorted.length;
 }
 
 export type CalculatedGrade = {
@@ -71,8 +123,8 @@ export function calculateProjectedCourseGrade(
   if (!subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z", isUnknown: false };
   const numericalvalue = subject.components
     ?.map((g) => {
-      const grade = calculateProjectedGradeForComponent(g);
-      return grade.value * g.subjectWeighting;
+      const grade = new_Component_calculateProjectedGrade(g, gradeMap);
+      return grade.numerical * g.subjectWeighting;
     })
     .reduce((a, b) => a + b);
   var completedWeighting;
@@ -183,7 +235,7 @@ export function calculateActualGradeForComponent(component: FullSubjectComponent
     value:
       active.map((d) => d.gradeValuePercentage).reduce((a, b) => a + b) /
       (component.subcomponents.length - component.numberOfSubComponentsToDrop_Lowest),
-    isAverage: component.subcomponents.filter((e) => !e.isCompleted).length != 0,
+    isAverage: component.subcomponents.filter((e) => !e.isCompleted).length !== 0,
     isUnknown: false,
   };
 }

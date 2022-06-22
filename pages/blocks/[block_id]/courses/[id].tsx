@@ -11,6 +11,7 @@ import {
   Editable,
   EditableInput,
   EditablePreview,
+  Flex,
   IconButton,
   Skeleton,
   Spinner,
@@ -204,15 +205,9 @@ const SubjectPage: NextPage = () => {
             </TableContainer>
           </div>
 
-          <Box
-            className="grow m-4 p-6 shadow-md rounded-md"
-            style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
-          >
-            <div style={{ color: subject?.color }} className="text-2xl mb-2 font-bold">
-              Averages
-            </div>
-            <div className="w-48"></div>
-          </Box>
+          {!courseProcessed?.status?.isCompleted && (
+            <AveragesWidget course={course0} processed={courseProcessed} gradeMap={user?.user?.gradeMap} />
+          )}
         </div>
 
         <div
@@ -224,7 +219,7 @@ const SubjectPage: NextPage = () => {
           </div>
           <div className="">
             {courseProcessed?.status.isCompleted ? (
-              <CourseCompletedProjectionsSection course={course0} processed={courseProcessed} />
+              <CourseCompletedProjectionsSection course={course0} processed={courseProcessed} gradeMap={gradeMap} />
             ) : (
               <>
                 <div className="lg:flex mt-6 wrap">
@@ -335,6 +330,68 @@ const SubjectPage: NextPage = () => {
   );
 };
 
+const AveragesWidget = (props: { course: FullSubject; processed: ProcessedCourseData; gradeMap: object }) => {
+  const actual = props.processed?.grades?.actual;
+  const unachievedGrades =
+    props.gradeMap &&
+    Object.keys(props.gradeMap)
+      .map(Number.parseFloat)
+      .filter((d) => actual.numerical < d);
+
+  const remainingComponents = props.processed?.status.componentsRemaining;
+  const remainingPieces = remainingComponents
+    .map((d) =>
+      d.subcomponents
+        .filter((e) => !e.isCompleted)
+        .map((e) => d.subjectWeighting / (d.subcomponents.length - d.numberOfSubComponentsToDrop_Lowest))
+    )
+    .flat();
+  console.log(remainingPieces);
+  return (
+    <Box
+      className="grow m-4 p-6 shadow-md rounded-md"
+      style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
+    >
+      <div style={{ color: props.course?.color }} className="text-2xl mb-2 font-bold">
+        Averages
+      </div>
+      <div>
+        <TableContainer>
+          <Table size="sm">
+            <Thead>
+              <Tr>
+                <Th>To get a...</Th>
+                <Th>You need an average of </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {unachievedGrades
+                ?.sort((a, b) => b - a)
+                .map((e) => (
+                  <Tr>
+                    <Td>
+                      <Box>
+                        <Text fontWeight="semibold">{props.gradeMap[e]}</Text>
+                      </Box>
+                    </Td>
+                    <Td>
+                      <Flex direction={"row"}>
+                        <Text color={props.course.color} fontWeight="semibold">
+                          {(((e - actual.numerical) / remainingPieces.reduce((a, b) => a + b)) * 100).toFixed(1)}
+                        </Text>
+                        %
+                      </Flex>
+                    </Td>
+                  </Tr>
+                ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </div>
+    </Box>
+  );
+};
+
 const ComponentRow = (props: {
   component: FullSubjectComponent;
   subject: FullSubject;
@@ -346,7 +403,7 @@ const ComponentRow = (props: {
   const subject = props.subject;
   const grade = props.componentGrade;
   const [singularValue, setSingularValue] = useState(
-    props.component.subcomponents[0].isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
+    props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
   );
   const [name, setName] = useState(props.component.name);
   const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");

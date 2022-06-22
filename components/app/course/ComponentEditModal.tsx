@@ -54,7 +54,7 @@ const ComponentEditModal = (props: {
             </div>
           )}
           <TableContainer>
-            <Table variant="striped" size="sm">
+            <Table variant="simple" size="sm">
               <Thead>
                 <Tr>
                   <Th>#</Th>
