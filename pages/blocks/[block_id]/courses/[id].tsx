@@ -8,9 +8,6 @@ import {
   AlertDialogOverlay,
   Box,
   Button,
-  Editable,
-  EditableInput,
-  EditablePreview,
   Flex,
   IconButton,
   Skeleton,
@@ -413,6 +410,7 @@ const ComponentRow = (props: {
   const [singularValue, setSingularValue] = useState(
     props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
   );
+  const [subjectWeighting, setSubjectWeighting] = useState(props.component.subjectWeighting * 100 + "%");
   const [name, setName] = useState(props.component.name);
   const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
   const [touched, setTouched] = useState(false);
@@ -421,52 +419,51 @@ const ComponentRow = (props: {
       <Td pl={0} style={{}}>
         {sectionLoadingUpdate !== "name" ? (
           <>
-            {e.subcomponents.length === 1 ? (
-              <span style={{ fontWeight: "bold" }}>
-                <Editable
-                  value={name}
-                  onChange={(e) => {
-                    setName(e);
-                    setTouched(true);
-                  }}
-                  onSubmit={async () => {
-                    if (touched) {
-                      setSectionLoadingUpdate("name");
-                      const response = await fetch(
-                        `/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`,
-                        {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({
-                            name: name,
-                          }),
-                        }
-                      );
-                      const data = await response.json();
-                      user.updateCourse(props.subject.id, {
-                        ...props.subject,
-                        components: props.subject.components.map((cc) => {
-                          if (cc.id !== props.component.id) return cc;
-                          return { ...cc, name: name };
+            <Flex alignItems="center">
+              <GkEditable
+                value={name}
+                onChange={(e) => {
+                  setTouched(true);
+                  setName(e);
+                }}
+                inputProps={{
+                  size: props.component.name.length,
+                }}
+                onCancelEdit={(e) => {
+                  setTouched(false);
+                  setName(props.component.name);
+                }}
+                displayProps={{ fontWeight: "bold" }}
+                onSubmit={async () => {
+                  if (touched) {
+                    setSectionLoadingUpdate("name");
+                    const response = await fetch(
+                      `/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`,
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          name: name,
                         }),
-                      });
-                      setSectionLoadingUpdate("");
-                      setTouched(false);
-                    }
-                  }}
-                >
-                  <EditablePreview />
-                  <EditableInput />
-                </Editable>
-              </span>
-            ) : (
-              <>
-                <span style={{ fontWeight: "bold" }}>{e.name}</span>{" "}
-                {e.subcomponents?.length > 1 ? <span>({e.subcomponents.length})</span> : ""}
-              </>
-            )}
+                      }
+                    );
+                    const data = await response.json();
+                    user.updateCourse(props.subject.id, {
+                      ...props.subject,
+                      components: props.subject.components.map((cc) => {
+                        if (cc.id !== props.component.id) return cc;
+                        return { ...cc, name: name };
+                      }),
+                    });
+                    setSectionLoadingUpdate("");
+                    setTouched(false);
+                  }
+                }}
+              />
+              <Text ml={1}>{e.subcomponents?.length > 1 ? <span>({e.subcomponents.length})</span> : ""}</Text>
+            </Flex>
           </>
         ) : (
           <>
@@ -476,7 +473,50 @@ const ComponentRow = (props: {
         )}
       </Td>
       <Td pl={0} className="text-center" style={{}}>
-        {e.subjectWeighting * 100}%
+        {sectionLoadingUpdate === "weight" ? (
+          <>
+            {" "}
+            <Spinner color={subject.color} size="sm" />
+          </>
+        ) : (
+          <GkEditable
+            onChange={(e) => {
+              setSubjectWeighting(e);
+              setTouched(true);
+            }}
+            onBeginEdit={(e) => {
+              setSubjectWeighting(e.replaceAll("%", ""));
+            }}
+            onSubmit={async (e) => {
+              setSectionLoadingUpdate("weight");
+              const response = await fetch(`/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  subjectWeighting: parseFloat(e.replaceAll("%", "")) / 100,
+                }),
+              });
+              const data = await response.json();
+              // user.updateCourse(props.subject.id, {
+              //   ...props.subject,
+              //   components: props.subject.components.map((cc) => {
+              //     if (cc.id !== props.component.id) return cc;
+              //     return { ...cc, subjectWeighting: parseFloat(subjectWeighting.replaceAll("%", "")) / 100 };
+              //   }),
+              // });
+              await user.redownload();
+              setSubjectWeighting(parseFloat(e.replaceAll("%", "")) + "%");
+              setSectionLoadingUpdate("");
+            }}
+            inputProps={{ size: 2 }}
+            onCancelEdit={() => {
+              setSubjectWeighting(props.component.subjectWeighting * 100 + "%");
+            }}
+            value={subjectWeighting}
+          />
+        )}
       </Td>
       <Td
         pl={0}
@@ -565,8 +605,10 @@ const ComponentRow = (props: {
                         props.onRequestModalOpen();
                       }}
                     >
-                      <Flex alignItems={"center"}>
-                        <EditIcon mr={2} /> {(grade.value * 100).toFixed(2)}%
+                      <Flex direction={"column"}>
+                        <Flex alignItems={"center"}>
+                          <EditIcon mr={2} /> {(grade.value * 100).toFixed(2)}%
+                        </Flex>
                         {grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
                       </Flex>
                     </Box>

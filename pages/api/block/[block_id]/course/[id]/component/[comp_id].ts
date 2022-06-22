@@ -44,6 +44,29 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
 
       if (resultdata) return res.status(200).json(resultdata[1]);
       return res.status(500);
+    } else if (req.body.subjectWeighting) {
+      const initupd = primsa.subjectComponent.update({
+        where: {
+          id: comp_id.toString(),
+        },
+        data: {
+          ...req.body,
+          subcomponents: { deleteMany: [{ componentId: { not: "" } }] },
+        },
+      });
+      const newSubcomponentData: Partial<SubjectSubcomponent>[] = [];
+      for (var i = 0; i < targetComponent.subcomponents.length; i++) {
+        newSubcomponentData.push({
+          componentId: targetComponent.id,
+          gradeValuePercentage: req.body.subjectWeighting / targetComponent.subcomponents.length,
+          isCompleted: false,
+          numberInSequence: i + 1,
+          overrideName: null,
+        });
+      }
+      const createNewSubcomponents = primsa.subjectSubcomponent.createMany({ data: newSubcomponentData });
+      const result = await primsa.$transaction([initupd, createNewSubcomponents]);
+      return res.status(200).send({});
     }
     return res.status(200).send({});
   }

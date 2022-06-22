@@ -1,5 +1,4 @@
-import { EditIcon } from "@chakra-ui/icons";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Text, TextProps } from "@chakra-ui/react";
 import React, { InputHTMLAttributes, PropsWithChildren, useState } from "react";
 
 export interface GkEditableProps extends PropsWithChildren {
@@ -9,6 +8,8 @@ export interface GkEditableProps extends PropsWithChildren {
   onChange?: (value: string) => void;
   onCancelEdit?: (value: string) => void;
   inputProps?: InputHTMLAttributes<HTMLInputElement>;
+  displayProps?: TextProps;
+  icon?: React.ReactNode;
 }
 
 export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((props: GkEditableProps, ref) => {
@@ -47,9 +48,10 @@ export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((pro
           setEditing(true);
           if (props.onBeginEdit) props.onBeginEdit(props.value);
         }}
+        {...props.displayProps}
       >
         <Flex alignItems={"center"} ref={ref}>
-          <EditIcon mr={1} />
+          {props.icon}
           {props.value}
         </Flex>
       </Text>
