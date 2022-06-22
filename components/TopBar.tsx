@@ -41,7 +41,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
       <div className="w-full p-2 flex flex-row">
         <div className="grow">
           {subjects && props.currentSubjectId && (
-            <Menu>
+            <Menu isLazy={true}>
               <MenuButton colorScheme={"teal"} as={Button} rightIcon={<ChevronDownIcon />}>
                 {currentSubject?.courseCodeName} {currentSubject?.courseCodeNumber}
               </MenuButton>
@@ -89,7 +89,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
                       {session.user?.name}
                     </Flex>
                   </MenuButton>
-                  <MenuList>
+                  <MenuList overflow={"hidden"}>
                     <MenuItem onClick={() => router.push("/")}>Home</MenuItem>
                     <MenuItem onClick={() => importModal.onOpen()} icon={<AddIcon />}>
                       Import a course
