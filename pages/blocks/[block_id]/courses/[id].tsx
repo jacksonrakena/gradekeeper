@@ -38,6 +38,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import ComponentEditModal from "../../../../components/app/course/ComponentEditModal";
+import { GkEditable } from "../../../../components/generic/GkEditable";
 import { TopBar } from "../../../../components/TopBar";
 import { FullSubject, FullSubjectComponent } from "../../../../lib/fullEntities";
 import {
@@ -489,56 +490,68 @@ const ComponentRow = (props: {
         ) : (
           <>
             {e.subcomponents?.length === 1 ? (
-              <Editable
-                cursor={"pointer"}
-                onSubmit={async (e) => {
-                  if (touched) {
-                    const actualGradeValue = Number.parseFloat(e.replaceAll("%", "")) / 100.0;
-                    setSingularValue(e ? Number.parseFloat(e).toFixed(2).toString() + "%" : "");
-
-                    setSectionLoadingUpdate("score");
-                    const response = await fetch(
-                      `/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`,
-                      {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          subcomponents: [
-                            {
-                              ...props.component.subcomponents[0],
-                              gradeValuePercentage: !!e ? actualGradeValue : 0,
-                              isCompleted: !!e,
-                            },
-                          ],
-                        }),
+              <Tooltip label="Click to edit">
+                <GkEditable
+                  onSubmit={async (e) => {
+                    if (touched) {
+                      const actualGradeValue = Number.parseFloat(e.replaceAll("%", "")) / 100.0;
+                      if (!actualGradeValue) {
+                        setTouched(false);
+                        setSingularValue(
+                          props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
+                        );
+                        return;
                       }
+                      setSingularValue(e ? Number.parseFloat(e).toFixed(2).toString() + "%" : "");
+
+                      setSectionLoadingUpdate("score");
+                      const response = await fetch(
+                        `/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`,
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            subcomponents: [
+                              {
+                                ...props.component.subcomponents[0],
+                                gradeValuePercentage: !!e ? actualGradeValue : 0,
+                                isCompleted: !!e,
+                              },
+                            ],
+                          }),
+                        }
+                      );
+                      const data = await response.json();
+                      user.updateCourse(props.subject.id, {
+                        ...props.subject,
+                        components: props.subject.components.map((cc) => {
+                          if (cc.id !== props.component.id) return cc;
+                          return data;
+                        }),
+                      });
+                      if (!singularValue) setSingularValue("0%");
+                      setSectionLoadingUpdate("");
+                      setTouched(false);
+                    }
+                  }}
+                  inputProps={{ size: 6 }}
+                  onChange={(f) => {
+                    setTouched(true);
+                    setSingularValue(f);
+                  }}
+                  value={singularValue}
+                  onBeginEdit={() => {
+                    setSingularValue(singularValue.replaceAll("%", ""));
+                  }}
+                  onCancelEdit={() => {
+                    setSingularValue(
+                      props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
                     );
-                    const data = await response.json();
-                    user.updateCourse(props.subject.id, {
-                      ...props.subject,
-                      components: props.subject.components.map((cc) => {
-                        if (cc.id !== props.component.id) return cc;
-                        return data;
-                      }),
-                    });
-                    if (!singularValue) setSingularValue("0%");
-                    setSectionLoadingUpdate("");
-                    setTouched(false);
-                  }
-                }}
-                onChange={(f) => {
-                  setTouched(true);
-                  setSingularValue(f);
-                }}
-                value={singularValue}
-              >
-                <Box minW={"50px"}>
-                  <EditablePreview cursor={"pointer"} />
-                  <EditableInput />
-                </Box>
-              </Editable>
+                  }}
+                />
+              </Tooltip>
             ) : (
               <>
                 {" "}
@@ -552,8 +565,10 @@ const ComponentRow = (props: {
                         props.onRequestModalOpen();
                       }}
                     >
-                      {" "}
-                      {(grade.value * 100).toFixed(2)}%{grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
+                      <Flex alignItems={"center"}>
+                        <EditIcon mr={2} /> {(grade.value * 100).toFixed(2)}%
+                        {grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
+                      </Flex>
                     </Box>
                   </>
                 ) : (
