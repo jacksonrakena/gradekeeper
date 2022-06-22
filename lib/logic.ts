@@ -12,6 +12,28 @@ export function _undefined<T>(): T | undefined {
 const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json());
 export { fetcher };
 
+export function processCourseData(course: FullSubject, gradeMap: object) {
+  const response = {
+    grades: {
+      maximumPossible: calculateMaximumPossibleCourseGrade(course, gradeMap),
+      actual: calculateActualCourseProgressGrade(course, gradeMap),
+      projected: calculateProjectedCourseGrade(course, gradeMap),
+    },
+    status: {
+      isCompleted: calculateIsCourseCompleted(course),
+    },
+  };
+  return response;
+}
+
+export type ProcessedCourseData = ReturnType<typeof processCourseData>;
+
+export function calculateIsCourseCompleted(course: FullSubject) {
+  return (
+    course.components.map(calculateActualGradeForComponent).filter((d) => !d.isUnknown && !d.isAverage).length === course.components.length
+  );
+}
+
 export function calculateMaximumPossibleCourseGrade(subject: FullSubject, gradeMap: object): { numerical: number; letter: string } {
   if (!subject || !subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z" };
   const numericalvalue = subject.components

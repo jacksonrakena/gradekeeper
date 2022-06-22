@@ -41,12 +41,11 @@ import { TopBar } from "../../../../components/TopBar";
 import { FullSubject, FullSubjectComponent } from "../../../../lib/fullEntities";
 import {
   adjust,
-  calculateActualCourseProgressGrade,
   calculateLetterGrade,
-  calculateMaximumPossibleCourseGrade,
-  calculateProjectedCourseGrade,
   calculateProjectedGradeForComponent,
   pickTextColorBasedOnBgColorAdvanced,
+  processCourseData,
+  ProcessedCourseData,
   _null,
 } from "../../../../lib/logic";
 import themeConstants from "../../../../themeConstants";
@@ -59,9 +58,10 @@ const SubjectPage: NextPage = () => {
   const studyBlock = user.user?.studyBlocks.filter((e) => e.id === block_id)[0];
   const course0 = studyBlock?.subjects.filter((d) => d.id === id)[0];
   const subject = course0;
-  const actualGrade = user && course0 && calculateActualCourseProgressGrade(course0, user?.user?.gradeMap ?? {});
-  const projectedGrade = user && course0 && calculateProjectedCourseGrade(course0, user?.user?.gradeMap ?? {});
-  const maximumPossibleGrade = user && course0 && calculateMaximumPossibleCourseGrade(course0, user?.user?.gradeMap ?? {});
+  const courseProcessed = user && course0 && processCourseData(course0, user?.user?.gradeMap);
+  const actualGrade = courseProcessed?.grades?.actual;
+  const projectedGrade = courseProcessed?.grades?.projected;
+  const maximumPossibleGrade = courseProcessed?.grades?.maximumPossible;
   const projected = projectedGrade;
   const grade = actualGrade;
   const gradeMap = user.user?.gradeMap;
@@ -222,104 +222,112 @@ const SubjectPage: NextPage = () => {
           <div style={{ color: subject?.color }} className="text-2xl font-bold">
             Projections
           </div>
-          <div className="lg:flex mt-6 wrap">
-            <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
-              <StatLabel>Projected grade</StatLabel>
-              <StatNumber>{projected?.letter}</StatNumber>
-              <StatHelpText>{((projected?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
-            </Stat>
-            <div className="py-3 flex grow mb-6">
-              <div style={{ position: "relative", backgroundColor: "#D9D9D9" }} className="rounded flex grow">
-                <div
-                  style={{
-                    backgroundColor: subject?.color,
-                    width: "" + (projected?.numerical ?? 0) * 100 + "%",
-                  }}
-                  className="rounded"
-                >
-                  &nbsp;
-                </div>
-                {Object.keys(gradeMap ?? {})
-                  .map((e) => Number.parseFloat(e))
-                  .map((gradeNumber) => (
-                    <div key={gradeNumber}>
+          <div className="">
+            {courseProcessed?.status.isCompleted ? (
+              <CourseCompletedProjectionsSection course={course0} processed={courseProcessed} />
+            ) : (
+              <>
+                <div className="lg:flex mt-6 wrap">
+                  <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
+                    <StatLabel>Projected grade</StatLabel>
+                    <StatNumber>{projected?.letter}</StatNumber>
+                    <StatHelpText>{((projected?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
+                  </Stat>
+                  <div className="py-3 flex grow mb-6">
+                    <div style={{ position: "relative", backgroundColor: "#D9D9D9" }} className="rounded flex grow">
                       <div
                         style={{
-                          borderColor: adjust(subject?.color ?? "", -50),
-                          position: "absolute",
-                          height: "99%",
-                          width: "1px",
-                          left: gradeNumber * 100 + "%",
+                          backgroundColor: subject?.color,
+                          width: "" + (projected?.numerical ?? 0) * 100 + "%",
                         }}
-                        className="border border-black"
+                        className="rounded"
                       >
                         &nbsp;
                       </div>
-                      <Text
-                        style={{
-                          position: "absolute",
-                          left: gradeNumber * 100 - 1 + "%",
-                          top: "110%",
-                        }}
-                        className="text-xs md:text-base"
-                        fontWeight={"semibold"}
-                        color={captionColor}
-                      >
-                        {(gradeNumber * 100).toFixed(0)} <br />
-                        {(gradeMap ?? {})[gradeNumber]}
-                      </Text>
+                      {Object.keys(gradeMap ?? {})
+                        .map((e) => Number.parseFloat(e))
+                        .map((gradeNumber) => (
+                          <div key={gradeNumber}>
+                            <div
+                              style={{
+                                borderColor: adjust(subject?.color ?? "", -50),
+                                position: "absolute",
+                                height: "99%",
+                                width: "1px",
+                                left: gradeNumber * 100 + "%",
+                              }}
+                              className="border border-black"
+                            >
+                              &nbsp;
+                            </div>
+                            <Text
+                              style={{
+                                position: "absolute",
+                                left: gradeNumber * 100 - 1 + "%",
+                                top: "110%",
+                              }}
+                              className="text-xs md:text-base"
+                              fontWeight={"semibold"}
+                              color={captionColor}
+                            >
+                              {(gradeNumber * 100).toFixed(0)} <br />
+                              {(gradeMap ?? {})[gradeNumber]}
+                            </Text>
+                          </div>
+                        ))}
                     </div>
-                  ))}
-              </div>
-            </div>
-          </div>
+                  </div>
+                </div>
 
-          <div className="lg:flex mt-12">
-            <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
-              <StatLabel>Actual progress so far</StatLabel>
-              <StatNumber>{grade?.letter}</StatNumber>
-              <StatHelpText>{((grade?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
-            </Stat>
-            <div className="py-3 flex grow mb-6">
-              <AmendableProgressBar
-                backgroundColor="#D9D9D9"
-                progressColor={subject?.color ?? ""}
-                percentageProgress={actualGrade?.numerical * 100}
-              >
-                {Object.keys(gradeMap ?? {})
-                  .map((e) => Number.parseFloat(e))
-                  .map((gradeNumber) => (
-                    <ProgressBarAmendment
-                      key={gradeNumber}
-                      color={adjust(subject?.color ?? "", -50)}
-                      atProgressPercentage={gradeNumber * 100}
-                      position="bottom"
+                <div className="lg:flex mt-12">
+                  <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
+                    <StatLabel>Actual progress so far</StatLabel>
+                    <StatNumber>{grade?.letter}</StatNumber>
+                    <StatHelpText>{((grade?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
+                  </Stat>
+                  <div className="py-3 flex grow mb-6">
+                    <AmendableProgressBar
+                      backgroundColor="#D9D9D9"
+                      progressColor={subject?.color ?? ""}
+                      percentageProgress={actualGrade?.numerical * 100}
                     >
-                      <Text color={captionColor}>
-                        {(gradeNumber * 100).toFixed(0)} <br />
-                        {(gradeMap ?? {})[gradeNumber]}
-                      </Text>
-                    </ProgressBarAmendment>
-                  ))}
-                <ProgressBarAmendment
-                  color={adjust(subject?.color ?? "", -90)}
-                  atProgressPercentage={maximumPossibleGrade?.numerical * 100}
-                  position="top"
-                >
-                  <Tooltip
-                    label={
-                      "Maximum possible grade: " +
-                      maximumPossibleGrade?.letter +
-                      " (" +
-                      (maximumPossibleGrade?.numerical * 100).toPrecision(3) +
-                      "%)"
-                    }
-                  >
-                    <InfoOutlineIcon w={4} h={4} />
-                  </Tooltip>
-                </ProgressBarAmendment>
-              </AmendableProgressBar>
-            </div>
+                      {Object.keys(gradeMap ?? {})
+                        .map((e) => Number.parseFloat(e))
+                        .map((gradeNumber) => (
+                          <ProgressBarAmendment
+                            key={gradeNumber}
+                            color={adjust(subject?.color ?? "", -50)}
+                            atProgressPercentage={gradeNumber * 100}
+                            position="bottom"
+                          >
+                            <Text color={captionColor}>
+                              {(gradeNumber * 100).toFixed(0)} <br />
+                              {(gradeMap ?? {})[gradeNumber]}
+                            </Text>
+                          </ProgressBarAmendment>
+                        ))}
+                      <ProgressBarAmendment
+                        color={adjust(subject?.color ?? "", -90)}
+                        atProgressPercentage={maximumPossibleGrade?.numerical * 100}
+                        position="top"
+                      >
+                        <Tooltip
+                          label={
+                            "Maximum possible grade: " +
+                            maximumPossibleGrade?.letter +
+                            " (" +
+                            (maximumPossibleGrade?.numerical * 100).toPrecision(3) +
+                            "%)"
+                          }
+                        >
+                          <InfoOutlineIcon w={4} h={4} />
+                        </Tooltip>
+                      </ProgressBarAmendment>
+                    </AmendableProgressBar>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </Skeleton>
@@ -517,6 +525,18 @@ const ComponentRow = (props: {
         </Td>
       )}
     </Tr>
+  );
+};
+
+const CourseCompletedProjectionsSection = (props: { course: FullSubject; processed: ProcessedCourseData }) => {
+  return (
+    <Box textAlign={"center"}>
+      <Box>Congratulations, you got an</Box>
+      <Box fontSize={48} color={props.course.color} fontWeight="bold">
+        {props.processed.grades.actual.letter}
+      </Box>
+      <Box>{(props.processed.grades.actual.numerical * 100).toPrecision(4)}%</Box>
+    </Box>
   );
 };
 
