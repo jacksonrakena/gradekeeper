@@ -340,7 +340,7 @@ const AveragesWidget = (props: { course: FullSubject; processed: ProcessedCourse
 
   const remainingComponents = props.processed?.status.componentsRemaining;
   const remainingPieces = remainingComponents
-    .map((d) =>
+    ?.map((d) =>
       d.subcomponents
         .filter((e) => !e.isCompleted)
         .map((e) => d.subjectWeighting / (d.subcomponents.length - d.numberOfSubComponentsToDrop_Lowest))
