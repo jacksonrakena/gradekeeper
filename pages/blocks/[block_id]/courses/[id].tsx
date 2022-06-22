@@ -167,7 +167,7 @@ const SubjectPage: NextPage = () => {
 
         <div className="flex flex-wrap">
           <div
-            className="m-4 p-6 shadow-md rounded-md overflow-auto"
+            className="grow m-4 p-6 shadow-md rounded-md overflow-auto"
             style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
           >
             <div style={{ color: subject?.color }} className="text-2xl mb-2 font-bold">
@@ -178,10 +178,9 @@ const SubjectPage: NextPage = () => {
                 <Thead>
                   <Tr>
                     <Th pl={0}>Name</Th>
-                    <Th className="p-2">Weight</Th>
-                    <Th className="p-2">Score</Th>
-                    <Th className="p-2">Grade</Th>
-                    {false && <Th className="p-2">Actions</Th>}
+                    <Th pl={0}>Weight</Th>
+                    <Th pl={0}>Score</Th>
+                    <Th pl={0}>Grade</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -205,14 +204,15 @@ const SubjectPage: NextPage = () => {
             </TableContainer>
           </div>
 
-          <div
-            className="w-full m-4 p-6 shadow-md rounded-md"
+          <Box
+            className="grow m-4 p-6 shadow-md rounded-md"
             style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
           >
             <div style={{ color: subject?.color }} className="text-2xl mb-2 font-bold">
               Averages
             </div>
-          </div>
+            <div className="w-48">d</div>
+          </Box>
         </div>
 
         <div
@@ -410,10 +410,11 @@ const ComponentRow = (props: {
           </>
         )}
       </Td>
-      <Td className="text-center" style={{}}>
+      <Td pl={0} className="text-center" style={{}}>
         {e.subjectWeighting * 100}%
       </Td>
       <Td
+        pl={0}
         style={{ color: subject?.color }}
         className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}
       >
@@ -508,7 +509,7 @@ const ComponentRow = (props: {
           </>
         )}
       </Td>
-      <Td style={{}} fontWeight={"semibold"} className="text-center">
+      <Td pl={0} style={{}} fontWeight={"semibold"} className="text-center">
         {!grade.isUnknown && calculateLetterGrade(grade.value, user.user?.gradeMap)}
       </Td>
       {false && (
