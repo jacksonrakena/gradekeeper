@@ -166,6 +166,15 @@ const SubjectPage: NextPage = () => {
           </div>
         </div>
 
+        {courseProcessed?.status.isCompleted && (
+          <div
+            className="p-6 m-4 shadow-md rounded-md"
+            style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
+          >
+            <CourseCompletedProjectionsSection course={course0} processed={courseProcessed} gradeMap={gradeMap} />
+          </div>
+        )}
+
         <div className="flex flex-wrap">
           <div
             className="grow m-4 p-6 shadow-md rounded-md overflow-auto"
@@ -210,17 +219,15 @@ const SubjectPage: NextPage = () => {
           )}
         </div>
 
-        <div
-          className="p-6 m-4 shadow-md rounded-md"
-          style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
-        >
-          <div style={{ color: subject?.color }} className="text-2xl font-bold">
-            Projections
-          </div>
-          <div className="">
-            {courseProcessed?.status.isCompleted ? (
-              <CourseCompletedProjectionsSection course={course0} processed={courseProcessed} gradeMap={gradeMap} />
-            ) : (
+        {!courseProcessed?.status.isCompleted && (
+          <div
+            className="p-6 m-4 shadow-md rounded-md"
+            style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
+          >
+            <div style={{ color: subject?.color }} className="text-2xl font-bold">
+              Projections
+            </div>
+            <div className="">
               <>
                 <div className="lg:flex mt-6 wrap">
                   <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
@@ -322,9 +329,9 @@ const SubjectPage: NextPage = () => {
                   </div>
                 </div>
               </>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </Skeleton>
     </div>
   );
