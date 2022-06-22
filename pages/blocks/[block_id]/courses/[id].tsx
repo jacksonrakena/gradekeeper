@@ -585,7 +585,7 @@ const ComponentRow = (props: {
                   onBeginEdit={() => {
                     setSingularValue(singularValue.replaceAll("%", ""));
                   }}
-                  icon={<EditIcon mr={1} />}
+                  icon={<EditIcon mr={2} />}
                   onCancelEdit={() => {
                     setSingularValue(
                       props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
