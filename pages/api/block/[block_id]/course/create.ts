@@ -25,6 +25,12 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
     }
 
     const newCourseId = cuid();
+    if (inputdto.components.map((e) => Number.parseInt(e.numberOfSubcomponents)).reduce((a, b) => a + b, 0) > 100) {
+      return res.status(400).json({ error: "Total number of subcomponents must not exceed 100." });
+    }
+    if (inputdto.components.map((e) => e.weighting).reduce((a, b) => a + b) !== 1) {
+      return res.status(400).json({ error: "Course components must add up to 100%." });
+    }
     const subjectCreationQuery = primsa.subject.create({
       data: {
         id: newCourseId,

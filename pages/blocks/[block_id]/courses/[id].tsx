@@ -140,7 +140,6 @@ const SubjectPage: NextPage = () => {
                       onClick={() => {
                         isDeleting(true);
                         fetch(`/api/block/${subject?.studyBlockId}/course/${subject?.id}`, { method: "DELETE" }).then(() => {
-                          user.deleteCourse(subject?.id);
                           isDeleting(false);
                           toast({
                             title: "Course deleted.",
@@ -150,6 +149,7 @@ const SubjectPage: NextPage = () => {
                             status: "success",
                           });
                           router.push("/");
+                          user.deleteCourse(subject?.id);
                         });
                       }}
                       isLoading={deleting}
@@ -341,7 +341,7 @@ const AveragesWidget = (props: { course: FullSubject; processed: ProcessedCourse
     props.gradeMap &&
     Object.keys(props.gradeMap)
       .map(Number.parseFloat)
-      .filter((d) => actual.numerical < d);
+      .filter((d) => actual?.numerical < d);
 
   const remainingComponents = props.processed?.status.componentsRemaining;
   const remainingPieces = remainingComponents

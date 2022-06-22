@@ -20,6 +20,7 @@ import {
   Thead,
   Tr,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
 import { useRouter } from "next/router";
@@ -39,6 +40,7 @@ export type ComponentDto = {
 
 export const CreateCourse = (props: { block_id: string }) => {
   const block_id = props.block_id;
+  const toast = useToast();
   const router = useRouter();
   const emptyComponents: Partial<ComponentDto>[] = [
     {
@@ -85,14 +87,23 @@ export const CreateCourse = (props: { block_id: string }) => {
               color: values.color,
               components: components,
             }),
-          })
-            .then((e) => e.json())
-            .then((f) => {
+          }).then(async (e) => {
+            const f = await e.json();
+            if (e.ok) {
               userContext.redownload().then(() => {
                 setSubmitting(false);
                 router.push(`/blocks/${block_id}/courses/${f.id}`);
               });
-            });
+            } else {
+              setSubmitting(false);
+              toast({
+                title: "An error occurred.",
+                description: f.error,
+                status: "error",
+                duration: 4000,
+              });
+            }
+          });
         }}
       >
         {({ values, handleSubmit, isSubmitting }) => (
