@@ -294,5 +294,5 @@ export function pickTextColorBasedOnBgColorAdvanced(bgColor: string, lightColor:
     return Math.pow((col + 0.055) / 1.055, 2.4);
   });
   var L = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
-  return L > 0.179 ? darkColor : lightColor;
+  return L > 0.46 ? darkColor : lightColor;
 }
