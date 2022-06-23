@@ -150,10 +150,14 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
               const data = await res.json();
               user.setUser(data);
               isSaving(false);
-            } else {
               toast({
                 title: "Updated.",
                 status: "success",
+              });
+            } else {
+              toast({
+                title: "An error occurred.",
+                status: "error",
               });
             }
           }}
