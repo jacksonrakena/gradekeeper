@@ -45,8 +45,8 @@ import {
   processCourseData,
   _null,
 } from "../../../../lib/logic";
-import themeConstants from "../../../../themeConstants";
-import { useUserContext } from "../../../../UserContext";
+import themeConstants from "../../../../lib/theme/themeConstants";
+import { useUserContext } from "../../../../lib/UserContext";
 
 const SubjectPage: NextPage = () => {
   const router = useRouter();

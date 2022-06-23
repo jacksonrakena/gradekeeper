@@ -3,7 +3,7 @@ import { Box, Flex, Spinner, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import { useState } from "react";
 import { FullSubject, FullSubjectComponent } from "../../../lib/fullEntities";
 import { calculateLetterGrade } from "../../../lib/logic";
-import { useUserContext } from "../../../UserContext";
+import { useUserContext } from "../../../lib/UserContext";
 import { GkEditable } from "../../generic/GkEditable";
 
 const ComponentRow = (props: {

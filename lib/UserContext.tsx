@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { createContext, useContext } from "react";
-import { FullSubject } from "./lib/fullEntities";
-import { getUserQuery } from "./pages/api/user";
+import { getUserQuery } from "../pages/api/user";
+import { FullSubject } from "./fullEntities";
 
 export const UserContext = createContext<{
   user?: Prisma.UserGetPayload<typeof getUserQuery>;

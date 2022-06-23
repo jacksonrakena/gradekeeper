@@ -27,7 +27,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { SliderPicker } from "react-color";
 import { randomColor } from "../../../lib/logic";
-import { useUserContext } from "../../../UserContext";
+import { useUserContext } from "../../../lib/UserContext";
 import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {

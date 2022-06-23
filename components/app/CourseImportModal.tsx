@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useUserContext } from "../../UserContext";
+import { useUserContext } from "../../lib/UserContext";
 
 export const CourseImportModal = (props: { blockId: string; onClose: () => void }) => {
   const [shareCode, setShareCode] = useState("");

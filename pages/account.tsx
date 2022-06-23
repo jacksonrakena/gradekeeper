@@ -25,7 +25,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { TopBar } from "../components/app/TopBar";
-import { useUserContext } from "../UserContext";
+import { useUserContext } from "../lib/UserContext";
 
 const Account: NextPage = () => {
   const data = useSession();

@@ -1,7 +1,7 @@
 import { Tag, Text, useColorModeValue } from "@chakra-ui/react";
 import { FullSubject } from "../../../lib/fullEntities";
 import { calculateProjectedCourseGrade } from "../../../lib/logic";
-import themeConstants from "../../../themeConstants";
+import themeConstants from "../../../lib/theme/themeConstants";
 
 const CoursePill = (props: { subject: FullSubject; gradeMap: any; onClick: () => any }) => {
   const grade = calculateProjectedCourseGrade(props.subject, props.gradeMap);

@@ -4,10 +4,10 @@ import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { Chakra } from "../Chakra";
 import { _undefined } from "../lib/logic";
+import { Chakra } from "../lib/theme/Chakra";
+import { UserContext } from "../lib/UserContext";
 import "../styles/globals.css";
-import { UserContext } from "../UserContext";
 import { getUserQuery } from "./api/user";
 
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppProps) {

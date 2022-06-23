@@ -3,7 +3,7 @@ import { Box, Button, Container, Heading, Img, Stack, Text, useColorModeValue } 
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";
-import themeConstants from "../../themeConstants";
+import themeConstants from "../../lib/theme/themeConstants";
 
 const MarketingHome = () => {
   const [loadingApp, setLoadingApp] = useState(false);

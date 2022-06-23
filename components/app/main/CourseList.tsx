@@ -22,7 +22,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { _null } from "../../../lib/logic";
-import { useUserContext } from "../../../UserContext";
+import { useUserContext } from "../../../lib/UserContext";
 import Footer from "../Footer";
 import { TopBar } from "../TopBar";
 import CoursePill from "./CoursePill";
