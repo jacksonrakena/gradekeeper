@@ -1,8 +1,9 @@
-import { ChevronDownIcon, CloseIcon, SettingsIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Button,
   Flex,
+  Icon,
   Menu,
   MenuButton,
   MenuDivider,
@@ -16,6 +17,9 @@ import {
 import { Subject } from "@prisma/client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { AiOutlineHome } from "react-icons/ai";
+import { FiSettings } from "react-icons/fi";
+import { IoIosLogOut } from "react-icons/io";
 import { useUserContext } from "../UserContext";
 
 export const TopBar = (props: { currentSubjectId?: string }) => {
@@ -86,24 +90,31 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
                     </Flex>
                   </MenuButton>
                   <MenuList overflow={"hidden"}>
-                    <MenuItem onClick={() => router.push("/")}>Home</MenuItem>
+                    <MenuItem onClick={() => router.push("/")}>
+                      <Flex alignItems={"center"}>
+                        <Icon w={4} h={4} as={AiOutlineHome} mr={2} /> Home
+                      </Flex>
+                    </MenuItem>
                     <MenuItem
                       onClick={() => {
                         router.push("/account");
                       }}
-                      icon={<SettingsIcon />}
                     >
-                      Account
+                      <Flex alignItems={"center"}>
+                        <Icon w={4} h={4} as={FiSettings} mr={2} /> Account
+                      </Flex>
                     </MenuItem>
                     <MenuItem
-                      icon={<CloseIcon />}
                       onClick={() => {
                         signOut({ redirect: false }).then(() => {
                           router.push("/");
                         });
                       }}
                     >
-                      Log out
+                      <Flex alignItems={"center"}>
+                        <Icon w={5} h={5} as={IoIosLogOut} mr={2} />
+                        Log out
+                      </Flex>
                     </MenuItem>
                   </MenuList>
                 </Menu>
