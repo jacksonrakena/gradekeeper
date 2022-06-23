@@ -222,14 +222,11 @@ const SubjectPage: NextPage = () => {
             className="p-6 m-4 shadow-md rounded-md"
             style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
           >
-            <div style={{ color: subject?.color }} className="text-2xl font-bold">
-              Projections
-            </div>
             <div className="">
               <>
-                <div className="lg:flex mt-4">
+                <div className="lg:flex">
                   <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
-                    <StatLabel>Projected grade</StatLabel>
+                    <StatLabel fontSize="lg">Projected grade</StatLabel>
                     <StatNumber>{projected?.letter}</StatNumber>
                     <StatHelpText>{((projected?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
                   </Stat>
