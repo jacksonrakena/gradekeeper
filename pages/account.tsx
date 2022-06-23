@@ -3,7 +3,7 @@ import { Box, Button, Code, Heading, Link, Stack, Text } from "@chakra-ui/react"
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { TopBar } from "../components/TopBar";
+import { TopBar } from "../components/app/TopBar";
 import { useUserContext } from "../UserContext";
 
 const Account: NextPage = () => {

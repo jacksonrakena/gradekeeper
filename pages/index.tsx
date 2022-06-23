@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import CourseList from "../components/app/main/CourseList";
-import MarketingHome from "../components/MarketingHome";
+import MarketingHome from "../components/marketing/MarketingHome";
 
 const Home: NextPage = () => {
   const data = useSession();

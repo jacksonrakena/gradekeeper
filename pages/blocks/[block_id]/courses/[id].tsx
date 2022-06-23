@@ -1,4 +1,4 @@
-import { DeleteIcon, EditIcon, InfoOutlineIcon } from "@chakra-ui/icons";
+import { DeleteIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -8,10 +8,8 @@ import {
   AlertDialogOverlay,
   Box,
   Button,
-  Flex,
   IconButton,
   Skeleton,
-  Spinner,
   Stat,
   StatHelpText,
   StatLabel,
@@ -19,7 +17,6 @@ import {
   Table,
   TableContainer,
   Tbody,
-  Td,
   Text,
   Th,
   Thead,
@@ -34,17 +31,18 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
-import ComponentEditModal from "../../../../components/app/course/ComponentEditModal";
-import { GkEditable } from "../../../../components/generic/GkEditable";
-import { TopBar } from "../../../../components/TopBar";
-import { FullSubject, FullSubjectComponent } from "../../../../lib/fullEntities";
+import AveragesWidget from "../../../../components/app/courseView/AveragesWidget";
+import ComponentEditModal from "../../../../components/app/courseView/ComponentEditModal";
+import ComponentRow from "../../../../components/app/courseView/ComponentRow";
+import CourseCompletedWidget from "../../../../components/app/courseView/CourseCompletedWidget";
+import Footer from "../../../../components/app/Footer";
+import { TopBar } from "../../../../components/app/TopBar";
+import { FullSubjectComponent } from "../../../../lib/fullEntities";
 import {
   adjust,
-  calculateLetterGrade,
   calculateProjectedGradeForComponent,
   pickTextColorBasedOnBgColorAdvanced,
   processCourseData,
-  ProcessedCourseData,
   _null,
 } from "../../../../lib/logic";
 import themeConstants from "../../../../themeConstants";
@@ -169,7 +167,7 @@ const SubjectPage: NextPage = () => {
             className="p-6 m-4 shadow-md rounded-md"
             style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
           >
-            <CourseCompletedProjectionsSection course={course0} processed={courseProcessed} gradeMap={gradeMap} />
+            <CourseCompletedWidget course={course0} processed={courseProcessed} gradeMap={gradeMap} />
           </div>
         )}
 
@@ -315,336 +313,11 @@ const SubjectPage: NextPage = () => {
             </div>
           </div>
         )}
+        <Box px={8} py={2}>
+          <Footer />
+        </Box>
       </Skeleton>
     </div>
-  );
-};
-
-const AveragesWidget = (props: { course: FullSubject; processed: ProcessedCourseData; gradeMap: object }) => {
-  const actual = props.processed?.grades?.actual;
-  const unachievedGrades =
-    props.gradeMap &&
-    Object.keys(props.gradeMap)
-      .map(Number.parseFloat)
-      .filter((d) => actual?.numerical < d);
-
-  const remainingComponents = props.processed?.status.componentsRemaining;
-  const remainingPieces = remainingComponents
-    ?.map((d) =>
-      d.subcomponents
-        .filter((e) => !e.isCompleted)
-        .map((e) => d.subjectWeighting / (d.subcomponents.length - d.numberOfSubComponentsToDrop_Lowest))
-    )
-    .flat();
-  console.log(remainingPieces);
-  return (
-    <Box
-      className="grow m-4 p-6 shadow-md rounded-md"
-      style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
-    >
-      <div style={{ color: props.course?.color }} className="text-2xl mb-2 font-bold">
-        Averages
-      </div>
-      <div>
-        <TableContainer>
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th>To get a...</Th>
-                <Th>You need an average of </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {unachievedGrades
-                ?.sort((a, b) => b - a)
-                .map((e) => (
-                  <Tr>
-                    <Td>
-                      <Box>
-                        <Text fontWeight="semibold">{props.gradeMap[e]}</Text>
-                      </Box>
-                    </Td>
-                    <Td>
-                      <Flex direction={"row"}>
-                        <Text color={props.course.color} fontWeight="semibold">
-                          {(((e - actual.numerical) / remainingPieces.reduce((a, b) => a + b)) * 100).toFixed(1)}
-                        </Text>
-                        %
-                      </Flex>
-                    </Td>
-                  </Tr>
-                ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      </div>
-    </Box>
-  );
-};
-
-const ComponentRow = (props: {
-  component: FullSubjectComponent;
-  subject: FullSubject;
-  componentGrade: { value: number; isUnknown: boolean; isAverage: boolean };
-  onRequestModalOpen: () => void;
-}) => {
-  const user = useUserContext();
-  const e = props.component;
-  const subject = props.subject;
-  const grade = props.componentGrade;
-  const [singularValue, setSingularValue] = useState(
-    props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
-  );
-  const [subjectWeighting, setSubjectWeighting] = useState(props.component.subjectWeighting * 100 + "%");
-  const [name, setName] = useState(props.component.name);
-  const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
-  const [touched, setTouched] = useState(false);
-  return (
-    <Tr key={e.name}>
-      <Td pl={0} style={{}}>
-        {sectionLoadingUpdate !== "name" ? (
-          <>
-            <Flex alignItems="center">
-              <GkEditable
-                value={name}
-                onChange={(e) => {
-                  setTouched(true);
-                  setName(e);
-                }}
-                inputProps={{
-                  size: props.component.name.length,
-                }}
-                onCancelEdit={(e) => {
-                  setTouched(false);
-                  setName(props.component.name);
-                }}
-                displayProps={{ fontWeight: "bold" }}
-                onSubmit={async () => {
-                  if (touched) {
-                    setSectionLoadingUpdate("name");
-                    const response = await fetch(
-                      `/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`,
-                      {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          name: name,
-                        }),
-                      }
-                    );
-                    const data = await response.json();
-                    user.updateCourse(props.subject.id, {
-                      ...props.subject,
-                      components: props.subject.components.map((cc) => {
-                        if (cc.id !== props.component.id) return cc;
-                        return { ...cc, name: name };
-                      }),
-                    });
-                    setSectionLoadingUpdate("");
-                    setTouched(false);
-                  }
-                }}
-              />
-              <Text ml={1}>{e.subcomponents?.length > 1 ? <span>({e.subcomponents.length})</span> : ""}</Text>
-            </Flex>
-          </>
-        ) : (
-          <>
-            {" "}
-            <Spinner color={subject.color} size="sm" />
-          </>
-        )}
-      </Td>
-      <Td pl={0} className="text-center" style={{}}>
-        {sectionLoadingUpdate === "weight" ? (
-          <>
-            {" "}
-            <Spinner color={subject.color} size="sm" />
-          </>
-        ) : (
-          <GkEditable
-            onChange={(e) => {
-              setSubjectWeighting(e);
-              setTouched(true);
-            }}
-            onBeginEdit={(e) => {
-              setSubjectWeighting(e.replaceAll("%", ""));
-            }}
-            onSubmit={async (e) => {
-              setSectionLoadingUpdate("weight");
-              const response = await fetch(`/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  subjectWeighting: parseFloat(e.replaceAll("%", "")) / 100,
-                }),
-              });
-              const data = await response.json();
-              // user.updateCourse(props.subject.id, {
-              //   ...props.subject,
-              //   components: props.subject.components.map((cc) => {
-              //     if (cc.id !== props.component.id) return cc;
-              //     return { ...cc, subjectWeighting: parseFloat(subjectWeighting.replaceAll("%", "")) / 100 };
-              //   }),
-              // });
-              await user.redownload();
-              setSubjectWeighting(parseFloat(e.replaceAll("%", "")) + "%");
-              setSectionLoadingUpdate("");
-            }}
-            inputProps={{ size: 2 }}
-            onCancelEdit={() => {
-              setSubjectWeighting(props.component.subjectWeighting * 100 + "%");
-            }}
-            value={subjectWeighting}
-          />
-        )}
-      </Td>
-      <Td
-        pl={0}
-        style={{ color: subject?.color }}
-        className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}
-      >
-        {sectionLoadingUpdate === "score" ? (
-          <>
-            <Spinner color={subject.color} size="sm" />
-          </>
-        ) : (
-          <>
-            {e.subcomponents?.length === 1 ? (
-              <Tooltip label="Click to edit">
-                <GkEditable
-                  onSubmit={async (e) => {
-                    if (touched) {
-                      const actualGradeValue = Number.parseFloat(e.replaceAll("%", "")) / 100.0;
-                      if (!actualGradeValue) {
-                        setTouched(false);
-                        setSingularValue(
-                          props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
-                        );
-                        return;
-                      }
-                      setSingularValue(e ? Number.parseFloat(e).toFixed(2).toString() + "%" : "");
-
-                      setSectionLoadingUpdate("score");
-                      const response = await fetch(
-                        `/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`,
-                        {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({
-                            subcomponents: [
-                              {
-                                ...props.component.subcomponents[0],
-                                gradeValuePercentage: !!e ? actualGradeValue : 0,
-                                isCompleted: !!e,
-                              },
-                            ],
-                          }),
-                        }
-                      );
-                      const data = await response.json();
-                      user.updateCourse(props.subject.id, {
-                        ...props.subject,
-                        components: props.subject.components.map((cc) => {
-                          if (cc.id !== props.component.id) return cc;
-                          return data;
-                        }),
-                      });
-                      if (!singularValue) setSingularValue("0%");
-                      setSectionLoadingUpdate("");
-                      setTouched(false);
-                    }
-                  }}
-                  inputProps={{ size: 6 }}
-                  onChange={(f) => {
-                    setTouched(true);
-                    setSingularValue(f);
-                  }}
-                  value={singularValue}
-                  onBeginEdit={() => {
-                    setSingularValue(singularValue.replaceAll("%", ""));
-                  }}
-                  icon={<EditIcon mr={2} />}
-                  onCancelEdit={() => {
-                    setSingularValue(
-                      props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
-                    );
-                  }}
-                />
-              </Tooltip>
-            ) : (
-              <>
-                {" "}
-                {!grade.isUnknown ? (
-                  <>
-                    <Box
-                      cursor="pointer"
-                      className="flex"
-                      flexDirection={"column"}
-                      onClick={() => {
-                        props.onRequestModalOpen();
-                      }}
-                    >
-                      <Flex direction={"column"}>
-                        <Flex alignItems={"center"}>
-                          <EditIcon mr={2} /> {(grade.value * 100).toFixed(2)}%
-                        </Flex>
-                        {grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
-                      </Flex>
-                    </Box>
-                  </>
-                ) : (
-                  <Box
-                    cursor="pointer"
-                    className="flex"
-                    flexDirection={"column"}
-                    onClick={() => {
-                      props.onRequestModalOpen();
-                    }}
-                  >
-                    Edit
-                  </Box>
-                )}
-              </>
-            )}
-          </>
-        )}
-      </Td>
-      <Td pl={0} style={{}} fontWeight={"semibold"} className="text-center">
-        {!grade.isUnknown && calculateLetterGrade(grade.value, user.user?.gradeMap)}
-      </Td>
-      {false && (
-        <Td style={{}} className="text-center">
-          <IconButton
-            onClick={() => {
-              setTargetComponent(e);
-            }}
-            colorScheme="teal"
-            size="sm"
-            aria-label={`Edit ${e.name}`}
-            icon={<EditIcon />}
-          />
-        </Td>
-      )}
-    </Tr>
-  );
-};
-
-const CourseCompletedProjectionsSection = (props: { course: FullSubject; processed: ProcessedCourseData }) => {
-  return (
-    <Box textAlign={"center"}>
-      <Box>Congratulations, you got an</Box>
-      <Box fontSize={48} color={props.course.color} fontWeight="bold">
-        {props.processed.grades.actual.letter}
-      </Box>
-      <Box>{(props.processed.grades.actual.numerical * 100).toPrecision(4)}%</Box>
-    </Box>
   );
 };
 
@@ -681,23 +354,4 @@ const ProgressBarAmendment = (props: { color: string; atProgressPercentage: numb
   );
 };
 
-const AmendableProgressBar = (props: { backgroundColor: string; progressColor: string; percentageProgress: number; children }) => {
-  return (
-    <div style={{ position: "relative", backgroundColor: props.backgroundColor }} className="rounded flex grow">
-      <div style={{ position: "absolute", backgroundColor: "black", width: "20%" }} className="rounded">
-        &nbsp;
-      </div>
-      <div
-        style={{
-          backgroundColor: props.progressColor,
-          width: "" + props.percentageProgress + "%",
-        }}
-        className="rounded"
-      >
-        &nbsp;
-      </div>
-      {props.children}
-    </div>
-  );
-};
 export default SubjectPage;

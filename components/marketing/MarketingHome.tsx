@@ -3,7 +3,7 @@ import { Box, Button, Container, Heading, Img, Stack, Text, useColorModeValue } 
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";
-import themeConstants from "../themeConstants";
+import themeConstants from "../../themeConstants";
 
 const MarketingHome = () => {
   const [loadingApp, setLoadingApp] = useState(false);
@@ -32,9 +32,6 @@ const MarketingHome = () => {
           >
             Get started <ArrowForwardIcon ml={2} />
           </Button>
-          <Heading size="lg" align="center">
-            What can you do with Gradekeeper?
-          </Heading>
           <Box p={8} style={{ borderRadius: 25 }} bgColor={useColorModeValue("white", themeConstants.darkModeContrastingColor)}>
             <Stack align="center">
               <Heading size="md" mb={4}>

@@ -1,8 +1,9 @@
 import { Box, Code, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
+import { PropsWithChildren } from "react";
 
-const PrivacySubheading = ({ children }) => {
-  return <Heading size="md">{children}</Heading>;
+const PrivacySubheading = (props: PropsWithChildren) => {
+  return <Heading size="md">{props.children}</Heading>;
 };
 
 const PrivacyPolicy: NextPage = () => {

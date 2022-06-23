@@ -1,4 +1,4 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertDescription,
@@ -12,34 +12,22 @@ import {
   AlertTitle,
   Box,
   Button,
-  Flex,
   Heading,
-  Icon,
   IconButton,
-  Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Skeleton,
-  Stack,
-  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
-import { BiImport } from "react-icons/bi";
 import { _null } from "../../../lib/logic";
 import { useUserContext } from "../../../UserContext";
-import { TopBar } from "../../TopBar";
-import { CreateBlock } from "../block/CreateBlock";
-import { CreateCourse } from "../course/CreateCourse";
-import { CourseImportModal } from "../CourseImportModal";
+import Footer from "../Footer";
+import { TopBar } from "../TopBar";
 import CoursePill from "./CoursePill";
+import CreateBlockModal from "./CreateBlockModal";
+import CreateCourseModal from "./CreateCourseModal";
 
 const CourseList = () => {
   const { user } = useUserContext();
@@ -209,97 +197,9 @@ const CourseList = () => {
           </div>
         </>
       </div>
-      <Box mx={12} mb={4} color={"GrayText"} fontSize={"sm"}>
-        &copy; Animals With Cool Hats, Inc. <br />
-        <Link href="/legal/privacy">Privacy</Link> &bull; <Link href="https://forms.office.com/r/rM3wq1QbH0">Feedback</Link> &bull;{" "}
-        <Link href="/legal/donate">Donate</Link>
+      <Box mx={12} mb={4}>
+        <Footer />
       </Box>
-    </>
-  );
-};
-
-const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
-  return (
-    <>
-      <Modal size="xl" isOpen={props.isOpen} onClose={props.onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create a new study block</ModalHeader>
-          <ModalBody>
-            <CreateBlock onClose={props.onClose} />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
-  );
-};
-
-const CreateCourseModal = (props: { isOpen: boolean; onClose: () => void; blockId: string }) => {
-  const [action, setAction] = useState("");
-  return (
-    <>
-      <Modal
-        size="xl"
-        isOpen={props.isOpen}
-        onClose={() => {
-          setAction("");
-          props.onClose();
-        }}
-        preserveScrollBarGap={true}
-      >
-        <ModalOverlay />
-
-        {!action ? (
-          <>
-            <ModalContent>
-              <ModalHeader fontSize={"2xl"}>What do you want to do?</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Stack spacing={6} pb={6}>
-                  <Box cursor={"pointer"} onClick={() => setAction("create")} p={6} boxShadow={"lg"} rounded={"md"}>
-                    <Flex>
-                      <EditIcon w={12} h={12} mr={4} />
-                      <Box>
-                        <Heading size="md">Create a new course</Heading>
-                        <Text>You'll need to provide the structure of the course.</Text>
-                      </Box>
-                    </Flex>
-                  </Box>
-                  <Box cursor={"pointer"} p={6} onClick={() => setAction("import")} boxShadow={"lg"} rounded={"md"}>
-                    <Flex>
-                      <Icon as={BiImport} w={12} h={12} mr={4} />
-                      <Box>
-                        <Heading size="md">Import a course</Heading>
-                        <Text>
-                          You'll need the course <b>share code</b>.
-                        </Text>
-                      </Box>
-                    </Flex>
-                  </Box>
-                </Stack>
-              </ModalBody>
-            </ModalContent>
-          </>
-        ) : (
-          <>
-            {action === "create" ? (
-              <>
-                <ModalContent>
-                  <ModalHeader>Create a new course</ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-                    <CreateCourse block_id={props.blockId} />
-                  </ModalBody>
-                </ModalContent>
-              </>
-            ) : (
-              <>
-                <CourseImportModal blockId={props.blockId} onClose={props.onClose} />
-              </>
-            )}
-          </>
-        )}
-      </Modal>
     </>
   );
 };
