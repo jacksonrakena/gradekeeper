@@ -17,6 +17,7 @@ export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((pro
   if (editing) {
     return (
       <form
+        {...props.inputProps}
         onSubmit={(e) => {
           e.preventDefault();
           setEditing(false);
@@ -41,7 +42,7 @@ export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((pro
     );
   }
   return (
-    <Flex alignItems={"center"}>
+    <Flex alignItems={"center"} {...props.displayProps}>
       <Text
         cursor={"pointer"}
         onClick={() => {
@@ -50,7 +51,7 @@ export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((pro
         }}
         {...props.displayProps}
       >
-        <Flex alignItems={"center"} ref={ref}>
+        <Flex {...props.displayProps} alignItems={"center"} ref={ref}>
           {props.icon}
           {props.value}
         </Flex>

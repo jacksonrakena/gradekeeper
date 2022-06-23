@@ -42,4 +42,21 @@ export default gkRoute(async (req: NextApiRequest, res: NextApiResponse<object>)
     });
     return res.status(200).json({});
   }
+  if (req.method === "POST") {
+    const toupdate = await primsa.subject.findFirst({
+      where: {
+        id: req.query.id.toString(),
+        studyBlock: { userId: session.user.email },
+      },
+    });
+    if (!toupdate) return res.status(404).json({});
+    const updated = await primsa.subject.update({
+      where: {
+        id: toupdate.id,
+      },
+      data: { ...req.body },
+      include: { components: { include: { subcomponents: true } } },
+    });
+    return res.status(200).json(updated);
+  }
 });

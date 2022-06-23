@@ -8,8 +8,10 @@ import {
   AlertDialogOverlay,
   Box,
   Button,
+  Center,
   IconButton,
   Skeleton,
+  Spinner,
   Stat,
   StatHelpText,
   StatLabel,
@@ -37,6 +39,7 @@ import ComponentRow from "../../../../components/app/courseView/ComponentRow";
 import CourseCompletedWidget from "../../../../components/app/courseView/CourseCompletedWidget";
 import Footer from "../../../../components/app/Footer";
 import { TopBar } from "../../../../components/app/TopBar";
+import { GkEditable } from "../../../../components/generic/GkEditable";
 import { FullSubjectComponent } from "../../../../lib/fullEntities";
 import {
   adjust,
@@ -55,6 +58,25 @@ const SubjectPage: NextPage = () => {
   const studyBlock = user.user?.studyBlocks.filter((e) => e.id === block_id)[0];
   const course0 = studyBlock?.subjects.filter((d) => d.id === id)[0];
   const subject = course0;
+  if (!subject) {
+    return (
+      <>
+        <TopBar />
+        <Center>
+          <Spinner color="teal" />
+        </Center>
+      </>
+    );
+  } else return <Subject />;
+};
+
+const Subject = () => {
+  const router = useRouter();
+  const { block_id, id } = router.query;
+  const user = useUserContext();
+  const studyBlock = user.user?.studyBlocks.filter((e) => e.id === block_id)[0];
+  const course0 = studyBlock?.subjects.filter((d) => d.id === id)[0];
+  const subject = course0!!;
   const courseProcessed = user && course0 && processCourseData(course0, user?.user?.gradeMap);
   const actualGrade = courseProcessed?.grades?.actual;
   const projectedGrade = courseProcessed?.grades?.projected;
@@ -70,7 +92,10 @@ const SubjectPage: NextPage = () => {
   const disc = useDisclosure();
   const cancelref = useRef();
   const toast = useToast();
-
+  const [name, setName] = useState(subject?.longName);
+  const [codeNum, setCodeNum] = useState(subject?.courseCodeNumber);
+  const [codeName, setCodeName] = useState(subject?.courseCodeName);
+  const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
   return (
     <div>
       <Head>
@@ -100,7 +125,34 @@ const SubjectPage: NextPage = () => {
             <span className="mr-4">
               {subject?.courseCodeName} {subject?.courseCodeNumber}
             </span>
-            <span style={{ fontWeight: "bold" }}>{subject?.longName}</span>
+            {sectionLoadingUpdate !== "longName" ? (
+              <GkEditable
+                onSubmit={async (v) => {
+                  setSectionLoadingUpdate("longName");
+                  const d = await fetch(`/api/block/${block_id?.toString()}/course/${subject?.id}`, {
+                    body: JSON.stringify({ longName: v }),
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    method: "POST",
+                  });
+                  if (d.ok) {
+                    const newcourse = await d.json();
+                    user.updateCourse(newcourse.id, newcourse);
+                    setSectionLoadingUpdate("");
+                  } else {
+                  }
+                }}
+                inputProps={{ style: { display: "inline" } }}
+                displayProps={{ style: { display: "inline", fontWeight: "bold" } }}
+                value={name}
+                onChange={(e) => setName(e)}
+              />
+            ) : (
+              <>
+                <Spinner />
+              </>
+            )}
           </div>
           <div className="text-xl" style={{ color: "#DDDDDD" }}>
             <span className="mr-4">
