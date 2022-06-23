@@ -236,10 +236,10 @@ const SubjectPage: NextPage = () => {
                         style={{
                           position: "absolute",
                           height: "30px",
-                          background: `repeating-linear-gradient(45deg, ${adjust(subject?.color, -20)}, ${adjust(
-                            subject?.color,
+                          background: `repeating-linear-gradient(45deg, ${adjust(subject?.color ?? "", -20)}, ${adjust(
+                            subject?.color ?? "",
                             -20
-                          )} 10px, ${adjust(subject?.color, -40)} 10px, ${adjust(subject?.color, -40)} 20px)`,
+                          )} 10px, ${adjust(subject?.color ?? "", -40)} 10px, ${adjust(subject?.color ?? "", -40)} 20px)`,
                           width: actualGrade?.numerical * 100 + "%",
                         }}
                         className="rounded"
@@ -283,7 +283,7 @@ const SubjectPage: NextPage = () => {
                           </ProgressBarAmendment>
                         ))}
                       <ProgressBarAmendment
-                        color={adjust(subject?.color, -40)}
+                        color={adjust(subject?.color ?? "", -40)}
                         atProgressPercentage={actualGrade?.numerical * 100}
                         position="top"
                       >
