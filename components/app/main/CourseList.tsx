@@ -19,6 +19,7 @@ import {
   Link,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
@@ -246,10 +247,12 @@ const CreateCourseModal = (props: { isOpen: boolean; onClose: () => void; blockI
         }}
       >
         <ModalOverlay />
+
         {!action ? (
           <>
             <ModalContent>
               <ModalHeader fontSize={"2xl"}>What do you want to do?</ModalHeader>
+              <ModalCloseButton />
               <ModalBody>
                 <Stack spacing={6} pb={6}>
                   <Box cursor={"pointer"} onClick={() => setAction("create")} p={6} boxShadow={"lg"} rounded={"md"}>
@@ -282,6 +285,7 @@ const CreateCourseModal = (props: { isOpen: boolean; onClose: () => void; blockI
               <>
                 <ModalContent>
                   <ModalHeader>Create a new course</ModalHeader>
+                  <ModalCloseButton />
                   <ModalBody>
                     <CreateCourse block_id={props.blockId} />
                   </ModalBody>
