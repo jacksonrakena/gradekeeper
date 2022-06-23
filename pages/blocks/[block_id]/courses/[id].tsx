@@ -67,7 +67,7 @@ const SubjectPage: NextPage = () => {
         </Center>
       </>
     );
-  } else return <Subject />;
+  } else return <Subject key={id?.toString()} />;
 };
 
 const Subject = () => {

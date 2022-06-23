@@ -56,9 +56,11 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
         });
       }
     }
+    // @ts-ignore
     await primsa.subjectSubcomponent.createMany({
       data: subcomponents,
     });
+
     return res.status(200).json(data);
   }
 });
