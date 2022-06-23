@@ -9,6 +9,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -18,6 +19,7 @@ export const CourseImportModal = (props: { blockId: string; onClose: () => void 
   const [shareCode, setShareCode] = useState("");
   const user = useUserContext();
   const router = useRouter();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const targetStudyBlock = props.blockId;
   return (
@@ -38,17 +40,35 @@ export const CourseImportModal = (props: { blockId: string; onClose: () => void 
           isLoading={loading}
           onClick={async () => {
             setLoading(true);
-            const course = await fetch(`/api/block/${targetStudyBlock}/import`, {
+            const res = await fetch(`/api/block/${targetStudyBlock}/import`, {
               headers: {
                 "Content-Type": "application/json",
               },
               method: "POST",
               body: JSON.stringify({ shareCode: shareCode }),
-            }).then((d) => d.json());
-            await user.redownload();
-            router.push(`/blocks/${targetStudyBlock}/courses/${course.id}`);
-            setLoading(false);
-            props.onClose();
+            });
+            if (res.ok) {
+              const course = await res.json();
+              await user.redownload();
+              router.push(`/blocks/${targetStudyBlock}/courses/${course.id}`);
+              setLoading(false);
+              props.onClose();
+              toast({
+                title: `Imported ${course.courseCodeName} ${course.courseCodeNumber} successfully.`,
+                status: "success",
+                duration: 4000,
+              });
+            } else {
+              setLoading(false);
+              if (res.status === 404) {
+                toast({
+                  title: "Course not found.",
+                  description: "Check the share code.",
+                  duration: 4000,
+                  status: "error",
+                });
+              }
+            }
           }}
           colorScheme={"teal"}
         >

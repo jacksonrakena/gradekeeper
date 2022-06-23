@@ -14,7 +14,10 @@ import {
   Heading,
   HStack,
   Link,
+  NumberInput,
+  NumberInputField,
   Stack,
+  Switch,
   Text,
   useDisclosure,
   useToast,
@@ -27,6 +30,141 @@ import { useRef, useState } from "react";
 import { TopBar } from "../components/app/TopBar";
 import { useUserContext } from "../lib/UserContext";
 
+const predefinedGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-"];
+const presets = {
+  init: {
+    "0.35": "D-",
+    "0.4": "D",
+    "0.45": "D+",
+    "0.5": "C-",
+    "0.6": "C+",
+    "0.7": "B",
+    "0.8": "A-",
+    "0.9": "A+",
+    "0.55": "C",
+    "0.65": "B-",
+    "0.75": "B+",
+    "0.85": "A",
+  },
+  "Victoria University of Wellington": {
+    "0.4": "D",
+    "0.5": "C-",
+    "0.6": "C+",
+    "0.7": "B",
+    "0.8": "A-",
+    "0.9": "A+",
+    "0.55": "C",
+    "0.65": "B-",
+    "0.75": "B+",
+    "0.85": "A",
+  },
+};
+
+const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; onChange: (gradeMap: object) => void }) => {
+  if (!props.userGradeMap) return <></>;
+  const definedGrades = Object.values(props.userGradeMap);
+  const uninitDefault = Object.entries(presets["init"]).find(([pct, grade]) => grade === props.gradeString)?.[0];
+  const value = Object.entries(props.userGradeMap).find(([pct, grade]) => grade === props.gradeString);
+  return (
+    <Box my={2} mr={6}>
+      <HStack>
+        <Switch
+          onChange={(c) => {
+            console.log(c.target.checked);
+            var newGradeMap = props.userGradeMap;
+            if (c.target.checked) {
+              newGradeMap = { ...newGradeMap, [value ? value[0].toString() : uninitDefault]: props.gradeString };
+            } else
+              newGradeMap = Object.fromEntries(
+                Object.entries(newGradeMap).filter((d) => {
+                  return d[0] !== value[0].toString();
+                })
+              );
+            console.log(newGradeMap);
+            props.onChange(newGradeMap);
+          }}
+          isChecked={definedGrades.includes(props.gradeString)}
+        />
+        <Text>{props.gradeString}:</Text>
+        <NumberInput
+          onChange={(c) => {
+            var newmap = Object.fromEntries(Object.entries(props.userGradeMap).filter((e) => e[1] !== props.gradeString));
+            console.log({ ...newmap, [c]: props.gradeString });
+            props.onChange({ ...newmap, [c]: props.gradeString });
+          }}
+          disabled={!value}
+          variant={"filled"}
+          value={value ? value[0] : ""}
+        >
+          <NumberInputField />
+        </NumberInput>
+      </HStack>
+    </Box>
+  );
+};
+
+const GradeMapEditor = (props: { gradeMap: object }) => {
+  const user = useUserContext();
+  const toast = useToast();
+  const [gradeMap, setGradeMap] = useState(props.gradeMap);
+  const [saving, isSaving] = useState(false);
+  return (
+    <Box>
+      <Heading size="md">My grade boundaries</Heading>
+      <HStack>
+        <Button
+          mt={2}
+          onClick={() => {
+            setGradeMap(presets["Victoria University of Wellington"]);
+          }}
+          size="sm"
+          colorScheme={"orange"}
+        >
+          Load defaults
+        </Button>
+      </HStack>
+      <Flex wrap={"wrap"}>
+        {predefinedGrades.map((predefinedGrade) => (
+          <GradeBoundaryEntry
+            key={predefinedGrade}
+            onChange={(g) => {
+              setGradeMap(g);
+            }}
+            userGradeMap={gradeMap}
+            gradeString={predefinedGrade}
+          />
+        ))}
+      </Flex>
+      <Box>
+        <Button
+          colorScheme={"teal"}
+          isLoading={saving}
+          onClick={async () => {
+            isSaving(true);
+            const res = await fetch(`/api/user`, {
+              headers: { "Content-Type": "application/json" },
+              method: "POST",
+              body: JSON.stringify({ gradeMap: gradeMap }),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              user.setUser(data);
+              isSaving(false);
+            } else {
+              toast({
+                title: "Updated.",
+                status: "success",
+              });
+            }
+          }}
+        >
+          Save
+        </Button>
+      </Box>
+    </Box>
+  );
+};
+
 const Account: NextPage = () => {
   const data = useSession();
   const user = useUserContext();
@@ -35,6 +173,7 @@ const Account: NextPage = () => {
   const cancelRef = useRef<Button>();
   const toast = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [gradeMap, setGradeMap] = useState(user?.user?.gradeMap);
   return (
     <>
       <AlertDialog {...deleteModal} leastDestructiveRef={cancelRef}>
@@ -112,6 +251,7 @@ const Account: NextPage = () => {
               </HStack>
             </Box>
           </Flex>
+          {user?.user?.gradeMap && <GradeMapEditor gradeMap={user?.user?.gradeMap} />}
         </Stack>
 
         <Box mt={12}>

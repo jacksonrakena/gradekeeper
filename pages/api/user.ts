@@ -37,43 +37,6 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
     var users = await primsa.user.findMany({
       include: { studyBlocks: { include: { subjects: { include: { components: { include: { subcomponents: true } } } } } } },
     });
-    // for (var u = 0; u < users.length; u++) {
-    //   let data = users[u];
-    //   for (var i = 0; i < data.studyBlocks.length; i++) {
-    //     for (var s = 0; s < data.studyBlocks[i].subjects.length; s++) {
-    //       for (var c = 0; c < data.studyBlocks[i].subjects[s].components.length; c++) {
-    //         const component = data.studyBlocks[i].subjects[s].components[c];
-    //         if (
-    //           (!component.subcomponents || component.subcomponents.length === 0) &&
-    //           component.subcomponentsArray &&
-    //           component.subcomponentsArray.length !== 0
-    //         ) {
-    //           const subarr = component.subcomponentsArray as Prisma.JsonArray;
-    //           try {
-    //             await primsa.$transaction([
-    //               primsa.subjectSubcomponent.createMany({
-    //                 data: subarr.map((e) => ({ ...e, componentId: component.id })),
-    //               }),
-    //               primsa.subjectComponent.update({
-    //                 where: {
-    //                   id: component.id,
-    //                 },
-    //                 data: {
-    //                   subcomponentsArray: undefined,
-    //                 },
-    //               }),
-    //             ]);
-    //           } catch (e) {
-    //             console.log("exception for " + data.id);
-    //             console.log(e);
-    //           }
-    //           component.subcomponents = subarr;
-    //         }
-    //         component.subcomponentsArray = undefined;
-    //       }
-    //     }
-    //   }
-    // }
     return res.status(200).json(data ?? {});
   }
   if (req.method === "DELETE") {
@@ -81,5 +44,13 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
       where: { id: userEmail },
     });
     return res.status(200).json({});
+  }
+  if (req.method === "POST") {
+    const updatedUser = await primsa.user.update({
+      where: { id: userEmail },
+      data: { ...req.body },
+      include: { studyBlocks: { include: { subjects: { include: { components: { include: { subcomponents: true } } } } } } },
+    });
+    return res.status(200).json(updatedUser);
   }
 });

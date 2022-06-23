@@ -19,7 +19,7 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
       },
       include: { components: { include: { subcomponents: true } } },
     });
-    if (!originalCourse) return res.status(404);
+    if (!originalCourse) return res.status(404).json({});
     const data = await primsa.subject.create({
       data: {
         studyBlockId: req.query["block_id"].toString(),
