@@ -1,4 +1,4 @@
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertDescription,
@@ -12,7 +12,9 @@ import {
   AlertTitle,
   Box,
   Button,
+  Flex,
   Heading,
+  Icon,
   IconButton,
   Link,
   Modal,
@@ -21,17 +23,21 @@ import {
   ModalHeader,
   ModalOverlay,
   Skeleton,
+  Stack,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
+import { BiImport } from "react-icons/bi";
 import { _null } from "../../../lib/logic";
 import { useUserContext } from "../../../UserContext";
 import { TopBar } from "../../TopBar";
 import { CreateBlock } from "../block/CreateBlock";
 import { CreateCourse } from "../course/CreateCourse";
+import { CourseImportModal } from "../CourseImportModal";
 import CoursePill from "./CoursePill";
 
 const CourseList = () => {
@@ -228,16 +234,66 @@ const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
 };
 
 const CreateCourseModal = (props: { isOpen: boolean; onClose: () => void; blockId: string }) => {
+  const [action, setAction] = useState("");
   return (
     <>
-      <Modal size="xl" isOpen={props.isOpen} onClose={props.onClose}>
+      <Modal
+        size="xl"
+        isOpen={props.isOpen}
+        onClose={() => {
+          setAction("");
+          props.onClose();
+        }}
+      >
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create a course</ModalHeader>
-          <ModalBody>
-            <CreateCourse block_id={props.blockId} />
-          </ModalBody>
-        </ModalContent>
+        {!action ? (
+          <>
+            <ModalContent>
+              <ModalHeader fontSize={"2xl"}>What do you want to do?</ModalHeader>
+              <ModalBody>
+                <Stack spacing={6} pb={6}>
+                  <Box cursor={"pointer"} onClick={() => setAction("create")} p={6} boxShadow={"lg"} rounded={"md"}>
+                    <Flex>
+                      <EditIcon w={12} h={12} mr={4} />
+                      <Box>
+                        <Heading size="md">Create a new course</Heading>
+                        <Text>You'll need to provide the structure of the course.</Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                  <Box cursor={"pointer"} p={6} onClick={() => setAction("import")} boxShadow={"lg"} rounded={"md"}>
+                    <Flex>
+                      <Icon as={BiImport} w={12} h={12} mr={4} />
+                      <Box>
+                        <Heading size="md">Import a course</Heading>
+                        <Text>
+                          You'll need the course <b>share code</b>.
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                </Stack>
+              </ModalBody>
+            </ModalContent>
+          </>
+        ) : (
+          <>
+            {action === "create" ? (
+              <>
+                <ModalContent>
+                  <ModalHeader>Create a new course</ModalHeader>
+                  <ModalBody>
+                    <CreateCourse block_id={props.blockId} />
+                  </ModalBody>
+                </ModalContent>
+              </>
+            ) : (
+              <>
+                <CourseImportModal blockId={props.blockId} onClose={props.onClose} />
+              </>
+            )}
+          </>
+        )}
       </Modal>
     </>
   );
