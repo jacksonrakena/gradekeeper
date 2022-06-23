@@ -76,4 +76,10 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
     // }
     return res.status(200).json(data ?? {});
   }
+  if (req.method === "DELETE") {
+    await primsa.user.delete({
+      where: { id: userEmail },
+    });
+    return res.status(200).json({});
+  }
 });
