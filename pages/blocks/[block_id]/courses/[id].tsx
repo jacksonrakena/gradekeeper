@@ -227,70 +227,49 @@ const SubjectPage: NextPage = () => {
             </div>
             <div className="">
               <>
-                <div className="lg:flex mt-6 wrap">
+                <div className="lg:flex mt-4">
                   <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
                     <StatLabel>Projected grade</StatLabel>
                     <StatNumber>{projected?.letter}</StatNumber>
                     <StatHelpText>{((projected?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
                   </Stat>
                   <div className="py-3 flex grow mb-6">
-                    <div style={{ position: "relative", backgroundColor: "#D9D9D9" }} className="rounded flex grow">
+                    <div style={{ position: "relative", backgroundColor: "#D9D9D9", height: "30px" }} className="rounded flex grow">
                       <div
                         style={{
-                          backgroundColor: subject?.color,
-                          width: "" + (projected?.numerical ?? 0) * 100 + "%",
+                          position: "absolute",
+                          height: "30px",
+                          background: `repeating-linear-gradient(45deg, ${adjust(subject?.color, -20)}, ${adjust(
+                            subject?.color,
+                            -20
+                          )} 10px, ${adjust(subject?.color, -40)} 10px, ${adjust(subject?.color, -40)} 20px)`,
+                          width: actualGrade?.numerical * 100 + "%",
                         }}
                         className="rounded"
                       >
                         &nbsp;
                       </div>
-                      {Object.keys(gradeMap ?? {})
-                        .map((e) => Number.parseFloat(e))
-                        .map((gradeNumber) => (
-                          <div key={gradeNumber}>
-                            <div
-                              style={{
-                                borderColor: adjust(subject?.color ?? "", -50),
-                                position: "absolute",
-                                height: "99%",
-                                width: "1px",
-                                left: gradeNumber * 100 + "%",
-                              }}
-                              className="border border-black"
-                            >
-                              &nbsp;
-                            </div>
-                            <Text
-                              style={{
-                                position: "absolute",
-                                left: gradeNumber * 100 - 1 + "%",
-                                top: "110%",
-                              }}
-                              className="text-xs md:text-base"
-                              fontWeight={"semibold"}
-                              color={captionColor}
-                            >
-                              {(gradeNumber * 100).toFixed(0)} <br />
-                              {(gradeMap ?? {})[gradeNumber]}
-                            </Text>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="lg:flex mt-12">
-                  <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
-                    <StatLabel>Actual progress so far</StatLabel>
-                    <StatNumber>{grade?.letter}</StatNumber>
-                    <StatHelpText>{((grade?.numerical ?? 0) * 100).toPrecision(4)}%</StatHelpText>
-                  </Stat>
-                  <div className="py-3 flex grow mb-6">
-                    <AmendableProgressBar
-                      backgroundColor="#D9D9D9"
-                      progressColor={subject?.color ?? ""}
-                      percentageProgress={actualGrade?.numerical * 100}
-                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          height: "30px",
+                          background: `repeating-linear-gradient(45deg,grey, grey 10px, white 10px, white 20px)`,
+                          right: "0px",
+                          width: 100 - maximumPossibleGrade?.numerical * 100 + "%",
+                        }}
+                        className="rounded"
+                      >
+                        &nbsp;
+                      </div>
+                      <div
+                        style={{
+                          backgroundColor: subject?.color ?? "",
+                          width: "" + projected?.numerical * 100 + "%",
+                        }}
+                        className="rounded"
+                      >
+                        &nbsp;
+                      </div>
                       {Object.keys(gradeMap ?? {})
                         .map((e) => Number.parseFloat(e))
                         .map((gradeNumber) => (
@@ -307,10 +286,19 @@ const SubjectPage: NextPage = () => {
                           </ProgressBarAmendment>
                         ))}
                       <ProgressBarAmendment
-                        color={adjust(subject?.color ?? "", -90)}
-                        atProgressPercentage={maximumPossibleGrade?.numerical * 100}
+                        color={adjust(subject?.color, -40)}
+                        atProgressPercentage={actualGrade?.numerical * 100}
                         position="top"
                       >
+                        <Tooltip
+                          label={
+                            "Lowest possible grade: " + actualGrade?.letter + " (" + (actualGrade?.numerical * 100).toPrecision(3) + "%)"
+                          }
+                        >
+                          <InfoOutlineIcon w={4} h={4} />
+                        </Tooltip>
+                      </ProgressBarAmendment>
+                      <ProgressBarAmendment color={"grey"} atProgressPercentage={maximumPossibleGrade?.numerical * 100} position="top">
                         <Tooltip
                           label={
                             "Maximum possible grade: " +
@@ -323,7 +311,7 @@ const SubjectPage: NextPage = () => {
                           <InfoOutlineIcon w={4} h={4} />
                         </Tooltip>
                       </ProgressBarAmendment>
-                    </AmendableProgressBar>
+                    </div>
                   </div>
                 </div>
               </>
@@ -699,6 +687,9 @@ const ProgressBarAmendment = (props: { color: string; atProgressPercentage: numb
 const AmendableProgressBar = (props: { backgroundColor: string; progressColor: string; percentageProgress: number; children }) => {
   return (
     <div style={{ position: "relative", backgroundColor: props.backgroundColor }} className="rounded flex grow">
+      <div style={{ position: "absolute", backgroundColor: "black", width: "20%" }} className="rounded">
+        &nbsp;
+      </div>
       <div
         style={{
           backgroundColor: props.progressColor,
