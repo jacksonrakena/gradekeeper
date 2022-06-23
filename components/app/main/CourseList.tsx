@@ -245,6 +245,7 @@ const CreateCourseModal = (props: { isOpen: boolean; onClose: () => void; blockI
           setAction("");
           props.onClose();
         }}
+        preserveScrollBarGap={true}
       >
         <ModalOverlay />
 
