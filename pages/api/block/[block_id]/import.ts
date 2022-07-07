@@ -42,7 +42,7 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
       },
       include: { components: { include: { subcomponents: true } } },
     });
-    const subcomponents: Partial<SubjectSubcomponent>[] = [];
+    const subcomponents: Omit<SubjectSubcomponent, "id">[] = [];
     for (var i = 0; i < originalCourse.components.length; i++) {
       const component = originalCourse.components[i];
       for (var s = 0; s < component.subcomponents.length; s++) {

@@ -1,4 +1,5 @@
-import { SubjectSubcomponent } from "@prisma/client";
+import { Prisma, StudyBlock, SubjectSubcomponent } from "@prisma/client";
+import { getUserQuery } from "../pages/api/user";
 import { FullSubject, FullSubjectComponent } from "./fullEntities";
 
 export function _null<T>(): T | null {
@@ -9,11 +10,23 @@ export function _undefined<T>(): T | undefined {
   return undefined;
 }
 
+// @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json());
 export { fetcher };
 
-export function processCourseData(course: FullSubject, gradeMap: object) {
+export type ProcessedStudyBlock = StudyBlock & {
+  processedCourses: ProcessedCourseInfo[];
+};
+export type ProcessedUserInfo = Omit<Prisma.UserGetPayload<typeof getUserQuery>, "studyBlocks"> & {
+  processedStudyBlocks: ProcessedStudyBlock[];
+};
+function processStudyBlock(rawStudyBlock: StudyBlock & { subjects: FullSubject[] }, gradeMap: any): ProcessedStudyBlock {
+  return { ...rawStudyBlock, processedCourses: rawStudyBlock.subjects.map((rawSubject) => processCourseInfo(rawSubject, gradeMap)) };
+}
+
+export function processCourseInfo(course: FullSubject, gradeMap: object): ProcessedCourseInfo {
   const response = {
+    ...course,
     grades: {
       maximumPossible: calculateMaximumPossibleCourseGrade(course, gradeMap),
       actual: calculateActualCourseProgressGrade(course, gradeMap),
@@ -25,16 +38,27 @@ export function processCourseData(course: FullSubject, gradeMap: object) {
         const grade = calculateActualGradeForComponent(d);
         return grade.isAverage || grade.isUnknown;
       }),
+      gradeMap: gradeMap,
     },
   };
   return response;
 }
 
-export type ObjectGrade = { numerical: number; letter: string; isUnknown: boolean; isAverage: boolean };
-export type CourseGrade = { numerical: number; letter: string; isUnknown: true };
-export function new_calculateProjectedCourseGrade(course: FullSubject, gradeMap: object) {}
+export interface ProcessedCourseInfo extends FullSubject {
+  grades: {
+    maximumPossible: CourseGrade;
+    actual: CourseGrade;
+    projected: CourseGrade;
+  };
+  status: {
+    isCompleted: boolean;
+    componentsRemaining: FullSubjectComponent[];
+    gradeMap: any;
+  };
+}
 
-export type ProcessedCourseData = ReturnType<typeof processCourseData>;
+export type ObjectGrade = { numerical: number; letter: string; isUnknown: boolean; isAverage: boolean };
+export type CourseGrade = { numerical: number; letter: string; isUnknown: boolean };
 
 export function calculateIsCourseCompleted(course: FullSubject) {
   return (
@@ -42,8 +66,8 @@ export function calculateIsCourseCompleted(course: FullSubject) {
   );
 }
 
-export function calculateMaximumPossibleCourseGrade(subject: FullSubject, gradeMap: object): { numerical: number; letter: string } {
-  if (!subject || !subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z" };
+export function calculateMaximumPossibleCourseGrade(subject: FullSubject, gradeMap: object): CourseGrade {
+  if (!subject || !subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z", isUnknown: true };
   const numericalvalue = subject.components
     ?.map((g) => {
       const grade = calculateMaximumPossibleComponentGrade(g);
@@ -51,45 +75,11 @@ export function calculateMaximumPossibleCourseGrade(subject: FullSubject, gradeM
       return grade.value * g.subjectWeighting;
     })
     .reduce((a, b) => a + b);
-  return { numerical: numericalvalue, letter: calculateLetterGrade(numericalvalue, gradeMap) };
+  return { numerical: numericalvalue, letter: calculateLetterGrade(numericalvalue, gradeMap), isUnknown: false };
 }
 
 export const UnknownCourseGrade: CourseGrade = { numerical: 0, letter: "U", isUnknown: true };
 export const UnknownGrade: ObjectGrade = { numerical: 0, letter: "U", isUnknown: true, isAverage: false };
-
-/**
- * This function computes the projected grade of a course component.
- */
-export function new_Component_calculateProjectedGrade(component: FullSubjectComponent, gradeMap: object): ObjectGrade {
-  const completedSubcomponents = component.subcomponents.filter((e) => e.isCompleted);
-
-  // The user has not completed any subcomponents.
-  if (completedSubcomponents.length === 0) return { numerical: 0, letter: "U", isUnknown: true, isAverage: false };
-
-  // Calculate the user's score on the subcomponents that they have completed.
-  const scoreOnCompletedSubcomponents =
-    completedSubcomponents.map((e) => e.gradeValuePercentage).reduce((a, b) => a + b, 0) / completedSubcomponents.length;
-
-  return {
-    numerical: scoreOnCompletedSubcomponents,
-    isAverage: true,
-    letter: calculateLetterGrade(scoreOnCompletedSubcomponents, gradeMap),
-    isUnknown: false,
-  };
-}
-
-export function new_Course_calculateProjectedGrade(course: FullSubject, gradeMap: object): CourseGrade {
-  const projectedComponents = course.components.map((d) => ({ ...d, ...new_Component_calculateProjectedGrade(d, gradeMap) }));
-  const knownComponents = projectedComponents.filter((e) => !e.isUnknown);
-  if (knownComponents.length === 0) return UnknownCourseGrade;
-
-  const projectedResult = knownComponents.map((e) => e.numerical).reduce((a, b) => a + b) / knownComponents.length;
-  return {
-    numerical: projectedResult,
-    letter: calculateLetterGrade(projectedResult, gradeMap),
-    isUnknown: true,
-  };
-}
 
 export function calculateAverageOfList(list: number[], drop: number): number | null {
   if (list.length === 0) return 0;
@@ -98,28 +88,18 @@ export function calculateAverageOfList(list: number[], drop: number): number | n
   return sorted.reduce((a, b) => a + b, 0) / sorted.length;
 }
 
-export type CalculatedGrade = {
-  numerical: number;
-  letter: string;
-  isUnknown: boolean;
-  isAverage: boolean;
-};
-
-export function calculateActualCourseProgressGrade(subject: FullSubject, gradeMap: object): { numerical: number; letter: string } {
-  if (!subject || !subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z" };
+export function calculateActualCourseProgressGrade(subject: FullSubject, gradeMap: object): CourseGrade {
+  if (!subject || !subject.components || subject.components.length === 0) return { numerical: 0, letter: "", isUnknown: true };
   const numericalvalue = subject.components
     ?.map((g) => {
       const grade = calculateActualGradeForComponent(g);
       return grade.value * g.subjectWeighting;
     })
     .reduce((a, b) => a + b);
-  return { numerical: numericalvalue, letter: calculateLetterGrade(numericalvalue, gradeMap) };
+  return { numerical: numericalvalue, letter: calculateLetterGrade(numericalvalue, gradeMap), isUnknown: false };
 }
 
-export function calculateProjectedCourseGrade(
-  subject: FullSubject,
-  gradeMap: object
-): { numerical: number; letter: string; isUnknown: boolean } {
+export function calculateProjectedCourseGrade(subject: FullSubject, gradeMap: object): CourseGrade {
   if (!subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z", isUnknown: false };
   const numericalvalue = subject.components
     ?.map((g) => {

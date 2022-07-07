@@ -92,11 +92,10 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
             console.log({ ...newmap, [c]: props.gradeString });
             props.onChange({ ...newmap, [c]: props.gradeString });
           }}
-          disabled={!value}
           variant={"filled"}
           value={value ? value[0] : ""}
         >
-          <NumberInputField />
+          <NumberInputField disabled={!value} />
         </NumberInput>
       </HStack>
     </Box>
@@ -174,10 +173,9 @@ const Account: NextPage = () => {
   const user = useUserContext();
   const router = useRouter();
   const deleteModal = useDisclosure();
-  const cancelRef = useRef<Button>();
+  const cancelRef = useRef<any>();
   const toast = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [gradeMap, setGradeMap] = useState(user?.user?.gradeMap);
   return (
     <>
       <AlertDialog {...deleteModal} leastDestructiveRef={cancelRef}>
@@ -255,7 +253,7 @@ const Account: NextPage = () => {
               </HStack>
             </Box>
           </Flex>
-          {user?.user?.gradeMap && <GradeMapEditor gradeMap={user?.user?.gradeMap} />}
+          {user?.user?.gradeMap && <GradeMapEditor gradeMap={user?.user?.gradeMap as object} />}
         </Stack>
 
         <Box mt={12}>

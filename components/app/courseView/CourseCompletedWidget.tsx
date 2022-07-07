@@ -1,15 +1,14 @@
 import { Box } from "@chakra-ui/react";
-import { FullSubject } from "../../../lib/fullEntities";
-import { ProcessedCourseData } from "../../../lib/logic";
+import { ProcessedCourseInfo } from "../../../lib/logic";
 
-const CourseCompletedWidget = (props: { course: FullSubject; processed: ProcessedCourseData }) => {
+const CourseCompletedWidget = (props: { course: ProcessedCourseInfo }) => {
   return (
     <Box textAlign={"center"}>
       <Box>Congratulations, you got an</Box>
       <Box fontSize={48} color={props.course.color} fontWeight="bold">
-        {props.processed.grades.actual.letter}
+        {props.course.grades.actual.letter}
       </Box>
-      <Box>{(props.processed.grades.actual.numerical * 100).toPrecision(4)}%</Box>
+      <Box>{(props.course.grades.actual.numerical * 100).toPrecision(4)}%</Box>
     </Box>
   );
 };

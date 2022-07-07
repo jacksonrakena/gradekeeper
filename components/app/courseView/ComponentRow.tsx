@@ -1,14 +1,14 @@
 import { EditIcon } from "@chakra-ui/icons";
 import { Box, Flex, Spinner, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import { useState } from "react";
-import { FullSubject, FullSubjectComponent } from "../../../lib/fullEntities";
-import { calculateLetterGrade } from "../../../lib/logic";
+import { FullSubjectComponent } from "../../../lib/fullEntities";
+import { calculateLetterGrade, ProcessedCourseInfo } from "../../../lib/logic";
 import { useUserContext } from "../../../lib/UserContext";
 import { GkEditable } from "../../generic/GkEditable";
 
 const ComponentRow = (props: {
   component: FullSubjectComponent;
-  subject: FullSubject;
+  subject: ProcessedCourseInfo;
   componentGrade: { value: number; isUnknown: boolean; isAverage: boolean };
   onRequestModalOpen: () => void;
 }) => {

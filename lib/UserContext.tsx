@@ -1,19 +1,16 @@
-import { Prisma } from "@prisma/client";
 import { createContext, useContext } from "react";
-import { getUserQuery } from "../pages/api/user";
-import { FullSubject } from "./fullEntities";
+import { ProcessedCourseInfo, ProcessedUserInfo } from "./logic";
 
-export const UserContext = createContext<{
-  user?: Prisma.UserGetPayload<typeof getUserQuery>;
-  setUser: (user: Prisma.UserGetPayload<typeof getUserQuery>) => void;
-  updateCourse: (courseId: string, replacementCourse: FullSubject) => void;
-  deleteCourse: (courseId: string) => void;
+export type AppContext = {
+  user?: ProcessedUserInfo;
+  setUser: (user: ProcessedUserInfo) => void;
+  updateCourse: (courseId: string, replacementCourse?: ProcessedCourseInfo) => void;
   redownload: () => Promise<void>;
-}>({
+};
+export const UserContext = createContext<AppContext>({
   user: undefined,
-  setUser: (user: Prisma.UserGetPayload<typeof getUserQuery>) => {},
+  setUser: (user: ProcessedUserInfo) => {},
   updateCourse(courseId, replacementCourse) {},
-  deleteCourse(courseId) {},
   async redownload() {},
 });
 export function useUserContext() {

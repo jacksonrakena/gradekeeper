@@ -103,7 +103,7 @@ const CourseList = () => {
           <div>
             <div className={"flex flex-col px-12"}>
               <Skeleton isLoaded={(user && !isLoading) ?? false}>
-                {(!user?.studyBlocks || user?.studyBlocks?.length === 0) && (
+                {(!user?.processedStudyBlocks || user?.processedStudyBlocks?.length === 0) && (
                   <div>
                     <div>
                       <Box mb={6}>
@@ -129,9 +129,9 @@ const CourseList = () => {
                   </div>
                 )}
                 {user &&
-                  user.studyBlocks &&
-                  (user?.studyBlocks?.length ?? 0) > 0 &&
-                  user?.studyBlocks?.map((studyBlock) => {
+                  user.processedStudyBlocks &&
+                  (user?.processedStudyBlocks?.length ?? 0) > 0 &&
+                  user?.processedStudyBlocks?.map((studyBlock) => {
                     const sbStart = new Date(studyBlock.startDate);
                     const sbEnd = new Date(studyBlock.endDate);
                     const dtf = new Intl.DateTimeFormat("en-US", {
@@ -160,7 +160,7 @@ const CourseList = () => {
                           {dtf.format(sbStart)} &#8212; {dtf.format(sbEnd)}
                         </div>
 
-                        {user.studyBlocks.length === 1 && studyBlock.subjects.length === 0 && (
+                        {user.processedStudyBlocks.length === 1 && studyBlock.processedCourses.length === 0 && (
                           <Box mt={4}>
                             <Alert>
                               <AlertIcon />
@@ -170,14 +170,13 @@ const CourseList = () => {
                           </Box>
                         )}
 
-                        {studyBlock.subjects.map((subject) => (
+                        {studyBlock.processedCourses.map((subject) => (
                           <CoursePill
                             key={subject.id}
                             onClick={() => {
                               router.push(`/blocks/${studyBlock.id}/courses/${subject.id}`);
                             }}
                             subject={subject}
-                            gradeMap={user.gradeMap}
                           />
                         ))}
 
@@ -187,7 +186,7 @@ const CourseList = () => {
                       </div>
                     );
                   })}
-                {user?.studyBlocks && user?.studyBlocks.length > 0 && (
+                {user?.processedStudyBlocks && user?.processedStudyBlocks.length > 0 && (
                   <Button colorScheme="orange" size="sm" onClick={createBlockDisclosure.onOpen}>
                     + New trimester/semester
                   </Button>

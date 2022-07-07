@@ -1,17 +1,16 @@
 import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react";
-import { FullSubject } from "../../../lib/fullEntities";
-import { ProcessedCourseData } from "../../../lib/logic";
+import { ProcessedCourseInfo } from "../../../lib/logic";
 import themeConstants from "../../../lib/theme/themeConstants";
 
-const AveragesWidget = (props: { course: FullSubject; processed: ProcessedCourseData; gradeMap: object }) => {
-  const actual = props.processed?.grades?.actual;
+const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
+  const actual = props.course.grades.actual;
   const unachievedGrades =
-    props.gradeMap &&
-    Object.keys(props.gradeMap)
+    props.course.status.gradeMap &&
+    Object.keys(props.course.status.gradeMap)
       .map(Number.parseFloat)
       .filter((d) => actual?.numerical < d);
 
-  const remainingComponents = props.processed?.status.componentsRemaining;
+  const remainingComponents = props.course?.status.componentsRemaining;
   const remainingPieces = remainingComponents
     ?.map((d) =>
       d.subcomponents
@@ -44,7 +43,7 @@ const AveragesWidget = (props: { course: FullSubject; processed: ProcessedCourse
                   <Tr>
                     <Td>
                       <Box>
-                        <Text fontWeight="semibold">{props.gradeMap[e]}</Text>
+                        <Text fontWeight="semibold">{props.course.status.gradeMap[e]}</Text>
                       </Box>
                     </Td>
                     <Td>

@@ -1,11 +1,9 @@
 import { Icon, Tag, Text, useColorModeValue } from "@chakra-ui/react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { FullSubject } from "../../../lib/fullEntities";
-import { processCourseData } from "../../../lib/logic";
+import { ProcessedCourseInfo } from "../../../lib/logic";
 import themeConstants from "../../../lib/theme/themeConstants";
 
-const CoursePill = (props: { subject: FullSubject; gradeMap: any; onClick: () => any }) => {
-  const processed = processCourseData(props.subject, props.gradeMap);
+const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any }) => {
   const subject = props.subject;
   return (
     <div
@@ -26,18 +24,18 @@ const CoursePill = (props: { subject: FullSubject; gradeMap: any; onClick: () =>
         </span>
         <span style={{ fontWeight: "bold" }}>{subject.longName} </span>
       </Text>
-      {!processed.status.isCompleted ? (
+      {!subject.status.isCompleted ? (
         <>
           <div className="flex">
             <div style={{ textAlign: "center" }} className=" flex flex-col">
-              {processed.grades.projected.numerical === 0 ? (
+              {subject.grades.projected.numerical === 0 ? (
                 <Tag px={3} my={3} colorScheme={"teal"}>
                   No data
                 </Tag>
               ) : (
                 <>
-                  <span style={{ fontWeight: "bold" }}>{processed.grades.projected.letter}</span>
-                  <span>{(processed.grades.projected.numerical * 100).toFixed(2)}%</span>
+                  <span style={{ fontWeight: "bold" }}>{subject.grades.projected.letter}</span>
+                  <span>{(subject.grades.projected.numerical * 100).toFixed(2)}%</span>
                 </>
               )}
             </div>
@@ -45,7 +43,7 @@ const CoursePill = (props: { subject: FullSubject; gradeMap: any; onClick: () =>
             <div className="py-3 px-4 flex grow">
               <div style={{ backgroundColor: "#D9D9D9" }} className="rounded flex grow">
                 <div
-                  style={{ backgroundColor: subject.color, width: "" + processed.grades.projected.numerical * 100 + "%" }}
+                  style={{ backgroundColor: subject.color, width: "" + subject.grades.projected.numerical * 100 + "%" }}
                   className="rounded"
                 ></div>
               </div>
@@ -58,9 +56,9 @@ const CoursePill = (props: { subject: FullSubject; gradeMap: any; onClick: () =>
             <div className="flex items-center">
               <Icon color={subject.color} as={BsCheckCircleFill} w={4} h={4} mr={2} />
               <Text style={{ fontWeight: "bold" }} mr={2}>
-                {processed.grades.actual.letter}
+                {subject.grades.actual.letter}
               </Text>
-              <Text>{(processed.grades.actual.numerical * 100).toFixed(2)}%</Text>
+              <Text>{(subject.grades.actual.numerical * 100).toFixed(2)}%</Text>
             </div>
           </div>
         </>
