@@ -123,8 +123,8 @@ export function calculateProjectedCourseGrade(
   if (!subject.components || subject.components.length === 0) return { numerical: 0, letter: "Z", isUnknown: false };
   const numericalvalue = subject.components
     ?.map((g) => {
-      const grade = new_Component_calculateProjectedGrade(g, gradeMap);
-      return grade.numerical * g.subjectWeighting;
+      const grade = calculateProjectedGradeForComponent(g);
+      return grade.value * g.subjectWeighting;
     })
     .reduce((a, b) => a + b);
   var completedWeighting;
