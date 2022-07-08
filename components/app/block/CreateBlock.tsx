@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input } from "@chakra-ui/react";
 import { Field, Form, Formik, useField, useFormikContext } from "formik";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
@@ -11,7 +11,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
 
   return (
     <Box mb={4}>
-      <div>A study block is a collection of courses, like a trimester or a semester at some universities.</div>
+      <div>A term is a collection of courses, like a trimester or a semester at some universities.</div>
 
       <Formik
         initialValues={{ name: "", startDate: new Date(), endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)) }}
@@ -53,26 +53,29 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                 </FormControl>
               )}
             </Field>
-            <Field name="startDate">
-              {({ field, form }: { field: any; form: any }) => (
-                <FormControl mb={4} isInvalid={form.errors.startDate && form.touched.startDate}>
-                  <FormLabel htmlFor="startDate">Block start date</FormLabel>
-                  <DatePickerField name="startDate" />
-                  <FormErrorMessage>{form.errors.startDate}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
-            <Field name="endDate">
-              {({ field, form }: { field: any; form: any }) => (
-                <FormControl mb={4} isInvalid={form.errors.endDate && form.touched.endDate}>
-                  <FormLabel htmlFor="endDate">Block end date</FormLabel>
-                  <DatePickerField name="endDate" />
-                  <FormErrorMessage>{form.errors.endDate}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
+            <Flex direction={"row"}>
+              {" "}
+              <Field name="startDate">
+                {({ field, form }: { field: any; form: any }) => (
+                  <FormControl mb={4} isInvalid={form.errors.startDate && form.touched.startDate}>
+                    <FormLabel htmlFor="startDate">Start date</FormLabel>
+                    <DatePickerField name="startDate" />
+                    <FormErrorMessage>{form.errors.startDate}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+              <Field name="endDate">
+                {({ field, form }: { field: any; form: any }) => (
+                  <FormControl mb={4} isInvalid={form.errors.endDate && form.touched.endDate}>
+                    <FormLabel htmlFor="endDate">End date</FormLabel>
+                    <DatePickerField name="endDate" />
+                    <FormErrorMessage>{form.errors.endDate}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+            </Flex>
             <Button type="submit" isLoading={isSubmitting} colorScheme="teal">
-              Submit
+              Create
             </Button>
           </Form>
         )}

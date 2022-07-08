@@ -1,6 +1,7 @@
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -25,7 +26,7 @@ import {
 import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { SliderPicker } from "react-color";
+import { TwitterPicker } from "react-color";
 import { randomColor } from "../../../lib/logic";
 import { useUserContext } from "../../../lib/UserContext";
 import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
@@ -52,13 +53,13 @@ export const CreateCourse = (props: { block_id: string }) => {
   ];
   const [components, setComponents] = useState(emptyComponents);
   const userContext = useUserContext();
-  const studyBlock = userContext.user?.studyBlocks.filter((d) => d.id === block_id?.toString())[0];
+  const studyBlock = userContext.user?.processedStudyBlocks.filter((d) => d.id === block_id?.toString())[0];
   const tablecolor = useColorModeValue("bg-gray-50", "");
   const [tabIndex, setTabIndex] = useState(0);
   if (!userContext.user) return <div>Loading</div>;
   return (
     <div>
-      <div>Currently, Gradekeeper only supports the grade boundaries at Victoria University of Wellington.</div>
+      <div>Let&apos;s make a new course.</div>
 
       <Formik
         initialValues={{
@@ -117,43 +118,45 @@ export const CreateCourse = (props: { block_id: string }) => {
               <TabPanels>
                 <TabPanel>
                   <Stack spacing={4}>
-                    <Field name="codeName">
-                      {({ field, form }: { field: any; form: any }) => (
-                        <FormControl isInvalid={form.errors.codeName && form.touched.codeName}>
-                          <FormLabel htmlFor="name">Course code name</FormLabel>
-                          <Input
-                            variant="filled"
-                            htmlSize={8}
-                            width="auto"
-                            size="md"
-                            placeholder="ENGR"
-                            {...field}
-                            id="codeName"
-                            type="text"
-                          />
-                          <FormErrorMessage>{form.errors.codeName}</FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
+                    <Flex direction={"row"}>
+                      <Field name="codeName">
+                        {({ field, form }: { field: any; form: any }) => (
+                          <FormControl isInvalid={form.errors.codeName && form.touched.codeName}>
+                            <FormLabel htmlFor="name">Course code name</FormLabel>
+                            <Input
+                              variant="filled"
+                              htmlSize={8}
+                              width="auto"
+                              size="md"
+                              placeholder="ENGR"
+                              {...field}
+                              id="codeName"
+                              type="text"
+                            />
+                            <FormErrorMessage>{form.errors.codeName}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
 
-                    <Field name="codeNo">
-                      {({ field, form }: { field: any; form: any }) => (
-                        <FormControl isInvalid={form.errors.codeNo && form.touched.codeNo}>
-                          <FormLabel htmlFor="codeNo">Course code number</FormLabel>
-                          <Input
-                            variant="filled"
-                            htmlSize={8}
-                            width="auto"
-                            size="md"
-                            placeholder="101"
-                            {...field}
-                            id="codeNo"
-                            type="text"
-                          />
-                          <FormErrorMessage>{form.errors.codeNo}</FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
+                      <Field name="codeNo">
+                        {({ field, form }: { field: any; form: any }) => (
+                          <FormControl isInvalid={form.errors.codeNo && form.touched.codeNo}>
+                            <FormLabel htmlFor="codeNo">Course code number</FormLabel>
+                            <Input
+                              variant="filled"
+                              htmlSize={8}
+                              width="auto"
+                              size="md"
+                              placeholder="101"
+                              {...field}
+                              id="codeNo"
+                              type="text"
+                            />
+                            <FormErrorMessage>{form.errors.codeNo}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Flex>
 
                     <Field name="name">
                       {({ field, form }: { field: any; form: any }) => (
@@ -185,7 +188,8 @@ export const CreateCourse = (props: { block_id: string }) => {
                       }) => (
                         <FormControl>
                           <FormLabel htmlFor="color">Course color</FormLabel>
-                          <SliderPicker
+                          <TwitterPicker
+                            triangle="hide"
                             color={field.value}
                             onChangeComplete={(e, event) => {
                               form.setFieldValue("color", e.hex, true);

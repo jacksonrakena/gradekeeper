@@ -1,4 +1,3 @@
-import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertDescription,
@@ -9,37 +8,45 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   AlertIcon,
-  AlertTitle,
   Box,
   Button,
+  Divider,
   Heading,
-  IconButton,
-  Skeleton,
+  Spinner,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
-import { _null } from "../../../lib/logic";
+import { ProcessedStudyBlock, _null } from "../../../lib/logic";
 import { useUserContext } from "../../../lib/UserContext";
 import Footer from "../Footer";
 import { TopBar } from "../TopBar";
-import CoursePill from "./CoursePill";
 import CreateBlockModal from "./CreateBlockModal";
 import CreateCourseModal from "./CreateCourseModal";
+import { StudyBlockCourseList } from "./StudyBlockCourseList";
 
 const CourseList = () => {
   const { user } = useUserContext();
   const isLoading = !user;
   const cancelRef = useRef<any>();
-  const [deleteStudyBlock, setDeleteStudyBlock] = useState(_null<any>());
+  const [deleteStudyBlock, setDeleteStudyBlock] = useState(_null<ProcessedStudyBlock>());
   const toast = useToast();
   const router = useRouter();
   const [isDeletingStudyBlock, setIsDeletingSb] = useState(false);
   const context = useUserContext();
   const [courseCreateBlockId, setCourseCreateBlockId] = useState("");
   const createBlockDisclosure = useDisclosure();
+
+  const closedStudyBlocks = user?.processedStudyBlocks
+    .filter((e) => Date.now() > new Date(e.endDate).getTime())
+    .sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
+
+  const openStudyBlocks = user?.processedStudyBlocks
+    .filter((e) => Date.now() < new Date(e.endDate).getTime())
+    .sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
   return (
     <>
       <div className="mb-12">
@@ -62,7 +69,7 @@ const CourseList = () => {
                 </AlertDialogHeader>
                 <AlertDialogBody>
                   Are you <strong>sure</strong> you want to delete {deleteStudyBlock?.name}? <br />
-                  This will delete <strong>{deleteStudyBlock?.subjects.length}</strong> courses.
+                  This will delete <strong>{deleteStudyBlock?.processedCourses.length}</strong> courses.
                 </AlertDialogBody>
                 <AlertDialogFooter>
                   <Button
@@ -102,96 +109,81 @@ const CourseList = () => {
           <CreateBlockModal isOpen={createBlockDisclosure.isOpen} onClose={createBlockDisclosure.onClose} />
           <div>
             <div className={"flex flex-col px-12"}>
-              <Skeleton isLoaded={(user && !isLoading) ?? false}>
-                {(!user?.processedStudyBlocks || user?.processedStudyBlocks?.length === 0) && (
-                  <div>
+              {(!user || isLoading) && <Spinner />}
+              {user && !isLoading && (
+                <Box>
+                  {(!user?.processedStudyBlocks || user?.processedStudyBlocks?.length === 0) && (
                     <div>
-                      <Box mb={6}>
-                        <Heading as="h2" size="md">
-                          Welcome to Gradekeeper.
-                        </Heading>
-                        <Heading size="sm">Let&apos;s get you set up.</Heading>
-                      </Box>
-                      <Box mb={6}>
-                        Gradekeeper is organised around a system of &lsquo;study blocks&rsquo;, which can be trimesters, semesters, or
-                        terms, depending on your university.
-                      </Box>
-                      <Box mb={6}>
-                        <Alert>
-                          <AlertIcon />
-                          <AlertDescription>Let&apos;s start by making a study block.</AlertDescription>
-                        </Alert>
-                      </Box>
-                      <Button colorScheme="orange" size="sm" onClick={createBlockDisclosure.onOpen}>
-                        + New study block
-                      </Button>
-                    </div>
-                  </div>
-                )}
-                {user &&
-                  user.processedStudyBlocks &&
-                  (user?.processedStudyBlocks?.length ?? 0) > 0 &&
-                  user?.processedStudyBlocks?.map((studyBlock) => {
-                    const sbStart = new Date(studyBlock.startDate);
-                    const sbEnd = new Date(studyBlock.endDate);
-                    const dtf = new Intl.DateTimeFormat("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    });
-                    return (
-                      <div key={studyBlock.id} className="mb-12">
-                        <div className="flex">
-                          <Heading size="lg">
-                            {studyBlock.name}
-                            <IconButton
-                              onClick={() => {
-                                setDeleteStudyBlock(studyBlock);
-                              }}
-                              className="ml-4"
-                              icon={<DeleteIcon />}
-                              size="xs"
-                              aria-label={"Delete"}
-                              colorScheme="teal"
-                            />
+                      <div>
+                        <Box mb={6}>
+                          <Heading as="h2" size="md">
+                            Welcome to Gradekeeper.
                           </Heading>
-                        </div>
-                        <div className="text-md">
-                          {dtf.format(sbStart)} &#8212; {dtf.format(sbEnd)}
-                        </div>
-
-                        {user.processedStudyBlocks.length === 1 && studyBlock.processedCourses.length === 0 && (
-                          <Box mt={4}>
-                            <Alert>
-                              <AlertIcon />
-                              <AlertTitle>Great job!</AlertTitle>
-                              <AlertDescription>Now, let&apos;s make a course in {studyBlock.name}.</AlertDescription>
-                            </Alert>
-                          </Box>
-                        )}
-
-                        {studyBlock.processedCourses.map((subject) => (
-                          <CoursePill
-                            key={subject.id}
-                            onClick={() => {
-                              router.push(`/blocks/${studyBlock.id}/courses/${subject.id}`);
-                            }}
-                            subject={subject}
-                          />
-                        ))}
-
-                        <Button onClick={() => setCourseCreateBlockId(studyBlock.id)} mt={4} colorScheme="teal" size="sm">
-                          + New course in {studyBlock.name}
+                          <Heading size="sm">Let&apos;s get you set up.</Heading>
+                        </Box>
+                        <Box mb={6}>
+                          Gradekeeper is organised around a system of &lsquo;study blocks&rsquo;, which can be trimesters, semesters, or
+                          terms, depending on your university.
+                        </Box>
+                        <Box mb={6}>
+                          <Alert>
+                            <AlertIcon />
+                            <AlertDescription>Let&apos;s start by making a study block.</AlertDescription>
+                          </Alert>
+                        </Box>
+                        <Button colorScheme="orange" size="sm" onClick={createBlockDisclosure.onOpen}>
+                          + New study block
                         </Button>
                       </div>
-                    );
-                  })}
-                {user?.processedStudyBlocks && user?.processedStudyBlocks.length > 0 && (
-                  <Button colorScheme="orange" size="sm" onClick={createBlockDisclosure.onOpen}>
-                    + New trimester/semester
-                  </Button>
-                )}
-              </Skeleton>
+                    </div>
+                  )}
+                  {user &&
+                    user.processedStudyBlocks &&
+                    (user?.processedStudyBlocks?.length ?? 0) > 0 &&
+                    openStudyBlocks &&
+                    openStudyBlocks
+                      .sort((a, b) => {
+                        return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+                      })
+                      .map((studyBlock) => (
+                        <StudyBlockCourseList
+                          setCourseCreateBlockId={setCourseCreateBlockId}
+                          setDeleteStudyBlock={setDeleteStudyBlock}
+                          key={studyBlock.id}
+                          studyBlock={studyBlock}
+                        />
+                      ))}
+                  {user?.processedStudyBlocks && user?.processedStudyBlocks.length > 0 && (
+                    <Button colorScheme="orange" size="sm" onClick={createBlockDisclosure.onOpen}>
+                      + New term
+                    </Button>
+                  )}
+                  {closedStudyBlocks && closedStudyBlocks.length > 0 && (
+                    <>
+                      <Divider my={4} />
+                      <Text my={4} fontWeight="semibold" size={"xs"} color={"GrayText"}>
+                        Previous terms
+                      </Text>
+                      {user &&
+                        user.processedStudyBlocks &&
+                        (user?.processedStudyBlocks?.length ?? 0) > 0 &&
+                        closedStudyBlocks &&
+                        closedStudyBlocks
+                          .sort((a, b) => {
+                            return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+                          })
+                          .map((studyBlock) => (
+                            <StudyBlockCourseList
+                              setCourseCreateBlockId={setCourseCreateBlockId}
+                              setDeleteStudyBlock={setDeleteStudyBlock}
+                              key={studyBlock.id}
+                              studyBlock={studyBlock}
+                            />
+                          ))}
+                    </>
+                  )}
+                </Box>
+              )}
             </div>
           </div>
         </>

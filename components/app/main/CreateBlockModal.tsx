@@ -7,7 +7,7 @@ const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
       <Modal size="xl" isOpen={props.isOpen} onClose={props.onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create a new study block</ModalHeader>
+          <ModalHeader>Create a new study term</ModalHeader>
           <ModalBody>
             <CreateBlock onClose={props.onClose} />
           </ModalBody>
