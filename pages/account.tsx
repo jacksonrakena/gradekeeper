@@ -266,6 +266,11 @@ const Account: NextPage = () => {
             </Link>
             .
           </Text>
+          {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA && (
+            <Text>
+              Version <Code>{process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA}</Code>
+            </Text>
+          )}
         </Box>
       </Box>
     </>
