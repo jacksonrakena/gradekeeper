@@ -1,10 +1,10 @@
 import { SlideFade } from "@chakra-ui/react";
-import { Prisma, StudyBlock } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { ProcessedUserInfo, _undefined } from "../lib/logic";
+import { ProcessedUserInfo, processStudyBlock, _undefined } from "../lib/logic";
 import { Chakra } from "../lib/theme/Chakra";
 import { AppContext, UserContext } from "../lib/UserContext";
 import "../styles/globals.css";
@@ -16,16 +16,21 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
     user: user,
     setUser: setUser,
     redownload: async () => {
+      console.log("Re-downloading user information");
       fetch("/api/user")
         .then((d) => d.json())
         .then((e) => {
+          console.log("Parsing user information");
           const prismaResponse: Prisma.UserGetPayload<typeof getUserQuery> = e;
-          setUser({
+          console.log("Raw user information: ", prismaResponse);
+          const newUserInfo = {
             ...prismaResponse,
             processedStudyBlocks: prismaResponse.studyBlocks.map((rawStudyBlock) =>
               processStudyBlock(rawStudyBlock, prismaResponse.gradeMap)
             ),
-          });
+          };
+          console.log("New user information: ", newUserInfo);
+          setUser(newUserInfo);
         })
         .catch(() => {});
     },
@@ -85,13 +90,3 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
 }
 
 export default MyApp;
-function processStudyBlock(
-  rawStudyBlock: StudyBlock & {
-    subjects: (import(".prisma/client").Subject & {
-      components: (import(".prisma/client").SubjectComponent & { subcomponents: import(".prisma/client").SubjectSubcomponent[] })[];
-    })[];
-  },
-  gradeMap: string | number | boolean | Prisma.JsonObject | Prisma.JsonArray | null
-): any {
-  throw new Error("Function not implemented.");
-}

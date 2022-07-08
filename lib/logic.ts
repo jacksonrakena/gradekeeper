@@ -20,7 +20,7 @@ export type ProcessedStudyBlock = StudyBlock & {
 export type ProcessedUserInfo = Omit<Prisma.UserGetPayload<typeof getUserQuery>, "studyBlocks"> & {
   processedStudyBlocks: ProcessedStudyBlock[];
 };
-function processStudyBlock(rawStudyBlock: StudyBlock & { subjects: FullSubject[] }, gradeMap: any): ProcessedStudyBlock {
+export function processStudyBlock(rawStudyBlock: StudyBlock & { subjects: FullSubject[] }, gradeMap: any): ProcessedStudyBlock {
   return { ...rawStudyBlock, processedCourses: rawStudyBlock.subjects.map((rawSubject) => processCourseInfo(rawSubject, gradeMap)) };
 }
 
@@ -71,7 +71,6 @@ export function calculateMaximumPossibleCourseGrade(subject: FullSubject, gradeM
   const numericalvalue = subject.components
     ?.map((g) => {
       const grade = calculateMaximumPossibleComponentGrade(g);
-      console.log(g.name + ": " + grade.value * g.subjectWeighting);
       return grade.value * g.subjectWeighting;
     })
     .reduce((a, b) => a + b);
