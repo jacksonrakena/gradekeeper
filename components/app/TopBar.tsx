@@ -28,8 +28,10 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
   const router = useRouter();
   const user = useUserContext();
   const cm = useColorMode();
-  const studyBlocks = user.user?.studyBlocks;
-  const subjects = user.user?.studyBlocks?.flatMap((d) => d.subjects);
+  const studyBlocks = user.user?.processedStudyBlocks;
+  const subjects = user.user?.processedStudyBlocks
+    ?.filter((e) => Date.now() < new Date(e.endDate).getTime())
+    .flatMap((d) => d.processedCourses);
   const currentSubject = subjects && props.currentSubjectId ? subjects.filter((d) => d.id === props.currentSubjectId)[0] : null;
   const blockMap = subjects?.reduce((block, course) => {
     block[course.studyBlockId] = block[course.studyBlockId] ?? [];
