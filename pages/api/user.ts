@@ -34,9 +34,6 @@ export default gkAuthorizedRoute(async (req: NextApiRequest, res: NextApiRespons
       });
       return res.status(200).json(data ?? {});
     }
-    var users = await primsa.user.findMany({
-      include: { studyBlocks: { include: { subjects: { include: { components: { include: { subcomponents: true } } } } } } },
-    });
     return res.status(200).json(data ?? {});
   }
   if (req.method === "DELETE") {

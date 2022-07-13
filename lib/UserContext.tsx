@@ -1,10 +1,11 @@
 import { createContext, useContext } from "react";
-import { ProcessedCourseInfo, ProcessedUserInfo } from "./logic";
+import { FullSubject } from "./fullEntities";
+import { ProcessedUserInfo } from "./logic";
 
 export type AppContext = {
   user?: ProcessedUserInfo;
   setUser: (user: ProcessedUserInfo) => void;
-  updateCourse: (courseId: string, replacementCourse?: ProcessedCourseInfo) => void;
+  updateCourse: (courseId: string, replacementCourse?: FullSubject) => void;
   redownload: () => Promise<void>;
 };
 export const UserContext = createContext<AppContext>({

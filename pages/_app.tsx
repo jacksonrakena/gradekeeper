@@ -4,7 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { ProcessedUserInfo, processStudyBlock, _undefined } from "../lib/logic";
+import { processCourseInfo, ProcessedUserInfo, processStudyBlock, _undefined } from "../lib/logic";
 import { Chakra } from "../lib/theme/Chakra";
 import { AppContext, UserContext } from "../lib/UserContext";
 import "../styles/globals.css";
@@ -51,13 +51,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
             } else {
               if (sb.id === replacementCourse.studyBlockId) {
                 if (sb.processedCourses.filter((aa) => aa.id === courseId).length === 0) {
-                  sb.processedCourses.push(replacementCourse);
+                  sb.processedCourses.push(processCourseInfo(replacementCourse, user?.gradeMap as {}));
                   return sb;
                 }
                 return {
                   ...sb,
                   processedCourses: sb.processedCourses.map((subj) => {
-                    if (subj.id === replacementCourse.id) return replacementCourse;
+                    if (subj.id === replacementCourse.id) return processCourseInfo(replacementCourse, user?.gradeMap as {});
                     return subj;
                   }),
                 };

@@ -153,7 +153,9 @@ const Subject = (
           </div>
           <div className="text-xl" style={{ color: "#DDDDDD" }}>
             <span className="mr-4">
-              <span style={{ fontWeight: "" }}>Block:</span> <span>{studyBlock?.name}</span>
+              <span style={{ color: pickTextColorBasedOnBgColorAdvanced(course?.color, "white", "black") }}>
+                <span>{studyBlock?.name}</span>
+              </span>
               <IconButton
                 onClick={() => {
                   disc.onOpen();
