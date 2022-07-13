@@ -140,7 +140,7 @@ const Subject = (
                   } else {
                   }
                 }}
-                inputProps={{ style: { display: "inline" } }}
+                inputProps={{ size: course?.longName.length, style: { display: "inline", color: "black" } }}
                 displayProps={{ style: { display: "inline", fontWeight: "bold" } }}
                 value={name}
                 onChange={(e) => setName(e)}
