@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Heading, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 

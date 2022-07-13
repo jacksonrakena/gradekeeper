@@ -63,7 +63,7 @@ const presets = {
 const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; onChange: (gradeMap: object) => void }) => {
   if (!props.userGradeMap) return <></>;
   const definedGrades = Object.values(props.userGradeMap);
-  const uninitDefault = Object.entries(presets["init"]).find(([pct, grade]) => grade === props.gradeString)?.[0];
+  const uninitDefault = Object.entries(presets["init"]).find(([pct, grade]) => grade === props.gradeString)?.[0] ?? "";
   const value = Object.entries(props.userGradeMap).find(([pct, grade]) => grade === props.gradeString);
   return (
     <Box my={2} mr={6}>
@@ -77,6 +77,7 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
             } else
               newGradeMap = Object.fromEntries(
                 Object.entries(newGradeMap).filter((d) => {
+                  // @ts-ignore
                   return d[0] !== value[0].toString();
                 })
               );
@@ -222,7 +223,7 @@ const Account: NextPage = () => {
         <Heading paddingBottom={6}>My account</Heading>
         <Stack spacing={12}>
           <Flex p={4} boxShadow={"md"} rounded="md" bgColor={"Background"}>
-            <Avatar src={data.data?.user?.image} size={"lg"} mr={4} />
+            <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"lg"} mr={4} />
             <Box>
               <Heading size="md">{data.data?.user?.name}</Heading>
               <Text>

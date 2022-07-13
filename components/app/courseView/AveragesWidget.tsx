@@ -4,7 +4,7 @@ import themeConstants from "../../../lib/theme/themeConstants";
 
 const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
   const actual = props.course.grades.actual;
-  const unachievedGrades =
+  const unachievedGrades: number[] =
     props.course.status.gradeMap &&
     Object.keys(props.course.status.gradeMap)
       .map(Number.parseFloat)
@@ -40,7 +40,7 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
               {unachievedGrades
                 ?.sort((a, b) => b - a)
                 .map((e) => (
-                  <Tr>
+                  <Tr key={e}>
                     <Td>
                       <Box>
                         <Text fontWeight="semibold">{props.course.status.gradeMap[e]}</Text>

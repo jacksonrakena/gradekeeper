@@ -76,6 +76,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
   };
   useEffect(() => {
     contextValue.redownload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>

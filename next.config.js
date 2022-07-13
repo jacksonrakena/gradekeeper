@@ -11,7 +11,6 @@ const withPWA = require("next-pwa");
  */
 const moduleExports = {
   reactStrictMode: true,
-  typescript: { ignoreBuildErrors: true },
 };
 
 /**

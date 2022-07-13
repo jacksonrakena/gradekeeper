@@ -36,7 +36,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
     subjects && props.currentSubjectId
       ? user.user?.processedStudyBlocks?.flatMap((d) => d.processedCourses).filter((d) => d.id === props.currentSubjectId)[0]
       : null;
-  const blockMap = subjects?.reduce((block, course) => {
+  const blockMap = subjects?.reduce((block: any, course: any) => {
     block[course.studyBlockId] = block[course.studyBlockId] ?? [];
     block[course.studyBlockId].push(course);
     return block;
@@ -59,8 +59,8 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
                   <Text fontWeight="semibold">Home</Text>
                 </MenuItem>
                 <MenuDivider />
-                {Object.keys(blockMap)
-                  .filter((blockName) => blockMap[blockName].filter((gg) => gg.id !== currentSubject?.id).length !== 0)
+                {Object.keys(blockMap as any)
+                  .filter((blockName) => blockMap[blockName].filter((gg: any) => gg.id !== currentSubject?.id).length !== 0)
                   .map((block) => (
                     <MenuGroup key={block} title={studyBlocks?.filter((d) => d.id === block)[0].name}>
                       {subjects
@@ -90,7 +90,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
                 <Menu>
                   <MenuButton as={Button} colorScheme={"teal"} rightIcon={<ChevronDownIcon />}>
                     <Flex alignItems="center">
-                      <Avatar size="sm" name={session.user?.name} src={session.user?.image} mr={2}></Avatar>
+                      <Avatar size="sm" name={session.user?.name ?? ""} src={session.user?.image ?? ""} mr={2}></Avatar>
                       {session.user?.name}
                     </Flex>
                   </MenuButton>

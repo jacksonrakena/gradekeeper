@@ -10,6 +10,7 @@ const config: ThemeConfig = {
 const theme = extendTheme({
   config,
   styles: {
+    // @ts-ignore
     global: (props) => ({
       "html, body": {
         background: mode("#f7f3f7", themeConstants.darkModePageBackground)(props),

@@ -48,7 +48,7 @@ export const CreateCourse = (props: { block_id: string }) => {
       id: randomColor(),
       dropLowest: 0,
       weighting: 0.2,
-      numberOfSubcomponents: 1,
+      numberOfSubcomponents: "1",
     },
   ];
   const [components, setComponents] = useState(emptyComponents);
@@ -254,7 +254,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                                         id: Math.random().toString(),
                                         dropLowest: 0,
                                         weighting: 0.2,
-                                        numberOfSubcomponents: 1,
+                                        numberOfSubcomponents: "1",
                                       },
                                     ]);
                                   }}

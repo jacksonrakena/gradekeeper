@@ -1,5 +1,5 @@
 import { Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input } from "@chakra-ui/react";
-import { Field, Form, Formik, useField, useFormikContext } from "formik";
+import { Field, FieldHookConfig, Form, Formik, useField, useFormikContext } from "formik";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -85,7 +85,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
 };
 const DatePickerField = ({ ...props }) => {
   const { setFieldValue } = useFormikContext();
-  const [field] = useField(props);
+  const [field] = useField(props as FieldHookConfig<any>);
   return (
     <DatePicker
       {...field}

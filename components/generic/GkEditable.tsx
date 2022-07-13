@@ -16,6 +16,7 @@ export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((pro
   const [editing, setEditing] = useState(false);
   if (editing) {
     return (
+      // @ts-ignore
       <form
         {...props.inputProps}
         onSubmit={(e) => {
@@ -59,3 +60,4 @@ export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((pro
     </Flex>
   );
 });
+GkEditable.displayName = "GkEditable";

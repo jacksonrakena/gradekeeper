@@ -4,7 +4,7 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHea
 import { Box, Input, Text, useColorModeValue } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import { useRef, useState } from "react";
-import { FullSubjectComponent } from "../../../lib/fullEntities";
+import { FullSubject, FullSubjectComponent } from "../../../lib/fullEntities";
 import { calculateLetterGrade, isActiveSubcomponent } from "../../../lib/logic";
 import { useUserContext } from "../../../lib/UserContext";
 
@@ -64,7 +64,7 @@ const ComponentEditModal = (props: {
               </Thead>
               <Tbody>
                 {subcomponents
-                  ?.sort((d, b) => d.numberInSequence - b.numberInSequence)
+                  ?.sort((d, b) => d.numberInSequence ?? 0 - (b.numberInSequence ?? 0))
                   .map((e, i) => {
                     return (
                       <Tr key={e.id}>
@@ -159,12 +159,13 @@ const ComponentEditModal = (props: {
                 })
               ).json();
               props.onReceiveUpdatedData(updatedComponent);
-              userContext.updateCourse(props.component?.subjectId, {
-                ...props.subject,
-                components: props?.subject.components.map((f) => {
-                  if (f.id === updatedComponent.id) return updatedComponent;
-                  return f;
-                }),
+              userContext.updateCourse(props.component?.subjectId ?? "", {
+                ...(props.subject as FullSubject),
+                components:
+                  props?.subject?.components.map((f) => {
+                    if (f.id === updatedComponent.id) return updatedComponent;
+                    return f;
+                  }) ?? [],
               });
             }}
           >

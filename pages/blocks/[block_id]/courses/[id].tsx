@@ -92,6 +92,7 @@ const Subject = (
   const cancelref = useRef<any>();
   const toast = useToast();
   const [name, setName] = useState(course?.longName);
+  const contrastingColor = useColorModeValue("white", themeConstants.darkModeContrastingColor);
   const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
   return (
     <div>
@@ -214,19 +215,13 @@ const Subject = (
         </div>
 
         {course.status.isCompleted && (
-          <div
-            className="p-6 m-4 shadow-md rounded-md"
-            style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
-          >
+          <div className="p-6 m-4 shadow-md rounded-md" style={{ backgroundColor: contrastingColor }}>
             <CourseCompletedWidget course={course} />
           </div>
         )}
 
         <div className="flex flex-wrap">
-          <div
-            className="grow m-4 p-6 shadow-md rounded-md overflow-auto"
-            style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
-          >
+          <div className="grow m-4 p-6 shadow-md rounded-md overflow-auto" style={{ backgroundColor: contrastingColor }}>
             <div style={{ color: course?.color }} className="text-2xl mb-2 font-bold">
               Results
             </div>
@@ -265,10 +260,7 @@ const Subject = (
         </div>
 
         {!course.status.isCompleted && (
-          <div
-            className="p-6 m-4 shadow-md rounded-md"
-            style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
-          >
+          <div className="p-6 m-4 shadow-md rounded-md" style={{ backgroundColor: contrastingColor }}>
             <div className="">
               <>
                 <div className="lg:flex">
