@@ -17,9 +17,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
     setUser: setUser,
     redownload: async () => {
       console.log("Re-downloading user information");
-      fetch("/api/user")
-        .then((d) => d.json())
-        .then((e) => {
+      async function download() {
+        try {
+          const d = await fetch("/api/user");
+          const e = await d.json();
           console.log("Parsing user information");
           const prismaResponse: Prisma.UserGetPayload<typeof getUserQuery> = e;
           console.log("Raw user information: ", prismaResponse);
@@ -31,8 +32,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
           };
           console.log("New user information: ", newUserInfo);
           setUser(newUserInfo);
-        })
-        .catch(() => {});
+        } catch (e) {
+          await new Promise((r) => setTimeout(r, 200));
+          console.error("Failed to download user data: ", e);
+          await download();
+        }
+      }
+      await download();
     },
     updateCourse: (courseId, replacementCourse) => {
       setUser({
