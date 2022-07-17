@@ -70,7 +70,7 @@ export const CourseImportModal = (props: { blockId: string; onClose: () => void 
               }
             }
           }}
-          colorScheme={"teal"}
+          colorScheme={"brand"}
         >
           Import
         </Button>

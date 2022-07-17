@@ -63,7 +63,7 @@ const SubjectPage: NextPage = () => {
       <>
         <TopBar />
         <Center>
-          <Spinner color="teal" />
+          <Spinner color="brand" />
         </Center>
       </>
     );
@@ -165,9 +165,9 @@ const Subject = (
                 icon={<DeleteIcon />}
                 size="xs"
                 aria-label={"Delete"}
-                colorScheme="teal"
+                colorScheme="brand"
               />
-              <Button size="xs" ml={2} onClick={cb.onCopy} colorScheme="teal" disabled={cb.hasCopied}>
+              <Button size="xs" ml={2} onClick={cb.onCopy} colorScheme="brand" disabled={cb.hasCopied}>
                 {cb.hasCopied ? "Copied" : "Copy share code"}
               </Button>
             </span>

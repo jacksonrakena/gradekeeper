@@ -28,7 +28,7 @@ const MarketingHome = () => {
               setLoadingApp(true);
               signIn("google");
             }}
-            colorScheme={"teal"}
+            colorScheme={"brand"}
           >
             Get started <ArrowForwardIcon ml={2} />
           </Button>

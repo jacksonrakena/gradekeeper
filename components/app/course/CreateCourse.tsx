@@ -199,7 +199,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                       )}
                     </Field>
                   </Stack>
-                  <Button mt={4} colorScheme={"teal"} onClick={() => setTabIndex(1)}>
+                  <Button mt={4} colorScheme={"brand"} onClick={() => setTabIndex(1)}>
                     Next
                   </Button>
                 </TabPanel>
@@ -269,7 +269,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                       </TableContainer>
                     </div>
                   </div>
-                  <Button mt={4} colorScheme={"teal"} onClick={() => setTabIndex(2)}>
+                  <Button mt={4} colorScheme={"brand"} onClick={() => setTabIndex(2)}>
                     Next
                   </Button>
                 </TabPanel>
@@ -278,7 +278,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                     On the next screen, you&apos;ll be able to record your results so far.
                   </Text>
 
-                  <Button type="submit" isLoading={isSubmitting} colorScheme="teal">
+                  <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
                     Create
                   </Button>
                 </TabPanel>

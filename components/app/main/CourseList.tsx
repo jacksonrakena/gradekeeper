@@ -154,7 +154,7 @@ const CourseList = () => {
                         />
                       ))}
                   {user?.processedStudyBlocks && user?.processedStudyBlocks.length > 0 && (
-                    <Button colorScheme="orange" size="sm" onClick={createBlockDisclosure.onOpen}>
+                    <Button colorScheme="brand" size="sm" onClick={createBlockDisclosure.onOpen}>
                       + New term
                     </Button>
                   )}

@@ -74,7 +74,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                 )}
               </Field>
             </Flex>
-            <Button type="submit" isLoading={isSubmitting} colorScheme="teal">
+            <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
               Create
             </Button>
           </Form>

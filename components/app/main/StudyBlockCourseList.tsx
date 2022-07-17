@@ -25,13 +25,13 @@ const StudyBlockCourseList = (props: {
   return (
     <div key={studyBlock.id} className="mb-12">
       <div className="flex">
-        <Heading size="lg">
+        <Heading size="lg" color="brand.700">
           {studyBlock.name}
           <IconButton
             className="ml-4"
             size="xs"
             aria-label={"Create"}
-            colorScheme={"blue"}
+            colorScheme={"brand"}
             icon={<BsPlusLg />}
             onClick={() => props.setCourseCreateBlockId(studyBlock.id)}
           />
@@ -43,7 +43,7 @@ const StudyBlockCourseList = (props: {
             icon={<DeleteIcon />}
             size="xs"
             aria-label={"Delete"}
-            colorScheme="teal"
+            colorScheme="brand"
           />
         </Heading>
       </div>

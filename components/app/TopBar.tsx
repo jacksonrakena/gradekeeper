@@ -47,7 +47,7 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
         <div className="grow">
           {subjects && props.currentSubjectId && (
             <Menu isLazy={true}>
-              <MenuButton colorScheme={"teal"} as={Button} rightIcon={<ChevronDownIcon />}>
+              <MenuButton colorScheme={"brand"} as={Button} rightIcon={<ChevronDownIcon />}>
                 {currentSubject?.courseCodeName} {currentSubject?.courseCodeNumber}
               </MenuButton>
               <MenuList>
@@ -87,8 +87,8 @@ export const TopBar = (props: { currentSubjectId?: string }) => {
           <SkeletonText isLoaded={sessiondata.status !== "loading"}>
             {session ? (
               <>
-                <Menu>
-                  <MenuButton as={Button} colorScheme={"teal"} rightIcon={<ChevronDownIcon />}>
+                <Menu colorScheme={"brand"}>
+                  <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>
                     <Flex alignItems="center">
                       <Avatar size="sm" name={session.user?.name ?? ""} src={session.user?.image ?? ""} mr={2}></Avatar>
                       {session.user?.name}

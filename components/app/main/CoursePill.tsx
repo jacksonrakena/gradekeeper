@@ -1,4 +1,4 @@
-import { Icon, Tag, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Icon, Tag, Text, useColorModeValue } from "@chakra-ui/react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { ProcessedCourseInfo } from "../../../lib/logic";
 import themeConstants from "../../../lib/theme/themeConstants";
@@ -18,7 +18,7 @@ const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any })
         backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor),
       }}
     >
-      <Text size="md">
+      <Text size="md" fontWeight={"semibold"}>
         <span style={{ color: subject.color }} className="pr-4">
           {subject.courseCodeName} {subject.courseCodeNumber}
         </span>
@@ -27,18 +27,18 @@ const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any })
       {!subject.status.isCompleted ? (
         <>
           <div className="flex">
-            <div style={{ textAlign: "center" }} className=" flex flex-col">
+            <Box style={{ textAlign: "center" }} className=" flex flex-col">
               {subject.grades.projected.numerical === 0 ? (
-                <Tag px={3} my={3} colorScheme={"teal"}>
+                <Tag px={3} my={3} colorScheme={"brand"}>
                   No data
                 </Tag>
               ) : (
-                <>
+                <Flex flexDir={"column"} mx={2}>
                   <span style={{ fontWeight: "bold" }}>{subject.grades.projected.letter}</span>
                   <span>{(subject.grades.projected.numerical * 100).toFixed(2)}%</span>
-                </>
+                </Flex>
               )}
-            </div>
+            </Box>
 
             <div className="py-3 px-4 flex grow">
               <div style={{ backgroundColor: "#D9D9D9" }} className="rounded flex grow">

@@ -145,7 +145,7 @@ const ComponentEditModal = (props: {
         <ModalFooter>
           <Button
             isLoading={loading}
-            colorScheme="teal"
+            colorScheme="brand"
             onClick={async () => {
               setLoading(true);
               const updatedComponent = await (

@@ -137,7 +137,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
       </Flex>
       <Box>
         <Button
-          colorScheme={"teal"}
+          colorScheme={"brand"}
           isLoading={saving}
           onClick={async () => {
             isSaving(true);
@@ -262,7 +262,7 @@ const Account: NextPage = () => {
           <Text>Gradekeeper is powered by open-source software.</Text>
           <Text>
             Gradekeeper is{" "}
-            <Link color="teal.500" href="https://github.com/jacksonrakena/gradekeeper" isExternal>
+            <Link color="brand.500" href="https://github.com/jacksonrakena/gradekeeper" isExternal>
               open-source <ExternalLinkIcon mx="2px" />
             </Link>
             .

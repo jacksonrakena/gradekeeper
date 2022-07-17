@@ -1,5 +1,5 @@
 import { DeleteIcon } from "@chakra-ui/icons";
-import { Tr, Td, Input, NumberInput, NumberInputField, IconButton } from "@chakra-ui/react";
+import { IconButton, Input, NumberInput, NumberInputField, Td, Tr } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { singularMap } from "../../../lib/logic";
 import { ComponentDto } from "./CreateCourse";
@@ -78,7 +78,7 @@ export const CreateCourseComponentRow = (props: {
       </Td>
       <Td className="p-2">
         <IconButton
-          colorScheme="teal"
+          colorScheme="brand"
           aria-label="Delete row"
           icon={<DeleteIcon />}
           onClick={() => {
