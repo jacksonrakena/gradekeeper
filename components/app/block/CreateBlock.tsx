@@ -126,7 +126,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
               <Box className="my-4">
                 <FormLabel>Or, select a template:</FormLabel>
                 <Flex>
-                  <Box>
+                  <Box mr="8">
                     <FormLabel>Institution</FormLabel>
                     <Select
                       placeholder="Select an institution"
@@ -139,7 +139,6 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                       ))}
                     </Select>
                   </Box>
-                  <Divider orientation="vertical" />
                   <Box>
                     {institutionTemplates && (
                       <>
