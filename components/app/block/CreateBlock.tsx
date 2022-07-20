@@ -135,7 +135,9 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                       }}
                     >
                       {Object.keys(templates).map((e) => (
-                        <option value={e}>{e}</option>
+                        <option key={e} value={e}>
+                          {e}
+                        </option>
                       ))}
                     </Select>
                   </Box>
@@ -156,7 +158,9 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                           }}
                         >
                           {institutionTemplates.map((e) => (
-                            <option value={e.name}>{e.name}</option>
+                            <option key={e.name} value={e.name}>
+                              {e.name}
+                            </option>
                           ))}
                         </Select>
                       </>
