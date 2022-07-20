@@ -231,9 +231,7 @@ const Subject = (
 
         <div className="flex flex-wrap">
           <div className="grow m-4 p-6 shadow-md rounded-md overflow-auto" style={{ backgroundColor: contrastingColor }}>
-            <Box color={"brand.600"} className="text-2xl mb-2 font-bold">
-              Results
-            </Box>
+            <Box className="text-2xl mb-2 font-bold">Results</Box>
             <TableContainer>
               <Table variant="simple">
                 <Thead>

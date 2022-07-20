@@ -127,7 +127,7 @@ const ComponentRow = (props: {
           />
         )}
       </Td>
-      <Td pl={0} color={"brand.800"} className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}>
+      <Td pl={0} color={"brand"} className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}>
         {sectionLoadingUpdate === "score" ? (
           <>
             <Spinner color={subject.color} size="sm" />
