@@ -11,10 +11,9 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import { Field, FieldHookConfig, Form, Formik, useField, useFormikContext } from "formik";
+import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useUserContext } from "../../../lib/UserContext";
 
@@ -63,7 +62,15 @@ export const CreateBlock = (props: { onClose: () => void }) => {
             return errors;
           }}
           onSubmit={(values, { setSubmitting }) => {
-            fetch(`/api/block/create`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(values) })
+            fetch(`/api/block/create`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...values,
+                startDate: typeof values.startDate === "string" ? new Date(values.startDate) : values.startDate,
+                endDate: typeof values.endDate === "string" ? new Date(values.endDate) : values.endDate,
+              }),
+            })
               .then((e) => e.json())
               .then((f) => {
                 context.redownload().then(() => {
@@ -103,7 +110,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                     {({ field, form }: { field: any; form: any }) => (
                       <FormControl mb={4} isInvalid={form.errors.startDate && form.touched.startDate}>
                         <FormLabel htmlFor="startDate">Start date</FormLabel>
-                        <DatePickerField name="startDate" />
+                        <Field type="date" name="startDate" />
                         <FormErrorMessage>{form.errors.startDate}</FormErrorMessage>
                       </FormControl>
                     )}
@@ -112,7 +119,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                     {({ field, form }: { field: any; form: any }) => (
                       <FormControl mb={4} isInvalid={form.errors.endDate && form.touched.endDate}>
                         <FormLabel htmlFor="endDate">End date</FormLabel>
-                        <DatePickerField name="endDate" />
+                        <Field type="date" name="endDate" />
                         <FormErrorMessage>{form.errors.endDate}</FormErrorMessage>
                       </FormControl>
                     )}
@@ -185,19 +192,5 @@ export const CreateBlock = (props: { onClose: () => void }) => {
         </Formik>
       </Box>
     </Box>
-  );
-};
-const DatePickerField = ({ ...props }) => {
-  const { setFieldValue } = useFormikContext();
-  const [field] = useField(props as FieldHookConfig<any>);
-  return (
-    <DatePicker
-      {...field}
-      {...props}
-      selected={(field.value && new Date(field.value)) || null}
-      onChange={(val: any) => {
-        setFieldValue(field.name, val);
-      }}
-    />
   );
 };

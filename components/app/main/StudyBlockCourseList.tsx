@@ -25,7 +25,7 @@ const StudyBlockCourseList = (props: {
   return (
     <div key={studyBlock.id} className="mb-12">
       <div className="flex">
-        <Heading size="lg" color="brand.700">
+        <Heading size="lg">
           {studyBlock.name}
           <IconButton
             className="ml-4"

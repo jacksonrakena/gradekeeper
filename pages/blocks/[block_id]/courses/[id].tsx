@@ -111,7 +111,7 @@ const Subject = (
         <></>
       )}
       <>
-        <Box bgColor="brand.200" className="p-8">
+        <Box bgColor={course?.color} className="p-8">
           <Box
             className="text-3xl"
             color="brand.900"
