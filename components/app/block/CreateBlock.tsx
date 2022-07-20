@@ -14,7 +14,6 @@ import {
 import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import "react-datepicker/dist/react-datepicker.css";
 import { useUserContext } from "../../../lib/UserContext";
 
 const templates: { [key: string]: { name: string; startDate: Date; endDate: Date }[] } = {
