@@ -173,44 +173,48 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                   </Box>
                 )}
               </Box>
-              <Divider />
-              <Box className="my-4">
-                <FormLabel>Or, create one from scratch:</FormLabel>
-                <Field name="name">
-                  {({ field, form }: { field: any; form: any }) => (
-                    <FormControl mb={4} isInvalid={form.errors.name && form.touched.name}>
-                      <FormLabel htmlFor="name">Name</FormLabel>
-                      <Input variant="filled" {...field} placeholder="Trimester 1" id="name" type="text" />
-                      <FormHelperText>For example, Trimester 1 or Semester 2.</FormHelperText>
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                    </FormControl>
-                  )}
-                </Field>
-                <Flex direction={"row"}>
-                  {" "}
-                  <Field name="startDate">
-                    {({ field, form }: { field: any; form: any }) => (
-                      <FormControl mb={4} isInvalid={form.errors.startDate && form.touched.startDate}>
-                        <FormLabel htmlFor="startDate">Start date</FormLabel>
-                        <Field type="date" name="startDate" />
-                        <FormErrorMessage>{form.errors.startDate}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="endDate">
-                    {({ field, form }: { field: any; form: any }) => (
-                      <FormControl mb={4} isInvalid={form.errors.endDate && form.touched.endDate}>
-                        <FormLabel htmlFor="endDate">End date</FormLabel>
-                        <Field type="date" name="endDate" />
-                        <FormErrorMessage>{form.errors.endDate}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                </Flex>
-                <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
-                  Create
-                </Button>
-              </Box>
+              {!selectedTemplate && (
+                <>
+                  <Divider />
+                  <Box className="my-4">
+                    <FormLabel>Or, create one from scratch:</FormLabel>
+                    <Field name="name">
+                      {({ field, form }: { field: any; form: any }) => (
+                        <FormControl mb={4} isInvalid={form.errors.name && form.touched.name}>
+                          <FormLabel htmlFor="name">Name</FormLabel>
+                          <Input variant="filled" {...field} placeholder="Trimester 1" id="name" type="text" />
+                          <FormHelperText>For example, Trimester 1 or Semester 2.</FormHelperText>
+                          <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Flex direction={"row"}>
+                      {" "}
+                      <Field name="startDate">
+                        {({ field, form }: { field: any; form: any }) => (
+                          <FormControl mb={4} isInvalid={form.errors.startDate && form.touched.startDate}>
+                            <FormLabel htmlFor="startDate">Start date</FormLabel>
+                            <Field type="date" name="startDate" />
+                            <FormErrorMessage>{form.errors.startDate}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                      <Field name="endDate">
+                        {({ field, form }: { field: any; form: any }) => (
+                          <FormControl mb={4} isInvalid={form.errors.endDate && form.touched.endDate}>
+                            <FormLabel htmlFor="endDate">End date</FormLabel>
+                            <Field type="date" name="endDate" />
+                            <FormErrorMessage>{form.errors.endDate}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Flex>
+                    <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
+                      Create
+                    </Button>
+                  </Box>
+                </>
+              )}
             </Form>
           )}
         </Formik>
