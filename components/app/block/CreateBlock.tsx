@@ -9,6 +9,7 @@ import {
   FormLabel,
   Input,
   Select,
+  Spacer,
   Text,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
@@ -16,22 +17,39 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useUserContext } from "../../../lib/UserContext";
 
-const templates: { [key: string]: { name: string; startDate: Date; endDate: Date }[] } = {
+const templates: { [key: string]: { name: string; startDate: string; endDate: string }[] } = {
   "Victoria University of Wellington": [
     {
       name: "Trimester 1, 2022",
-      startDate: new Date(2022, 2, 28),
-      endDate: new Date(2022, 6, 26),
+      startDate: "2022-02-28",
+      endDate: "2022-06-26",
     },
     {
       name: "Trimester 2, 2022",
-      startDate: new Date(2022, 7, 11),
-      endDate: new Date(2022, 11, 13),
+      startDate: "2022-07-11",
+      endDate: "2022-11-13",
     },
     {
       name: "Trimester 3, 2022",
-      startDate: new Date(2022, 11, 14),
-      endDate: new Date(2023, 2, 13),
+      startDate: "2022-11-14",
+      endDate: "2023-02-13",
+    },
+  ],
+  "University of Canterbury": [
+    {
+      name: "Semester 1, 2022",
+      startDate: "2022-02-21",
+      endDate: "2022-06-25",
+    },
+    {
+      name: "Semester 2, 2022",
+      startDate: "2022-07-18",
+      endDate: "2022-10-21",
+    },
+    {
+      name: "Summer School, 2022",
+      startDate: "2022-11-14",
+      endDate: "2023-02-17",
     },
   ],
 };
@@ -39,8 +57,8 @@ const templates: { [key: string]: { name: string; startDate: Date; endDate: Date
 export const CreateBlock = (props: { onClose: () => void }) => {
   const router = useRouter();
   const context = useUserContext();
-  const [institutionTemplates, setTemplates] = useState<{ name: string; startDate: Date; endDate: Date }[]>();
-  const [selectedTemplate, setSelectedTemplate] = useState<{ name: string; startDate: Date; endDate: Date }>();
+  const [institutionTemplates, setTemplates] = useState<{ name: string; startDate: string; endDate: string }[]>();
+  const [selectedTemplate, setSelectedTemplate] = useState<{ name: string; startDate: string; endDate: string }>();
   const dtf = new Intl.DateTimeFormat("en-US", {
     month: "long",
     day: "numeric",
@@ -54,7 +72,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
       <Box>
         {" "}
         <Formik
-          initialValues={{ name: "", startDate: new Date(), endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)) }}
+          initialValues={{ name: "", startDate: "", endDate: "" }}
           validate={(values) => {
             const errors: any = {};
             if (!values.name) errors["name"] = "Required";
@@ -93,6 +111,71 @@ export const CreateBlock = (props: { onClose: () => void }) => {
           }) => (
             <Form onSubmit={handleSubmit}>
               <Box className="my-4">
+                <FormLabel>Select a template:</FormLabel>
+                <Flex>
+                  <Box>
+                    <FormLabel>Institution</FormLabel>
+                    <Select
+                      placeholder="Select an institution"
+                      onChange={(f) => {
+                        if (!f.target.value) {
+                          setSelectedTemplate(undefined);
+                        }
+                        setTemplates(templates[f.target.value]);
+                      }}
+                    >
+                      {Object.keys(templates).map((e) => (
+                        <option key={e} value={e}>
+                          {e}
+                        </option>
+                      ))}
+                    </Select>
+                  </Box>
+                  <Spacer />
+                  <Box>
+                    {institutionTemplates && (
+                      <>
+                        <FormLabel>Template:</FormLabel>
+                        <Select
+                          placeholder="Select a term"
+                          onChange={(f) => {
+                            if (!f.target.value) {
+                              setSelectedTemplate(undefined);
+                            } else {
+                              const nt = institutionTemplates.filter((g) => g.name == f.target.value)[0];
+                              setSelectedTemplate(nt);
+                              setValues(nt);
+                            }
+                          }}
+                        >
+                          {institutionTemplates.map((e) => (
+                            <option key={e.name} value={e.name}>
+                              {e.name}
+                            </option>
+                          ))}
+                        </Select>
+                      </>
+                    )}
+                  </Box>
+                </Flex>
+                {selectedTemplate && (
+                  <Box className="my-4">
+                    <FormLabel>You've selected:</FormLabel>
+                    <Flex alignItems={"center"} direction={"column"}>
+                      <Text>{selectedTemplate.name}</Text>
+                      <Text color="brand.600" size="sm" className="mb-4">
+                        {dtf.format(new Date(selectedTemplate.startDate))} — {dtf.format(new Date(selectedTemplate.endDate))}
+                      </Text>
+                    </Flex>
+                    <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
+                      Create from template
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+              <Divider />
+              <Box className="my-4">
+                <FormLabel>Or, create one from scratch:</FormLabel>
                 <Field name="name">
                   {({ field, form }: { field: any; form: any }) => (
                     <FormControl mb={4} isInvalid={form.errors.name && form.touched.name}>
@@ -127,64 +210,6 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                 <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
                   Create
                 </Button>
-              </Box>
-              <Divider />
-              <Box className="my-4">
-                <FormLabel>Or, select a template:</FormLabel>
-                <Flex>
-                  <Box mr="8">
-                    <FormLabel>Institution</FormLabel>
-                    <Select
-                      placeholder="Select an institution"
-                      onChange={(f) => {
-                        setTemplates(templates[f.target.value]);
-                      }}
-                    >
-                      {Object.keys(templates).map((e) => (
-                        <option key={e} value={e}>
-                          {e}
-                        </option>
-                      ))}
-                    </Select>
-                  </Box>
-                  <Box>
-                    {institutionTemplates && (
-                      <>
-                        <FormLabel>Template:</FormLabel>
-                        <Select
-                          placeholder="Select a term"
-                          onChange={(f) => {
-                            if (!f.target.value) {
-                              setSelectedTemplate(undefined);
-                            } else {
-                              const nt = institutionTemplates.filter((g) => g.name == f.target.value)[0];
-                              setSelectedTemplate(nt);
-                              setValues(nt);
-                            }
-                          }}
-                        >
-                          {institutionTemplates.map((e) => (
-                            <option key={e.name} value={e.name}>
-                              {e.name}
-                            </option>
-                          ))}
-                        </Select>
-                      </>
-                    )}
-                  </Box>
-                </Flex>
-                {selectedTemplate && (
-                  <Box className="my-4">
-                    <FormLabel>You've selected:</FormLabel>
-                    <Text>{selectedTemplate.name}</Text>
-                    <Text size="sm" className="mb-4">
-                      {dtf.format(selectedTemplate.startDate)} — {dtf.format(selectedTemplate.endDate)}
-                    </Text>
-                    <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
-                      Create from template
-                    </Button>
-                  </Box>
-                )}
               </Box>
             </Form>
           )}
