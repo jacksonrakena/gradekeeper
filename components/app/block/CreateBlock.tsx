@@ -135,7 +135,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                   <Box>
                     {institutionTemplates && (
                       <>
-                        <FormLabel>Template:</FormLabel>
+                        <FormLabel>Term</FormLabel>
                         <Select
                           placeholder="Select a term"
                           onChange={(f) => {
