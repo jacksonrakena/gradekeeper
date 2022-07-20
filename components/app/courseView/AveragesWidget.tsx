@@ -24,9 +24,9 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
       className="grow m-4 p-6 shadow-md rounded-md"
       style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
     >
-      <div style={{ color: props.course?.color }} className="text-2xl mb-2 font-bold">
+      <Box color={"brand.600"} className="text-2xl mb-2 font-bold">
         Averages
-      </div>
+      </Box>
       <div>
         <TableContainer>
           <Table size="sm">
@@ -48,7 +48,7 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
                     </Td>
                     <Td>
                       <Flex direction={"row"}>
-                        <Text color={props.course.color} fontWeight="semibold">
+                        <Text color={"brand.800"} fontWeight="semibold">
                           {(((e - actual.numerical) / remainingPieces.reduce((a, b) => a + b)) * 100).toFixed(1)}
                         </Text>
                         %

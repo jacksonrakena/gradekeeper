@@ -40,14 +40,7 @@ import Footer from "../../../../components/app/Footer";
 import { TopBar } from "../../../../components/app/TopBar";
 import { GkEditable } from "../../../../components/generic/GkEditable";
 import { FullSubjectComponent } from "../../../../lib/fullEntities";
-import {
-  adjust,
-  calculateProjectedGradeForComponent,
-  pickTextColorBasedOnBgColorAdvanced,
-  ProcessedCourseInfo,
-  ProcessedStudyBlock,
-  _null,
-} from "../../../../lib/logic";
+import { adjust, calculateProjectedGradeForComponent, ProcessedCourseInfo, ProcessedStudyBlock, _null } from "../../../../lib/logic";
 import themeConstants from "../../../../lib/theme/themeConstants";
 import { useUserContext } from "../../../../lib/UserContext";
 
@@ -118,10 +111,18 @@ const Subject = (
         <></>
       )}
       <>
-        <div style={{ backgroundColor: course?.color }} className="p-8">
-          <div className="text-3xl" style={{ color: pickTextColorBasedOnBgColorAdvanced(course?.color ?? "", "white", "") }}>
+        <Box bgColor="brand.200" className="p-8">
+          <Box
+            className="text-3xl"
+            color="brand.900"
+            style={
+              {
+                /*color: pickTextColorBasedOnBgColorAdvanced(course?.color ?? "", "white", "")*/
+              }
+            }
+          >
             <span className="mr-4">
-              {course?.courseCodeName} {course?.courseCodeNumber}
+              <Text display="inline">{course?.courseCodeName}</Text> {course?.courseCodeNumber}
             </span>
             {sectionLoadingUpdate !== "longName" ? (
               <GkEditable
@@ -151,12 +152,20 @@ const Subject = (
                 <Spinner />
               </>
             )}
-          </div>
+          </Box>
           <div className="text-xl" style={{ color: "#DDDDDD" }}>
             <span className="mr-4">
-              <span style={{ color: pickTextColorBasedOnBgColorAdvanced(course?.color, "white", "black") }}>
+              <Box
+                display="inline"
+                color="brand.900"
+                style={
+                  {
+                    /*color: pickTextColorBasedOnBgColorAdvanced(course?.color, "white", "black")*/
+                  }
+                }
+              >
                 <span>{studyBlock?.name}</span>
-              </span>
+              </Box>
               <IconButton
                 onClick={() => {
                   disc.onOpen();
@@ -212,7 +221,7 @@ const Subject = (
               </AlertDialogOverlay>
             </AlertDialog>
           </div>
-        </div>
+        </Box>
 
         {course.status.isCompleted && (
           <div className="p-6 m-4 shadow-md rounded-md" style={{ backgroundColor: contrastingColor }}>
@@ -222,9 +231,9 @@ const Subject = (
 
         <div className="flex flex-wrap">
           <div className="grow m-4 p-6 shadow-md rounded-md overflow-auto" style={{ backgroundColor: contrastingColor }}>
-            <div style={{ color: course?.color }} className="text-2xl mb-2 font-bold">
+            <Box color={"brand.600"} className="text-2xl mb-2 font-bold">
               Results
-            </div>
+            </Box>
             <TableContainer>
               <Table variant="simple">
                 <Thead>
