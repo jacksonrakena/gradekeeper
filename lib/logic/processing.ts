@@ -1,5 +1,5 @@
 import { Prisma, StudyBlock, SubjectSubcomponent } from "@prisma/client";
-import { getUserQuery } from "../pages/api/user";
+import { getUserQuery } from "../../pages/api/user";
 import { FullSubject, FullSubjectComponent } from "./fullEntities";
 
 export function _null<T>(): T | null {

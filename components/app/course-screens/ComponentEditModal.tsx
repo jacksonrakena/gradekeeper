@@ -4,8 +4,8 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHea
 import { Box, Input, Text, useColorModeValue } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import { useRef, useState } from "react";
-import { FullSubject, FullSubjectComponent } from "../../../lib/fullEntities";
-import { calculateLetterGrade, isActiveSubcomponent } from "../../../lib/logic";
+import { FullSubject, FullSubjectComponent } from "../../../lib/logic/fullEntities";
+import { calculateLetterGrade, isActiveSubcomponent } from "../../../lib/logic/processing";
 import { useUserContext } from "../../../lib/UserContext";
 
 const ComponentEditModal = (props: {

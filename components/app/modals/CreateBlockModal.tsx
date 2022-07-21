@@ -17,6 +17,25 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useUserContext } from "../../../lib/UserContext";
 
+import { Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+
+const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
+  return (
+    <>
+      <Modal size="xl" isOpen={props.isOpen} onClose={props.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create a new study term</ModalHeader>
+          <ModalBody>
+            <CreateBlock onClose={props.onClose} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
+export default CreateBlockModal;
+
 const templates: { [key: string]: { name: string; startDate: string; endDate: string }[] } = {
   "Victoria University of Wellington": [
     {

@@ -4,7 +4,7 @@ import cuid from "cuid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ComponentDto } from "../../../../../components/app/course/CreateCourse";
 import { gkAuthorizedRoute } from "../../../../../lib/api/gkRoute";
-import { singularMap } from "../../../../../lib/logic";
+import { singularMap } from "../../../../../lib/logic/processing";
 
 export default gkAuthorizedRoute(
   async (
