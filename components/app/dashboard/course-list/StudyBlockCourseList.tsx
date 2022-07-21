@@ -2,8 +2,8 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Heading, IconButton } from "@chakra-ui/react";
 import router from "next/router";
 import { BsPlusLg } from "react-icons/bs";
-import { ProcessedStudyBlock } from "../../../lib/logic";
-import { useUserContext } from "../../../lib/UserContext";
+import { ProcessedStudyBlock } from "../../../../lib/logic/processing";
+import { useUserContext } from "../../../../lib/UserContext";
 import CoursePill from "./CoursePill";
 
 const StudyBlockCourseList = (props: {

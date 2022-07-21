@@ -4,7 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { processCourseInfo, ProcessedUserInfo, processStudyBlock, _undefined } from "../lib/logic";
+import { processCourseInfo, ProcessedUserInfo, processStudyBlock, _undefined } from "../lib/logic/processing";
 import { Chakra } from "../lib/theme/Chakra";
 import { AppContext, UserContext } from "../lib/UserContext";
 import "../styles/globals.css";

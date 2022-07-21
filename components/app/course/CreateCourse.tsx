@@ -27,7 +27,7 @@ import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from 
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { TwitterPicker } from "react-color";
-import { randomColor } from "../../../lib/logic";
+import { randomColor } from "../../../lib/logic/processing";
 import { useUserContext } from "../../../lib/UserContext";
 import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 

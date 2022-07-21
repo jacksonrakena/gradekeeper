@@ -1,8 +1,8 @@
 import { EditIcon } from "@chakra-ui/icons";
 import { Box, Flex, Spinner, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import { useState } from "react";
-import { FullSubjectComponent } from "../../../lib/fullEntities";
-import { calculateLetterGrade, ProcessedCourseInfo } from "../../../lib/logic";
+import { FullSubjectComponent } from "../../../lib/logic/fullEntities";
+import { calculateLetterGrade, ProcessedCourseInfo } from "../../../lib/logic/processing";
 import { useUserContext } from "../../../lib/UserContext";
 import { GkEditable } from "../../generic/GkEditable";
 
@@ -127,7 +127,7 @@ const ComponentRow = (props: {
           />
         )}
       </Td>
-      <Td pl={0} color={"brand.800"} className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}>
+      <Td pl={0} color={"brand"} className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}>
         {sectionLoadingUpdate === "score" ? (
           <>
             <Spinner color={subject.color} size="sm" />

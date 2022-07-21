@@ -19,6 +19,7 @@ import {
   Stack,
   Switch,
   Text,
+  useColorModeValue,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -27,7 +28,8 @@ import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
-import { TopBar } from "../components/app/TopBar";
+import { TopBar } from "../components/app/nav/TopBar";
+import themeConstants from "../lib/theme/themeConstants";
 import { useUserContext } from "../lib/UserContext";
 
 const predefinedGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-"];
@@ -94,6 +96,7 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
             props.onChange({ ...newmap, [c]: props.gradeString });
           }}
           variant={"filled"}
+          maxW={24}
           value={value ? value[0] : ""}
         >
           <NumberInputField disabled={!value} />
@@ -177,6 +180,7 @@ const Account: NextPage = () => {
   const cancelRef = useRef<any>();
   const toast = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
+  const accCardBg = useColorModeValue("white", themeConstants.darkModeContrastingColor);
   return (
     <>
       <AlertDialog {...deleteModal} leastDestructiveRef={cancelRef}>
@@ -219,16 +223,20 @@ const Account: NextPage = () => {
         <title>My account</title>
       </Head>
       <TopBar />
-      <Box paddingX={12}>
+      <Box paddingX={[6, 12]}>
         <Heading paddingBottom={6}>My account</Heading>
         <Stack spacing={12}>
-          <Flex p={4} boxShadow={"md"} rounded="md" bgColor={"Background"}>
-            <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"lg"} mr={4} />
+          <Flex direction="column" p={4} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={accCardBg}>
+            <Flex alignItems="center">
+              <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"md"} mr={4} />
+              <Box>
+                <Heading size="md">{data.data?.user?.name}</Heading>
+                <Text fontSize="md" color={"ActiveCaption"}>
+                  {data.data?.user?.email}
+                </Text>
+              </Box>
+            </Flex>
             <Box>
-              <Heading size="md">{data.data?.user?.name}</Heading>
-              <Text>
-                Connected to your Google account: <Code>{data.data?.user?.email}</Code>
-              </Text>
               <HStack mt={2}>
                 <Button
                   size="sm"

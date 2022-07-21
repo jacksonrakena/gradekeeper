@@ -20,15 +20,15 @@ import {
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
-import { ProcessedStudyBlock, _null } from "../../../lib/logic";
-import { useUserContext } from "../../../lib/UserContext";
-import Footer from "../Footer";
-import { TopBar } from "../TopBar";
-import CreateBlockModal from "./CreateBlockModal";
-import CreateCourseModal from "./CreateCourseModal";
+import { ProcessedStudyBlock, _null } from "../../../../lib/logic/processing";
+import { useUserContext } from "../../../../lib/UserContext";
+import Footer from "../../Footer";
+import CreateBlockModal from "../../modals/CreateBlockModal";
+import CreateCourseModal from "../../modals/CreateCourseModal";
+import { TopBar } from "../../nav/TopBar";
 import { StudyBlockCourseList } from "./StudyBlockCourseList";
 
-const CourseList = () => {
+const Dashboard = () => {
   const { user } = useUserContext();
   const isLoading = !user;
   const cancelRef = useRef<any>();
@@ -108,7 +108,7 @@ const CourseList = () => {
           <CreateCourseModal blockId={courseCreateBlockId} isOpen={!!courseCreateBlockId} onClose={() => setCourseCreateBlockId("")} />
           <CreateBlockModal isOpen={createBlockDisclosure.isOpen} onClose={createBlockDisclosure.onClose} />
           <div>
-            <div className={"flex flex-col px-12"}>
+            <Box className={"flex flex-col"} px={[6, 12]}>
               {(!user || isLoading) && <Spinner />}
               {user && !isLoading && (
                 <Box>
@@ -184,7 +184,7 @@ const CourseList = () => {
                   )}
                 </Box>
               )}
-            </div>
+            </Box>
           </div>
         </>
       </div>
@@ -195,4 +195,4 @@ const CourseList = () => {
   );
 };
 
-export default CourseList;
+export default Dashboard;

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
-import { FullSubject } from "./fullEntities";
-import { ProcessedUserInfo } from "./logic";
+import { FullSubject } from "./logic/fullEntities";
+import { ProcessedUserInfo } from "./logic/processing";
 
 export type AppContext = {
   user?: ProcessedUserInfo;

@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 import { AiOutlineHome } from "react-icons/ai";
 import { FiSettings } from "react-icons/fi";
 import { IoIosLogOut } from "react-icons/io";
-import { useUserContext } from "../../lib/UserContext";
+import { useUserContext } from "../../../lib/UserContext";
 
 export const TopBar = (props: { currentSubjectId?: string }) => {
   const sessiondata = useSession();

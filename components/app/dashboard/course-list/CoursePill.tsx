@@ -1,7 +1,7 @@
 import { Box, Flex, Icon, Tag, Text, useColorModeValue } from "@chakra-ui/react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { ProcessedCourseInfo } from "../../../lib/logic";
-import themeConstants from "../../../lib/theme/themeConstants";
+import { ProcessedCourseInfo } from "../../../../lib/logic/processing";
+import themeConstants from "../../../../lib/theme/themeConstants";
 
 const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any }) => {
   const subject = props.subject;

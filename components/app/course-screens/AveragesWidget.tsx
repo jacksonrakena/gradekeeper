@@ -1,5 +1,5 @@
 import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react";
-import { ProcessedCourseInfo } from "../../../lib/logic";
+import { ProcessedCourseInfo } from "../../../lib/logic/processing";
 import themeConstants from "../../../lib/theme/themeConstants";
 
 const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
@@ -24,9 +24,7 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
       className="grow m-4 p-6 shadow-md rounded-md"
       style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
     >
-      <Box color={"brand.600"} className="text-2xl mb-2 font-bold">
-        Averages
-      </Box>
+      <Box className="text-2xl mb-2 font-bold">Averages</Box>
       <div>
         <TableContainer>
           <Table size="sm">
@@ -48,7 +46,7 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
                     </Td>
                     <Td>
                       <Flex direction={"row"}>
-                        <Text color={"brand.800"} fontWeight="semibold">
+                        <Text color={"brand"} fontWeight="semibold">
                           {(((e - actual.numerical) / remainingPieces.reduce((a, b) => a + b)) * 100).toFixed(1)}
                         </Text>
                         %

@@ -17,6 +17,25 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useUserContext } from "../../../lib/UserContext";
 
+import { Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+
+const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
+  return (
+    <>
+      <Modal size="xl" isOpen={props.isOpen} onClose={props.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create a new study term</ModalHeader>
+          <ModalBody>
+            <CreateBlock onClose={props.onClose} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
+export default CreateBlockModal;
+
 const templates: { [key: string]: { name: string; startDate: string; endDate: string }[] } = {
   "Victoria University of Wellington": [
     {
@@ -173,44 +192,48 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                   </Box>
                 )}
               </Box>
-              <Divider />
-              <Box className="my-4">
-                <FormLabel>Or, create one from scratch:</FormLabel>
-                <Field name="name">
-                  {({ field, form }: { field: any; form: any }) => (
-                    <FormControl mb={4} isInvalid={form.errors.name && form.touched.name}>
-                      <FormLabel htmlFor="name">Name</FormLabel>
-                      <Input variant="filled" {...field} placeholder="Trimester 1" id="name" type="text" />
-                      <FormHelperText>For example, Trimester 1 or Semester 2.</FormHelperText>
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                    </FormControl>
-                  )}
-                </Field>
-                <Flex direction={"row"}>
-                  {" "}
-                  <Field name="startDate">
-                    {({ field, form }: { field: any; form: any }) => (
-                      <FormControl mb={4} isInvalid={form.errors.startDate && form.touched.startDate}>
-                        <FormLabel htmlFor="startDate">Start date</FormLabel>
-                        <Field type="date" name="startDate" />
-                        <FormErrorMessage>{form.errors.startDate}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field name="endDate">
-                    {({ field, form }: { field: any; form: any }) => (
-                      <FormControl mb={4} isInvalid={form.errors.endDate && form.touched.endDate}>
-                        <FormLabel htmlFor="endDate">End date</FormLabel>
-                        <Field type="date" name="endDate" />
-                        <FormErrorMessage>{form.errors.endDate}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                </Flex>
-                <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
-                  Create
-                </Button>
-              </Box>
+              {!selectedTemplate && (
+                <>
+                  <Divider />
+                  <Box className="my-4">
+                    <FormLabel>Or, create one from scratch:</FormLabel>
+                    <Field name="name">
+                      {({ field, form }: { field: any; form: any }) => (
+                        <FormControl mb={4} isInvalid={form.errors.name && form.touched.name}>
+                          <FormLabel htmlFor="name">Name</FormLabel>
+                          <Input variant="filled" {...field} placeholder="Trimester 1" id="name" type="text" />
+                          <FormHelperText>For example, Trimester 1 or Semester 2.</FormHelperText>
+                          <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Flex direction={"row"}>
+                      {" "}
+                      <Field name="startDate">
+                        {({ field, form }: { field: any; form: any }) => (
+                          <FormControl mb={4} isInvalid={form.errors.startDate && form.touched.startDate}>
+                            <FormLabel htmlFor="startDate">Start date</FormLabel>
+                            <Field type="date" name="startDate" />
+                            <FormErrorMessage>{form.errors.startDate}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                      <Field name="endDate">
+                        {({ field, form }: { field: any; form: any }) => (
+                          <FormControl mb={4} isInvalid={form.errors.endDate && form.touched.endDate}>
+                            <FormLabel htmlFor="endDate">End date</FormLabel>
+                            <Field type="date" name="endDate" />
+                            <FormErrorMessage>{form.errors.endDate}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Flex>
+                    <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
+                      Create
+                    </Button>
+                  </Box>
+                </>
+              )}
             </Form>
           )}
         </Formik>
