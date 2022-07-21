@@ -108,7 +108,7 @@ const CourseList = () => {
           <CreateCourseModal blockId={courseCreateBlockId} isOpen={!!courseCreateBlockId} onClose={() => setCourseCreateBlockId("")} />
           <CreateBlockModal isOpen={createBlockDisclosure.isOpen} onClose={createBlockDisclosure.onClose} />
           <div>
-            <div className={"flex flex-col px-12"}>
+            <Box className={"flex flex-col"} px={[6, 12]}>
               {(!user || isLoading) && <Spinner />}
               {user && !isLoading && (
                 <Box>
@@ -184,7 +184,7 @@ const CourseList = () => {
                   )}
                 </Box>
               )}
-            </div>
+            </Box>
           </div>
         </>
       </div>

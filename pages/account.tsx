@@ -219,16 +219,20 @@ const Account: NextPage = () => {
         <title>My account</title>
       </Head>
       <TopBar />
-      <Box paddingX={12}>
+      <Box paddingX={[6, 12]}>
         <Heading paddingBottom={6}>My account</Heading>
         <Stack spacing={12}>
-          <Flex p={4} boxShadow={"md"} rounded="md" bgColor={"Background"}>
-            <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"lg"} mr={4} />
+          <Flex direction="column" p={4} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={"Background"}>
+            <Flex alignItems="center">
+              <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"md"} mr={4} />
+              <Box>
+                <Heading size="md">{data.data?.user?.name}</Heading>
+                <Text fontSize="md" color={"ActiveCaption"}>
+                  {data.data?.user?.email}
+                </Text>
+              </Box>
+            </Flex>
             <Box>
-              <Heading size="md">{data.data?.user?.name}</Heading>
-              <Text>
-                Connected to your Google account: <Code>{data.data?.user?.email}</Code>
-              </Text>
               <HStack mt={2}>
                 <Button
                   size="sm"
