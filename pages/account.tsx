@@ -10,6 +10,7 @@ import {
   Box,
   Button,
   Code,
+  Divider,
   Flex,
   Heading,
   HStack,
@@ -270,24 +271,26 @@ const Account: NextPage = () => {
               </Button>
             </HStack>
           </Box>
-
-          <Box>
-            <Text>Gradekeeper is &copy; 2022 Animals With Cool Hats, Inc.</Text>
-            <Text>Gradekeeper is powered by open-source software.</Text>
-            <Text>
-              Gradekeeper is{" "}
-              <Link color="brand.500" href="https://github.com/jacksonrakena/gradekeeper" isExternal>
-                open-source <ExternalLinkIcon mx="2px" />
-              </Link>
-              .
-            </Text>
-            {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA && (
-              <Text>
-                Version <Code>{process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA}</Code>
-              </Text>
-            )}
-          </Box>
         </Stack>
+      </Box>
+      <Divider marginTop={12} marginBottom={8} />
+      <Box paddingX={[6, 12]} marginBottom={10}>
+        <Box fontSize="sm" textColor={"GrayText"}>
+          <Text>Gradekeeper is &copy; 2022 Animals With Cool Hats, Inc.</Text>
+          <Text>Gradekeeper is powered by open-source software.</Text>
+          <Text>
+            Gradekeeper is{" "}
+            <Link color="brand.500" href="https://github.com/jacksonrakena/gradekeeper" isExternal>
+              open-source <ExternalLinkIcon mx="2px" />
+            </Link>
+            .
+          </Text>
+          {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA && (
+            <Text>
+              Version <Code>{process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA}</Code>
+            </Text>
+          )}
+        </Box>
       </Box>
     </>
   );

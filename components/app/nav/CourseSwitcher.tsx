@@ -27,7 +27,7 @@ const CourseSwitcher = ({
             router.push("/");
           }}
         >
-          <Text fontWeight="semibold">Home</Text>
+          <Text fontWeight="semibold">Dashboard</Text>
         </MenuItem>
         <MenuDivider />
         {Object.keys(blockMap as any)

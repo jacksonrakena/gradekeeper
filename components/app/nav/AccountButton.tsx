@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Avatar, Button, Flex, Icon, Menu, MenuButton, MenuItem, MenuList, useColorMode } from "@chakra-ui/react";
+import { Avatar, Button, Flex, Icon, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, useColorMode } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import router from "next/router";
@@ -12,7 +12,7 @@ const AccountButton = (props: { session: Session }) => {
   const session = props.session;
   const colorMode = useColorMode();
   return (
-    <Menu colorScheme={"brand"}>
+    <Menu colorScheme={"brand"} variant={"unfilled"}>
       <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>
         <Flex alignItems="center">
           <Avatar size="sm" name={session.user?.name ?? ""} src={session.user?.image ?? ""} mr={2}></Avatar>
@@ -25,12 +25,14 @@ const AccountButton = (props: { session: Session }) => {
             <Icon w={4} h={4} as={AiOutlineHome} mr={2} /> Home
           </Flex>
         </MenuItem>
+        <MenuDivider />
         <MenuItem onClick={colorMode.toggleColorMode} closeOnSelect={false}>
           <Flex alignItems={"center"}>
             <Icon as={colorMode.colorMode === "dark" ? MdDarkMode : MdLightMode} w={4} h={4} mr={2} />{" "}
             {colorMode.colorMode === "dark" ? "Dark" : "Light"}
           </Flex>
         </MenuItem>
+        <MenuDivider />
         <MenuItem
           onClick={() => {
             router.push("/account");
@@ -40,20 +42,24 @@ const AccountButton = (props: { session: Session }) => {
             <Icon w={4} h={4} as={VscSettingsGear} mr={2} /> My account
           </Flex>
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            signOut({ redirect: false }).then(() => {
-              router.push("/");
-            });
-          }}
-          textColor={"red.500"}
-          fontWeight={"semibold"}
-        >
-          <Flex alignItems={"center"}>
-            <Icon w={5} h={5} as={IoIosLogOut} mr={2} />
-            Log out
-          </Flex>
-        </MenuItem>
+        <MenuDivider />
+        <MenuGroup>
+          {" "}
+          <MenuItem
+            onClick={() => {
+              signOut({ redirect: false }).then(() => {
+                router.push("/");
+              });
+            }}
+            textColor={"red.500"}
+            fontWeight={"semibold"}
+          >
+            <Flex alignItems={"center"}>
+              <Icon w={5} h={5} as={IoIosLogOut} mr={2} />
+              Log out
+            </Flex>
+          </MenuItem>
+        </MenuGroup>
       </MenuList>
     </Menu>
   );
