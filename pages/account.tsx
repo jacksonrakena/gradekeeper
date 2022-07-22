@@ -237,7 +237,7 @@ const Account: NextPage = () => {
                 <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"md"} mr={4} />
                 <Box>
                   <Heading size="md">{data.data?.user?.name}</Heading>
-                  <Text fontSize="md" color={"ActiveCaption"}>
+                  <Text fontSize="md" color={"GrayText"}>
                     {data.data?.user?.email}
                   </Text>
                 </Box>
