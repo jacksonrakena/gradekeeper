@@ -21,7 +21,7 @@ class MainDocument extends Document {
           <meta name="msapplication-tap-highlight" content="no" />
           <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
 
-          <meta name="theme-color" content="rgb(26, 32, 44)" media="(prefers-color-scheme: dark)" />
+          <meta name="theme-color" content="#111" media="(prefers-color-scheme: dark)" />
 
           <link rel="apple-touch-icon" href="/icons/touch-icon-iphone.png" />
           <link rel="apple-touch-icon" sizes="152x152" href="/icons/touch-icon-ipad.png" />
