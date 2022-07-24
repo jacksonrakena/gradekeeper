@@ -14,9 +14,8 @@ export default gkAuthorizedRoute(
       };
     }
   ) => {
-    const primsa = new PrismaClient();
     if (req.method === "POST") {
-      const data = await primsa.studyBlock.create({
+      const data = await ctx.services.db.studyBlock.create({
         data: {
           userId: ctx.userId,
           ...req.body,

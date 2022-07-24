@@ -61,8 +61,7 @@ export default gkAuthorizedRoute(
           });
         }
       }
-      // @ts-ignore
-      await primsa.subjectSubcomponent.createMany({
+      await ctx.services.db.subjectSubcomponent.createMany({
         data: subcomponents,
       });
 
