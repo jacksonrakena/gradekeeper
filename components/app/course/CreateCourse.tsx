@@ -33,8 +33,8 @@ import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
   id: string;
-  weighting: number;
-  dropLowest: number;
+  weighting: string;
+  dropLowest: string;
   name: string;
   numberOfSubcomponents: string;
 };
@@ -46,8 +46,8 @@ export const CreateCourse = (props: { block_id: string }) => {
   const emptyComponents: Partial<ComponentDto>[] = [
     {
       id: randomColor(),
-      dropLowest: 0,
-      weighting: 0.2,
+      dropLowest: "0",
+      weighting: "20",
       numberOfSubcomponents: "1",
     },
   ];
@@ -86,7 +86,13 @@ export const CreateCourse = (props: { block_id: string }) => {
               codeName: values.codeName,
               codeNo: values.codeNo,
               color: values.color,
-              components: components,
+              components: components.map((c) => {
+                return {
+                  ...c,
+                  weighting: Number.parseInt(c.weighting ?? "0") / 100,
+                  dropLowest: Number.parseInt(c.dropLowest ?? "0"),
+                };
+              }),
             }),
           }).then(async (e) => {
             const f = await e.json();
@@ -109,7 +115,7 @@ export const CreateCourse = (props: { block_id: string }) => {
       >
         {({ values, handleSubmit, isSubmitting }) => (
           <Form className="mt-4" onSubmit={handleSubmit}>
-            <Tabs index={tabIndex} onChange={setTabIndex} variant="enclosed">
+            <Tabs index={tabIndex} onChange={setTabIndex} variant="enclosed" colorScheme="theme">
               <TabList>
                 <Tab>1. Information</Tab>
                 <Tab>2. Components</Tab>
@@ -122,7 +128,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                       <Field name="codeName">
                         {({ field, form }: { field: any; form: any }) => (
                           <FormControl isInvalid={form.errors.codeName && form.touched.codeName}>
-                            <FormLabel htmlFor="name">Course code name</FormLabel>
+                            <FormLabel htmlFor="name">Faculty code</FormLabel>
                             <Input
                               variant="filled"
                               htmlSize={8}
@@ -141,7 +147,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                       <Field name="codeNo">
                         {({ field, form }: { field: any; form: any }) => (
                           <FormControl isInvalid={form.errors.codeNo && form.touched.codeNo}>
-                            <FormLabel htmlFor="codeNo">Course code number</FormLabel>
+                            <FormLabel htmlFor="codeNo">Course number</FormLabel>
                             <Input
                               variant="filled"
                               htmlSize={8}
@@ -161,7 +167,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                     <Field name="name">
                       {({ field, form }: { field: any; form: any }) => (
                         <FormControl isInvalid={form.errors.name && form.touched.name}>
-                          <FormLabel htmlFor="name">Course code name</FormLabel>
+                          <FormLabel htmlFor="name">Course name</FormLabel>
                           <Input
                             variant="filled"
                             htmlSize={16}
@@ -252,8 +258,8 @@ export const CreateCourse = (props: { block_id: string }) => {
                                       ...components,
                                       {
                                         id: Math.random().toString(),
-                                        dropLowest: 0,
-                                        weighting: 0.2,
+                                        dropLowest: "0",
+                                        weighting: "20",
                                         numberOfSubcomponents: "1",
                                       },
                                     ]);
