@@ -34,7 +34,7 @@ module.exports = require("@next/bundle-analyzer")({ enabled: false })(
     pwa: {
       dest: "public",
       skipWaiting: true,
-      disable: process.env.NODE_ENV === "development",
+      disable: process.env.NODE_ENV !== "production",
     },
   })
 );

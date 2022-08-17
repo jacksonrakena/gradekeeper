@@ -33,7 +33,7 @@ export default gkAuthorizedRoute(
       if (inputdto.components.map((e) => Number.parseInt(e.numberOfSubcomponents)).reduce((a, b) => a + b, 0) > 100) {
         return res.status(400).json({ error: "Total number of subcomponents must not exceed 100." });
       }
-      if (inputdto.components.map((e) => e.weighting).reduce((a, b) => a + b) !== 1) {
+      if (inputdto.components.map((e) => Number.parseInt(e.weighting)).reduce((a, b) => a + b) !== 1) {
         return res.status(400).json({ error: "Course components must add up to 100%." });
       }
       const subjectCreationQuery = ctx.services.db.subject.create({
@@ -57,8 +57,8 @@ export default gkAuthorizedRoute(
           name: subc.name,
           id: subc.id,
           nameOfSubcomponentSingular: nameOfSubcomponentSingular,
-          numberOfSubComponentsToDrop_Lowest: subc.dropLowest,
-          subjectWeighting: subc.weighting,
+          numberOfSubComponentsToDrop_Lowest: Number.parseFloat(subc.dropLowest),
+          subjectWeighting: Number.parseFloat(subc.weighting),
         };
         for (var iz = 0; iz < Number.parseInt(subc.numberOfSubcomponents); iz++) {
           emptysubcarr.push({
@@ -66,7 +66,7 @@ export default gkAuthorizedRoute(
             numberInSequence: iz + 1,
             id: cuid(),
             componentId: subc.id,
-            gradeValuePercentage: subc.weighting / Number.parseInt(subc.numberOfSubcomponents),
+            gradeValuePercentage: Number.parseFloat(subc.weighting) / Number.parseInt(subc.numberOfSubcomponents),
           });
         }
         return insdata;
