@@ -9,18 +9,13 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/android-chrome-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "theme_color": "#FFFFFF",
-  "background_color": "#FFFFFF",
+  "theme_color": "rgb(38 38 38)",
+  "background_color": "#fafafa",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait"

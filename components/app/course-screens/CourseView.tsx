@@ -98,15 +98,7 @@ const CourseView = (
       )}
       <>
         <Box bgColor={course?.color} className="p-8">
-          <Box
-            className="text-3xl"
-            color="brand.900"
-            style={
-              {
-                /*color: pickTextColorBasedOnBgColorAdvanced(course?.color ?? "", "white", "")*/
-              }
-            }
-          >
+          <Box className="text-3xl">
             <span className="mr-4">
               <Text display="inline">{course?.courseCodeName}</Text> {course?.courseCodeNumber}
             </span>

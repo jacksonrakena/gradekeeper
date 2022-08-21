@@ -64,7 +64,7 @@ const ComponentEditModal = (props: {
               </Thead>
               <Tbody>
                 {subcomponents
-                  ?.sort((d, b) => d.numberInSequence ?? 0 - (b.numberInSequence ?? 0))
+                  ?.sort((d, b) => (d.numberInSequence ?? 0) - (b.numberInSequence ?? 0))
                   .map((e, i) => {
                     return (
                       <Tr key={e.id}>

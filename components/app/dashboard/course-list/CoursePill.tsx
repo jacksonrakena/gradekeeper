@@ -6,7 +6,7 @@ import themeConstants from "../../../../lib/theme/themeConstants";
 const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any }) => {
   const subject = props.subject;
   return (
-    <div
+    <Box
       className="my-4 shadow-md hover:cursor-pointer"
       onClick={props.onClick}
       style={{
@@ -16,6 +16,13 @@ const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any })
         maxWidth: "800px",
         display: "block",
         backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor),
+        transition: "0.25s",
+        WebkitFilter: "blur(0)",
+        msFilter: "blur(0)",
+        filter: "none",
+      }}
+      _hover={{
+        transform: "scale(1.01)",
       }}
     >
       <Text size="md" fontWeight={"semibold"}>
@@ -63,7 +70,7 @@ const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any })
           </div>
         </>
       )}
-    </div>
+    </Box>
   );
 };
 

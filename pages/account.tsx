@@ -10,6 +10,7 @@ import {
   Box,
   Button,
   Code,
+  Divider,
   Flex,
   Heading,
   HStack,
@@ -88,14 +89,17 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
           }}
           isChecked={definedGrades.includes(props.gradeString)}
         />
-        <Text>{props.gradeString}:</Text>
+        <Text width="25px" fontWeight={"semibold"}>
+          {props.gradeString}
+        </Text>
         <NumberInput
           onChange={(c) => {
             var newmap = Object.fromEntries(Object.entries(props.userGradeMap).filter((e) => e[1] !== props.gradeString));
             console.log({ ...newmap, [c]: props.gradeString });
             props.onChange({ ...newmap, [c]: props.gradeString });
           }}
-          variant={"filled"}
+          m={0}
+          variant={"outline"}
           maxW={24}
           value={value ? value[0] : ""}
         >
@@ -111,63 +115,64 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
   const toast = useToast();
   const [gradeMap, setGradeMap] = useState(props.gradeMap);
   const [saving, isSaving] = useState(false);
+  const accCardBg = useColorModeValue("white", themeConstants.darkModeContrastingColor);
   return (
-    <Box>
-      <Heading size="md">My grade boundaries</Heading>
-      <HStack>
-        <Button
-          mt={2}
-          onClick={() => {
-            setGradeMap(presets["Victoria University of Wellington"]);
-          }}
-          size="sm"
-          colorScheme={"orange"}
-        >
-          Load defaults
-        </Button>
-      </HStack>
-      <Flex wrap={"wrap"}>
-        {predefinedGrades.map((predefinedGrade) => (
-          <GradeBoundaryEntry
-            key={predefinedGrade}
-            onChange={(g) => {
-              setGradeMap(g);
+    <Box p={4} maxW={800} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={accCardBg}>
+      <Stack spacing={6}>
+        <Heading size="md">My grade boundaries</Heading>
+        <Flex wrap={"wrap"}>
+          {predefinedGrades.map((predefinedGrade) => (
+            <GradeBoundaryEntry
+              key={predefinedGrade}
+              onChange={(g) => {
+                setGradeMap(g);
+              }}
+              userGradeMap={gradeMap}
+              gradeString={predefinedGrade}
+            />
+          ))}
+        </Flex>
+        <HStack>
+          <Button
+            colorScheme={"brand"}
+            isLoading={saving}
+            onClick={async () => {
+              isSaving(true);
+              const res = await fetch(`/api/user`, {
+                headers: { "Content-Type": "application/json" },
+                method: "POST",
+                body: JSON.stringify({ gradeMap: gradeMap }),
+              });
+              if (res.ok) {
+                const data = await res.json();
+                user.setUser(data);
+                isSaving(false);
+                toast({
+                  title: "Updated.",
+                  status: "success",
+                });
+              } else {
+                toast({
+                  title: "An error occurred.",
+                  status: "error",
+                });
+              }
             }}
-            userGradeMap={gradeMap}
-            gradeString={predefinedGrade}
-          />
-        ))}
-      </Flex>
-      <Box>
-        <Button
-          colorScheme={"brand"}
-          isLoading={saving}
-          onClick={async () => {
-            isSaving(true);
-            const res = await fetch(`/api/user`, {
-              headers: { "Content-Type": "application/json" },
-              method: "POST",
-              body: JSON.stringify({ gradeMap: gradeMap }),
-            });
-            if (res.ok) {
-              const data = await res.json();
-              user.setUser(data);
-              isSaving(false);
-              toast({
-                title: "Updated.",
-                status: "success",
-              });
-            } else {
-              toast({
-                title: "An error occurred.",
-                status: "error",
-              });
-            }
-          }}
-        >
-          Save
-        </Button>
-      </Box>
+          >
+            Save
+          </Button>{" "}
+          <Button
+            mt={2}
+            onClick={() => {
+              setGradeMap(presets["Victoria University of Wellington"]);
+            }}
+            colorScheme={"red"}
+            type="reset"
+          >
+            Reset
+          </Button>
+        </HStack>
+      </Stack>
     </Box>
   );
 };
@@ -226,46 +231,51 @@ const Account: NextPage = () => {
       <Box paddingX={[6, 12]}>
         <Heading paddingBottom={6}>My account</Heading>
         <Stack spacing={12}>
-          <Flex direction="column" p={4} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={accCardBg}>
-            <Flex alignItems="center">
-              <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"md"} mr={4} />
-              <Box>
-                <Heading size="md">{data.data?.user?.name}</Heading>
-                <Text fontSize="md" color={"ActiveCaption"}>
-                  {data.data?.user?.email}
-                </Text>
-              </Box>
+          <Stack spacing={12}>
+            <Flex direction="column" p={4} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={accCardBg}>
+              <Flex alignItems="center">
+                <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"md"} mr={4} />
+                <Box>
+                  <Heading size="md">{data.data?.user?.name}</Heading>
+                  <Text fontSize="md" color={"GrayText"}>
+                    {data.data?.user?.email}
+                  </Text>
+                </Box>
+              </Flex>
             </Flex>
-            <Box>
-              <HStack mt={2}>
-                <Button
-                  size="sm"
-                  href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                    JSON.stringify({
-                      meta: {
-                        created: new Date().getTime(),
-                        service: "AWCH_GK_PUBLIC_VCL",
-                        server: "SYD02.SECURE.GRADEKEEPER.XYZ",
-                      },
-                      data: user?.user,
-                    })
-                  )}`}
-                  as={"a"}
-                  colorScheme={"yellow"}
-                  download={`GK_EXPORT_${new Date().getTime()}.json`}
-                >
-                  Download my data
-                </Button>
-                <Button onClick={deleteModal.onOpen} size="sm" colorScheme={"red"}>
-                  Delete my data
-                </Button>
-              </HStack>
-            </Box>
-          </Flex>
-          {user?.user?.gradeMap && <GradeMapEditor gradeMap={user?.user?.gradeMap as object} />}
-        </Stack>
+            {user?.user?.gradeMap && <GradeMapEditor gradeMap={user?.user?.gradeMap as object} />}
+          </Stack>
 
-        <Box mt={12}>
+          <Box>
+            <HStack mt={2}>
+              <Button
+                size="sm"
+                href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                  JSON.stringify({
+                    meta: {
+                      created: new Date().getTime(),
+                      service: "AWCH_GK_PUBLIC_VCL",
+                      server: "SYD02.SECURE.GRADEKEEPER.XYZ",
+                    },
+                    data: user?.user,
+                  })
+                )}`}
+                as={"a"}
+                colorScheme={"yellow"}
+                download={`GK_EXPORT_${new Date().getTime()}.json`}
+              >
+                Download my data
+              </Button>
+              <Button onClick={deleteModal.onOpen} size="sm" colorScheme={"red"}>
+                Delete my data
+              </Button>
+            </HStack>
+          </Box>
+        </Stack>
+      </Box>
+      <Divider marginTop={12} marginBottom={8} />
+      <Box paddingX={[6, 12]} marginBottom={10}>
+        <Box fontSize="sm" textColor={"GrayText"}>
           <Text>Gradekeeper is &copy; 2022 Animals With Cool Hats, Inc.</Text>
           <Text>Gradekeeper is powered by open-source software.</Text>
           <Text>

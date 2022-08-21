@@ -228,7 +228,11 @@ const ComponentRow = (props: {
                       props.onRequestModalOpen();
                     }}
                   >
-                    Edit
+                    <Flex direction={"column"}>
+                      <Flex alignItems={"center"}>
+                        <EditIcon mr={2} /> 0%
+                      </Flex>
+                    </Flex>
                   </Box>
                 )}
               </>
