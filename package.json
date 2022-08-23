@@ -11,9 +11,6 @@
     "dev:studio": "dotenv -e .env.local -- npx prisma studio"
   },
   "dependencies": {
-    "@capacitor/browser": "^4.0.1",
-    "@capacitor/core": "^4.1.0",
-    "@capacitor/ios": "^4.1.0",
     "@chakra-ui/icons": "^2.0.8",
     "@chakra-ui/react": "^2.2.8",
     "@emotion/react": "^11.10.0",
@@ -34,7 +31,6 @@
     "react-icons": "^4.4.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "^4.1.0",
     "@next/bundle-analyzer": "^12.2.5",
     "@types/node": "18.7.6",
     "@types/react": "18.0.17",

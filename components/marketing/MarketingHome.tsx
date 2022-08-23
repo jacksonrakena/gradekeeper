@@ -1,6 +1,7 @@
 import { Browser } from "@capacitor/browser";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Button, Container, Heading, Img, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";
 import themeConstants from "../../lib/theme/themeConstants";
@@ -26,36 +27,7 @@ const MarketingHome = () => {
             isLoading={loadingApp}
             onClick={() => {
               setLoadingApp(true);
-              //signIn("google");
-              (async () => {
-                const host = "https://preview.gradekeeper.xyz";
-                const { csrfToken }: { csrfToken: string } = await fetch(`${host}/api/auth/csrf`, {
-                  credentials: "include",
-                }).then((res) => {
-                  return res.json();
-                });
-
-                // Generate an oAuth url for the Twitter provider
-                const { url }: { url: string } = await fetch(`${host}/api/auth/signin/google`, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                  },
-                  body: new URLSearchParams({
-                    csrfToken,
-                    json: "true",
-                    // where next-auth will redirect us after auth
-                    callbackUrl: `${host}/redirect`,
-                  }),
-                  redirect: "follow",
-                  credentials: "include",
-                }).then((res) => res.json());
-
-                Browser.addListener("browserFinished", () => {
-                  window.location.reload();
-                });
-                await Browser.open({ url: url });
-              })();
+              signIn("google");
             }}
             colorScheme={"brand"}
           >
