@@ -97,6 +97,7 @@ const ComponentRow = (props: {
               setSubjectWeighting(e.replaceAll("%", ""));
             }}
             onSubmit={async (e) => {
+              if (!e) return;
               setSectionLoadingUpdate("weight");
               const response = await fetch(`/api/block/${subject.studyBlockId}/course/${subject.id}/component/${props.component.id}`, {
                 method: "POST",
@@ -104,7 +105,7 @@ const ComponentRow = (props: {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  subjectWeighting: parseFloat(e.replaceAll("%", "")) / 100,
+                  subjectWeighting: parseFloat(e?.replaceAll("%", "")) / 100,
                 }),
               });
               const data = await response.json();
@@ -138,15 +139,16 @@ const ComponentRow = (props: {
               <Tooltip label="Click to edit">
                 <GkEditable
                   onSubmit={async (e) => {
+                    console.log("Grade editd");
                     if (touched) {
-                      const actualGradeValue = Number.parseFloat(e.replaceAll("%", "")) / 100.0;
-                      if (!actualGradeValue) {
-                        setTouched(false);
-                        setSingularValue(
-                          props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
-                        );
-                        return;
-                      }
+                      const actualGradeValue = Number.parseFloat((e ?? "").replaceAll("%", "")) / 100.0;
+                      // if (!actualGradeValue) {
+                      //   setTouched(false);
+                      //   setSingularValue(
+                      //     props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%"
+                      //   );
+                      //   return;
+                      // }
                       setSingularValue(e ? Number.parseFloat(e).toFixed(2).toString() + "%" : "");
 
                       setSectionLoadingUpdate("score");

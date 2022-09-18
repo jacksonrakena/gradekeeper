@@ -2,7 +2,7 @@ import { Flex, Text, TextProps } from "@chakra-ui/react";
 import React, { InputHTMLAttributes, PropsWithChildren, useState } from "react";
 
 export interface GkEditableProps extends PropsWithChildren {
-  onSubmit?: (value: string) => void;
+  onSubmit?: (value?: string) => void;
   value: string;
   onBeginEdit?: (value: string) => void;
   onChange?: (value: string) => void;
