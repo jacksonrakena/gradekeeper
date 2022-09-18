@@ -18,7 +18,6 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
         .map((e) => d.subjectWeighting / (d.subcomponents.length - d.numberOfSubComponentsToDrop_Lowest))
     )
     .flat();
-  console.log(remainingPieces);
   return (
     <Box
       className="grow m-4 p-6 shadow-md rounded-md"

@@ -139,7 +139,6 @@ const ComponentRow = (props: {
               <Tooltip label="Click to edit">
                 <GkEditable
                   onSubmit={async (e) => {
-                    console.log("Grade editd");
                     if (touched) {
                       const actualGradeValue = Number.parseFloat((e ?? "").replaceAll("%", "")) / 100.0;
                       // if (!actualGradeValue) {

@@ -222,7 +222,6 @@ const CourseView = (
                 </Thead>
                 <Tbody>
                   {course?.components?.map((e, i) => {
-                    console.log(e);
                     const grade = calculateProjectedGradeForComponent(e);
                     return (
                       <ComponentRow

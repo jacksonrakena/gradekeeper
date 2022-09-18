@@ -73,7 +73,6 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
       <HStack>
         <Switch
           onChange={(c) => {
-            console.log(c.target.checked);
             var newGradeMap = props.userGradeMap;
             if (c.target.checked) {
               newGradeMap = { ...newGradeMap, [value ? value[0].toString() : uninitDefault]: props.gradeString };
@@ -84,7 +83,6 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
                   return d[0] !== value[0].toString();
                 })
               );
-            console.log(newGradeMap);
             props.onChange(newGradeMap);
           }}
           isChecked={definedGrades.includes(props.gradeString)}
@@ -95,7 +93,6 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
         <NumberInput
           onChange={(c) => {
             var newmap = Object.fromEntries(Object.entries(props.userGradeMap).filter((e) => e[1] !== props.gradeString));
-            console.log({ ...newmap, [c]: props.gradeString });
             props.onChange({ ...newmap, [c]: props.gradeString });
           }}
           m={0}

@@ -110,7 +110,6 @@ export const CreateBlock = (props: { onClose: () => void }) => {
               .then((e) => e.json())
               .then((f) => {
                 context.redownload().then(() => {
-                  console.log("created " + f.id);
                   setSubmitting(false);
                   props.onClose();
                 });

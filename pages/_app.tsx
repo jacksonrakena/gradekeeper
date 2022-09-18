@@ -16,21 +16,18 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
     user: user,
     setUser: setUser,
     redownload: async () => {
-      console.log("Re-downloading user information");
       async function download() {
         try {
           const d = await fetch("/api/user");
           const e = await d.json();
-          console.log("Parsing user information");
           const prismaResponse: Prisma.UserGetPayload<typeof getUserQuery> = e;
-          console.log("Raw user information: ", prismaResponse);
           const newUserInfo = {
             ...prismaResponse,
             processedStudyBlocks: prismaResponse.studyBlocks.map((rawStudyBlock) =>
               processStudyBlock(rawStudyBlock, prismaResponse.gradeMap)
             ),
           };
-          console.log("New user information: ", newUserInfo);
+          console.log("User information: ", newUserInfo);
           setUser(newUserInfo);
         } catch (e) {
           await new Promise((r) => setTimeout(r, 200));
