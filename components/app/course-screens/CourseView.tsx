@@ -73,6 +73,7 @@ const CourseView = (
   const [name, setName] = useState(course?.longName);
   const contrastingColor = useColorModeValue("white", themeConstants.darkModeContrastingColor);
   const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
+  const tooltipColor = useColorModeValue("white", "black");
   return (
     <div>
       <Head>
@@ -311,6 +312,7 @@ const CourseView = (
                         position="top"
                       >
                         <Tooltip
+                          color={tooltipColor}
                           label={
                             "Lowest possible grade: " +
                             props.course.grades.actual?.letter +
@@ -328,6 +330,7 @@ const CourseView = (
                         position="top"
                       >
                         <Tooltip
+                          color={tooltipColor}
                           label={
                             "Maximum possible grade: " +
                             props.course.grades.maximumPossible?.letter +

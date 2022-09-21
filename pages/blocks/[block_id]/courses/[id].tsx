@@ -11,8 +11,7 @@ const CoursePage: NextPage = () => {
   const user = useUserContext();
   const studyBlock = user.user?.processedStudyBlocks?.filter((e) => e.id === block_id)[0];
   const course0 = studyBlock?.processedCourses.filter((d) => d.id === id)[0];
-  const subject = course0;
-  if (!subject || !studyBlock) {
+  if (!course0 || !studyBlock) {
     return (
       <>
         <TopBar />

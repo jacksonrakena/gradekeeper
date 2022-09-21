@@ -15,22 +15,22 @@ const theme = extendTheme({
       "html, body": {
         //#fafafa
         //old:"#f7f3f7"
-        background: mode("#fafafa", themeConstants.darkModePageBackground)(props),
+        background: mode("#f7f3f7", themeConstants.darkModePageBackground)(props),
       },
     }),
   },
   colors: {
     brand: {
-      "50": "#DFDFE1",
-      "100": "#D5D5D8",
-      "200": "#BFC0C4",
-      "300": "#AAABB0",
-      "400": "#95969D",
-      "500": "#808189",
-      "600": "#65656C",
-      "700": "#4A4A4F",
-      "800": "#2F2F32",
-      "900": "#141415",
+      "50": "#e7fcf2",
+      "100": "#95f3c7",
+      "200": "#45df96",
+      "300": "#3abb7e",
+      "400": "#33a771",
+      "500": "#2b8d5f",
+      "600": "#257750",
+      "700": "#1d6041",
+      "800": "#195137",
+      "900": "#123a27",
     },
   },
 });
