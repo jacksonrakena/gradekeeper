@@ -1,5 +1,19 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Avatar, Button, Flex, Icon, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, useColorMode } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Flex,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  useColorMode,
+} from "@chakra-ui/react";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import router from "next/router";
@@ -7,10 +21,14 @@ import { AiOutlineHome } from "react-icons/ai";
 import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscSettingsGear } from "react-icons/vsc";
+import { useRecoilState } from "recoil";
+import { defaultThemes } from "../../../lib/theme/theme";
+import { ThemeNameState } from "../../../state/theme";
 
 const AccountButton = (props: { session: Session }) => {
   const session = props.session;
   const colorMode = useColorMode();
+  const [theme, setTheme] = useRecoilState(ThemeNameState);
   return (
     <Menu colorScheme={"brand"} variant={"unfilled"}>
       <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>
@@ -32,6 +50,23 @@ const AccountButton = (props: { session: Session }) => {
             {colorMode.colorMode === "dark" ? "Dark" : "Light"}
           </Flex>
         </MenuItem>
+        <MenuDivider />
+        <MenuOptionGroup
+          title="Theme"
+          value={theme}
+          type="radio"
+          onChange={(v) => {
+            if (!v) return;
+            console.log(typeof v === "string" ? v : v[0]);
+            setTheme((typeof v === "string" ? v : v[0]) as keyof typeof defaultThemes);
+          }}
+        >
+          {Object.entries(defaultThemes).map(([key, value]) => (
+            <MenuItemOption closeOnSelect={false} key={key} value={key}>
+              {key}
+            </MenuItemOption>
+          ))}
+        </MenuOptionGroup>
         <MenuDivider />
         <MenuItem
           onClick={() => {
