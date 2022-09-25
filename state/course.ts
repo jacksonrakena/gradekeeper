@@ -1,6 +1,6 @@
-import { Prisma } from "@prisma/client";
-import { atom, selector, useRecoilState } from "recoil";
-import { FullSubject } from "../lib/logic/fullEntities";
+import { Prisma, SubjectSubcomponent } from "@prisma/client";
+import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { FullSubject, FullSubjectComponent } from "../lib/logic/fullEntities";
 import { ProcessedCourseInfo, ProcessedStudyBlock, ProcessedUserInfo, processStudyBlock } from "../lib/logic/processing";
 
 import { getUserQuery } from "../pages/api/user";
@@ -24,44 +24,72 @@ async function download(): Promise<GetUserResponse> {
 
 export const useInvalidator = () => {
   const [user, setUser] = useRecoilState(UserState);
-  return {
-    invalidate: async () => {
-      const data = await download();
-      console.log("[invalidator] " + (!!user ? "New" : "Initial") + " user download: ", data);
-      setUser(data);
-    },
-    updateStudyBlock: (studyBlockId: string, replacementStudyBlock: DownloadedStudyBlock | null) => {
-      if (!user) return;
-      setUser({
-        ...user,
-        gradeMap: user?.gradeMap ?? {},
-        studyBlocks:
-          replacementStudyBlock === null
-            ? user?.studyBlocks.filter((e) => e.id !== studyBlockId)
-            : user?.studyBlocks.map((sb) => {
-                if (sb.id === studyBlockId) return replacementStudyBlock;
-                return sb;
-              }),
-      });
-    },
-    updateCourse: (courseId: string, replacementCourse: FullSubject | null) => {
-      if (!user) return;
-      setUser({
-        ...user,
-        gradeMap: user?.gradeMap ?? {},
-        studyBlocks: user?.studyBlocks.map((sb) => {
-          if (sb.subjects.filter((d) => d.id === courseId).length === 0) return sb;
-          if (!replacementCourse) return { ...sb, subjects: sb.subjects.filter((d) => d.id !== courseId) };
-          return {
-            ...sb,
-            subjects: sb.subjects.map((subj) => {
-              if (subj.id === replacementCourse.id) return replacementCourse;
-              return subj;
+  const course = useRecoilValue(SelectedCourseState);
+  const invalidate = async () => {
+    const data = await download();
+    console.log("[invalidator] " + (!!user ? "New" : "Initial") + " user download: ", data);
+    setUser(data);
+  };
+  const updateStudyBlock = (studyBlockId: string, replacementStudyBlock: DownloadedStudyBlock | null) => {
+    if (!user) return;
+    setUser({
+      ...user,
+      gradeMap: user?.gradeMap ?? {},
+      studyBlocks:
+        replacementStudyBlock === null
+          ? user?.studyBlocks.filter((e) => e.id !== studyBlockId)
+          : user?.studyBlocks.map((sb) => {
+              if (sb.id === studyBlockId) return replacementStudyBlock;
+              return sb;
             }),
-          };
-        }),
-      });
-    },
+    });
+  };
+  const updateCourse = (courseId: string, replacementCourse: FullSubject | null) => {
+    if (!user) return;
+    setUser({
+      ...user,
+      gradeMap: user?.gradeMap ?? {},
+      studyBlocks: user?.studyBlocks.map((sb) => {
+        if (sb.subjects.filter((d) => d.id === courseId).length === 0) return sb;
+        if (!replacementCourse) return { ...sb, subjects: sb.subjects.filter((d) => d.id !== courseId) };
+        return {
+          ...sb,
+          subjects: sb.subjects.map((subj) => {
+            if (subj.id === replacementCourse.id) return replacementCourse;
+            return subj;
+          }),
+        };
+      }),
+    });
+  };
+  const updateComponent = (componentId: string, replacementComponent: FullSubjectComponent | null) => {
+    if (!course) return;
+    updateCourse(course.id, {
+      ...course,
+      components: replacementComponent
+        ? course.components.map((c) => (c.id === componentId ? replacementComponent : c))
+        : course.components.filter((c) => c.id !== componentId),
+    });
+  };
+  const updateSubcomponent = (
+    subcomponentId: string,
+    component: FullSubjectComponent,
+    replacementSubcomponent: SubjectSubcomponent | null
+  ) => {
+    if (!course) return;
+    updateComponent(component.id, {
+      ...component,
+      subcomponents: replacementSubcomponent
+        ? component.subcomponents.map((c) => (c.id === subcomponentId ? replacementSubcomponent : c))
+        : component.subcomponents.filter((c) => c.id !== subcomponentId),
+    });
+  };
+  return {
+    invalidate,
+    updateStudyBlock,
+    updateComponent,
+    updateCourse,
+    updateSubcomponent,
   };
 };
 

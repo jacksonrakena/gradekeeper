@@ -14,14 +14,8 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
-  Table,
-  TableContainer,
-  Tbody,
   Text,
-  Th,
-  Thead,
   Tooltip,
-  Tr,
   useClipboard,
   useColorModeValue,
   useDisclosure,
@@ -31,22 +25,14 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { PropsWithChildren, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { FullSubjectComponent } from "../../../lib/logic/fullEntities";
-import {
-  adjust,
-  calculateProjectedGradeForComponent,
-  ProcessedCourseInfo,
-  ProcessedStudyBlock,
-  _null,
-} from "../../../lib/logic/processing";
+import { adjust, ProcessedCourseInfo, ProcessedStudyBlock } from "../../../lib/logic/processing";
 import themeConstants from "../../../lib/theme/themeConstants";
 import { ProcessedUserState, useInvalidator } from "../../../state/course";
 import { GkEditable } from "../../generic/GkEditable";
 import Footer from "../Footer";
 import { TopBar } from "../nav/TopBar";
 import AveragesWidget from "./widgets/AveragesWidget";
-import ComponentEditModal from "./widgets/components/ComponentEditModal";
-import ComponentRow from "./widgets/components/ComponentRow";
+import { ResultsWidget } from "./widgets/components/ResultsWidget";
 import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
 import ProgressBarCaption from "./widgets/ProgressBarCaption";
 
@@ -66,7 +52,6 @@ const CourseView = (
   const gradeMap = props.course.status.gradeMap;
 
   const cb = useClipboard(course.id?.toString() || "");
-  const [component, setTargetComponent] = useState(_null<FullSubjectComponent>());
   const [deleting, isDeleting] = useState(false);
   const captionColor = useColorModeValue("gray.700", "gray.200");
   const disc = useDisclosure();
@@ -82,23 +67,7 @@ const CourseView = (
         <title>{course?.longName ?? "Loading..."}</title>
       </Head>
       <TopBar />
-      {component !== null ? (
-        <ComponentEditModal
-          subject={course}
-          blockId={course?.studyBlockId ?? ""}
-          onReceiveUpdatedData={(newcomp) => {
-            setTargetComponent(null);
-          }}
-          gradeMap={gradeMap}
-          onClose={() => {
-            setTargetComponent(null);
-          }}
-          showing={component !== null}
-          component={component}
-        />
-      ) : (
-        <></>
-      )}
+
       <>
         <Box bgColor={course?.color} className="p-8">
           <Box className="text-3xl">
@@ -211,37 +180,7 @@ const CourseView = (
         )}
 
         <div className="flex flex-wrap">
-          <div className="grow m-4 p-6 shadow-md rounded-md overflow-auto" style={{ backgroundColor: contrastingColor }}>
-            <Box className="text-2xl mb-2 font-bold">Results</Box>
-            <TableContainer>
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th pl={0}>Name</Th>
-                    <Th pl={0}>Weight</Th>
-                    <Th pl={0}>Score</Th>
-                    <Th pl={0}>Grade</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {course?.components?.map((e, i) => {
-                    const grade = calculateProjectedGradeForComponent(e);
-                    return (
-                      <ComponentRow
-                        onRequestModalOpen={() => {
-                          setTargetComponent(e);
-                        }}
-                        subject={course}
-                        key={e.id}
-                        component={e}
-                        componentGrade={grade}
-                      />
-                    );
-                  })}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </div>
+          <ResultsWidget contrastingColor={contrastingColor} course={course} />
 
           {!course.status.isCompleted && <AveragesWidget course={course} />}
         </div>

@@ -61,8 +61,18 @@ export default gkAuthorizedRoute(
         });
         const result = await ctx.services.db.$transaction([initupd]);
         return res.status(200).send({});
+      } else if (req.body.name) {
+        const initupd = await ctx.services.db.subjectComponent.update({
+          where: {
+            id: comp_id?.toString(),
+          },
+          data: {
+            name: req.body.name,
+          },
+        });
+        return res.status(200).send(initupd);
       }
-      return res.status(200).send({});
+      return res.status(400).send({});
     }
   }
 );

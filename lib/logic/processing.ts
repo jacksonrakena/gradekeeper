@@ -83,7 +83,10 @@ export const UnknownGrade: ObjectGrade = { numerical: 0, letter: "U", isUnknown:
 export function calculateAverageOfList(list: number[], drop: number): number | null {
   if (list.length === 0) return 0;
   if (list.length - drop <= 0) return null;
-  const sorted = list.sort((a, b) => b - a).slice(0, 0 - drop);
+  const sorted = list
+    .map((a) => a)
+    .sort((a, b) => b - a)
+    .slice(0, 0 - drop);
   return sorted.reduce((a, b) => a + b, 0) / sorted.length;
 }
 

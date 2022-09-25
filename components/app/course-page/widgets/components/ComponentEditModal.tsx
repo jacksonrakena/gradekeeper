@@ -1,35 +1,22 @@
-import { SubjectSubcomponent } from ".prisma/client";
 import { Button } from "@chakra-ui/button";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
-import { Box, Input, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Input, Text } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { FullSubject, FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
+import { FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
 import { calculateLetterGrade, isActiveSubcomponent } from "../../../../../lib/logic/processing";
-import { ProcessedUserState, useInvalidator } from "../../../../../state/course";
+import { SelectedCourseState, SelectedStudyBlockState, useInvalidator } from "../../../../../state/course";
 
-const ComponentEditModal = (props: {
-  blockId: string;
-  gradeMap: any;
-  showing: boolean;
-  component: FullSubjectComponent | null;
-  onClose: () => void;
-  subject?: FullSubject;
-  onReceiveUpdatedData: (data: FullSubjectComponent) => void;
-}) => {
+const ComponentEditModal = (props: { gradeMap: any; showing: boolean; component: FullSubjectComponent; onClose: () => void }) => {
   const { updateCourse } = useInvalidator();
-  const captionColor = useColorModeValue("gray.700", "gray.200");
-  const user = useRecoilValue(ProcessedUserState);
-  const [subcomponents, setSubcomponents] = useState(props.component?.subcomponents ?? []);
+  const term = useRecoilValue(SelectedStudyBlockState);
+  const course = useRecoilValue(SelectedCourseState);
+  const [subcomponents, setSubcomponents] = useState(props.component.subcomponents);
   const [loading, setLoading] = useState(false);
-  const previousValueRef = useRef<SubjectSubcomponent[]>(subcomponents);
-  const previousValue = previousValueRef.current;
+
   const isSingular = props.component?.subcomponents.length === 1;
-  if ((props.component?.subcomponents ?? []) !== previousValue && (props.component?.subcomponents ?? []) !== subcomponents) {
-    setSubcomponents(props.component?.subcomponents ?? []);
-    previousValueRef.current = props.component?.subcomponents ?? [];
-  }
+
   return (
     <Modal isOpen={props.showing} onClose={props.onClose} size={"xl"}>
       <ModalOverlay />
@@ -71,11 +58,6 @@ const ComponentEditModal = (props: {
                   .map((e, i) => {
                     return (
                       <Tr key={e.id}>
-                        {/* <Td className="p-2" style={{ minWidth: "200px" }}>
-                          <span style={{ fontWeight: "bold" }}>
-                            {props.component?.nameOfSubcomponentSingular} {!isSingular && e.numberInSequence}
-                          </span>
-                        </Td> */}
                         <Td className="p-2">
                           <span className="hidden md:inline" style={{ fontWeight: "bold" }}>
                             {props.component?.nameOfSubcomponentSingular}{" "}
@@ -153,7 +135,7 @@ const ComponentEditModal = (props: {
               if (!props.component?.subjectId) return;
               setLoading(true);
               const updatedComponent = await (
-                await fetch(`/api/block/${props.blockId}/course/${props.component.subjectId}/component/${props.component?.id}`, {
+                await fetch(`/api/block/${term?.id}/course/${props.component.subjectId}/component/${props.component?.id}`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
@@ -162,11 +144,11 @@ const ComponentEditModal = (props: {
                   }),
                 })
               ).json();
-              props.onReceiveUpdatedData(updatedComponent);
+              props.onClose();
               updateCourse(props.component.subjectId, {
-                ...props.subject!,
+                ...course!,
                 components:
-                  props?.subject?.components.map((f) => {
+                  course?.components.map((f) => {
                     if (f.id === updatedComponent.id) return updatedComponent;
                     return f;
                   }) ?? [],
