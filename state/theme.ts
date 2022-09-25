@@ -14,6 +14,7 @@ export const ThemeState = selector<any>({
   dangerouslyAllowMutability: true,
   get: ({ get }) => {
     const n = get(ThemeNameState);
+    if (!(n in defaultThemes)) return defaultThemes.Default;
     return defaultThemes[n];
   },
 });

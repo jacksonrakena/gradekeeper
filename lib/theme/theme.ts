@@ -1,6 +1,5 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
-import themeConstants from "./themeConstants";
 
 const config: ThemeConfig = {
   initialColorMode: "system",
@@ -8,16 +7,19 @@ const config: ThemeConfig = {
 };
 {
 }
-const regular = (theme: any) => {
+const regular = (
+  theme: any,
+  opts: any = {
+    bg: ["#f7f3f7", "#111"],
+  }
+) => {
   return extendTheme({
     config,
     styles: {
       // @ts-ignore
       global: (props) => ({
         "html, body": {
-          //#fafafa
-          //old:"#f7f3f7"
-          background: mode("#f7f3f7", themeConstants.darkModePageBackground)(props),
+          background: mode(opts.bg[0], opts.bg[1])(props),
         },
       }),
     },
@@ -76,17 +78,32 @@ export const defaultThemes = {
     "800": "#674113",
     "900": "#553610",
   }),
-  // IanPad: regular({
-  //   "50": "#e9fcee",
-  //   "100": "#b3eec3",
-  //   "200": "#9ed2ac",
-  //   "300": "#84b090",
-  //   "400": "#769d81",
-  //   "500": "#64856d",
-  //   "600": "#54705c",
-  //   "700": "#435a4a",
-  //   "800": "#394c3e",
-  //   "900": "#29372d",
+  // IanPad: extendTheme({
+  //   config,
+  //   styles: {
+  //     // @ts-ignore
+  //     global: (props) => ({
+  //       "html, body": {
+  //         //#fafafa
+  //         //old:"#f7f3f7"
+  //         background: "#B9F6CA",
+  //       },
+  //     }),
+  //   },
+  //   colors: {
+  //     brand: {
+  //       "50": "#e9fcee",
+  //       "100": "#b3eec3",
+  //       "200": "#9ed2ac",
+  //       "300": "#84b090",
+  //       "400": "#769d81",
+  //       "500": "#64856d",
+  //       "600": "#54705c",
+  //       "700": "#435a4a",
+  //       "800": "#394c3e",
+  //       "900": "#29372d",
+  //     },
+  //   },
   // }),
   Red: regular({
     "50": "#fdf6f5",
