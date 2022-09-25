@@ -1,10 +1,11 @@
 import { EditIcon } from "@chakra-ui/icons";
 import { Box, Flex, Spinner, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import { useState } from "react";
-import { FullSubjectComponent } from "../../../lib/logic/fullEntities";
-import { calculateLetterGrade, ProcessedCourseInfo } from "../../../lib/logic/processing";
-import { useUserContext } from "../../../lib/UserContext";
-import { GkEditable } from "../../generic/GkEditable";
+import { useRecoilValue } from "recoil";
+import { FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
+import { calculateLetterGrade, ProcessedCourseInfo } from "../../../../../lib/logic/processing";
+import { ProcessedUserState, useInvalidator } from "../../../../../state/course";
+import { GkEditable } from "../../../../generic/GkEditable";
 
 const ComponentRow = (props: {
   component: FullSubjectComponent;
@@ -12,7 +13,8 @@ const ComponentRow = (props: {
   componentGrade: { value: number; isUnknown: boolean; isAverage: boolean };
   onRequestModalOpen: () => void;
 }) => {
-  const user = useUserContext();
+  const user = useRecoilValue(ProcessedUserState);
+  const { updateCourse, invalidate } = useInvalidator();
   const e = props.component;
   const subject = props.subject;
   const grade = props.componentGrade;
@@ -59,7 +61,7 @@ const ComponentRow = (props: {
                       }
                     );
                     const data = await response.json();
-                    user.updateCourse(props.subject.id, {
+                    updateCourse(props.subject.id, {
                       ...props.subject,
                       components: props.subject.components.map((cc) => {
                         if (cc.id !== props.component.id) return cc;
@@ -109,14 +111,7 @@ const ComponentRow = (props: {
                 }),
               });
               const data = await response.json();
-              // user.updateCourse(props.subject.id, {
-              //   ...props.subject,
-              //   components: props.subject.components.map((cc) => {
-              //     if (cc.id !== props.component.id) return cc;
-              //     return { ...cc, subjectWeighting: parseFloat(subjectWeighting.replaceAll("%", "")) / 100 };
-              //   }),
-              // });
-              await user.redownload();
+              await invalidate();
               setSubjectWeighting(parseFloat(e.replaceAll("%", "")) + "%");
               setSectionLoadingUpdate("");
             }}
@@ -170,7 +165,7 @@ const ComponentRow = (props: {
                         }
                       );
                       const data = await response.json();
-                      user.updateCourse(props.subject.id, {
+                      updateCourse(props.subject.id, {
                         ...props.subject,
                         components: props.subject.components.map((cc) => {
                           if (cc.id !== props.component.id) return cc;
@@ -242,7 +237,7 @@ const ComponentRow = (props: {
         )}
       </Td>
       <Td pl={0} style={{}} fontWeight={"semibold"} className="text-center">
-        {!grade.isUnknown && calculateLetterGrade(grade.value, user.user?.gradeMap)}
+        {!grade.isUnknown && calculateLetterGrade(grade.value, user?.gradeMap)}
       </Td>
     </Tr>
   );

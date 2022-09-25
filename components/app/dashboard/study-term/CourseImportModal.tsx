@@ -13,15 +13,15 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useUserContext } from "../../../lib/UserContext";
+import { useInvalidator } from "../../../../state/course";
 
 export const CourseImportModal = (props: { blockId: string; onClose: () => void }) => {
   const [shareCode, setShareCode] = useState("");
-  const user = useUserContext();
   const router = useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const targetStudyBlock = props.blockId;
+  const { invalidate } = useInvalidator();
   return (
     <ModalContent>
       <ModalHeader>Import a course</ModalHeader>
@@ -49,7 +49,7 @@ export const CourseImportModal = (props: { blockId: string; onClose: () => void 
             });
             if (res.ok) {
               const course = await res.json();
-              await user.redownload();
+              await invalidate();
               router.push(`/blocks/${targetStudyBlock}/courses/${course.id}`);
               setLoading(false);
               props.onClose();

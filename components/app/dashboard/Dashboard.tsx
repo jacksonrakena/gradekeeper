@@ -1,12 +1,6 @@
 import {
   Alert,
   AlertDescription,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   AlertIcon,
   Box,
   Button,
@@ -19,26 +13,32 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
-import { ProcessedStudyBlock, _null } from "../../../../lib/logic/processing";
-import { useUserContext } from "../../../../lib/UserContext";
-import Footer from "../../Footer";
-import CreateBlockModal from "../../modals/CreateBlockModal";
-import CreateCourseModal from "../../modals/CreateCourseModal";
-import { TopBar } from "../../nav/TopBar";
-import { StudyBlockCourseList } from "./StudyBlockCourseList";
+import { useEffect, useRef, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { ProcessedStudyBlock, _null } from "../../../lib/logic/processing";
+import { ProcessedUserState, SelectedCourseIdState, SelectedStudyBlockIdState } from "../../../state/course";
+import Footer from "../Footer";
+import { TopBar } from "../nav/TopBar";
+import CreateBlockModal from "./CreateBlockModal";
+import { StudyBlockCourseList } from "./study-term/StudyBlockCourseList";
 
 const Dashboard = () => {
-  const { user } = useUserContext();
+  const user = useRecoilValue(ProcessedUserState);
   const isLoading = !user;
   const cancelRef = useRef<any>();
   const [deleteStudyBlock, setDeleteStudyBlock] = useState(_null<ProcessedStudyBlock>());
   const toast = useToast();
   const router = useRouter();
   const [isDeletingStudyBlock, setIsDeletingSb] = useState(false);
-  const context = useUserContext();
   const [courseCreateBlockId, setCourseCreateBlockId] = useState("");
   const createBlockDisclosure = useDisclosure();
+
+  const [currentCourseId, setCurrentCourseId] = useRecoilState(SelectedCourseIdState);
+  const [currentBlockId, setCurrentBlockId] = useRecoilState(SelectedStudyBlockIdState);
+  useEffect(() => {
+    if (currentCourseId) setCurrentCourseId(null);
+    if (currentBlockId) setCurrentBlockId(null);
+  }, [router.pathname]);
 
   const closedStudyBlocks = user?.processedStudyBlocks
     .filter((e) => Date.now() > new Date(e.endDate).getTime())
@@ -55,57 +55,6 @@ const Dashboard = () => {
           <Head>
             <title>My courses</title>
           </Head>
-          <AlertDialog
-            isOpen={deleteStudyBlock !== null}
-            leastDestructiveRef={cancelRef}
-            onClose={() => {
-              setDeleteStudyBlock(null);
-            }}
-          >
-            <AlertDialogOverlay>
-              <AlertDialogContent>
-                <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                  Delete block &lsquo;{deleteStudyBlock?.name}&rsquo;
-                </AlertDialogHeader>
-                <AlertDialogBody>
-                  Are you <strong>sure</strong> you want to delete {deleteStudyBlock?.name}? <br />
-                  This will delete <strong>{deleteStudyBlock?.processedCourses.length}</strong> courses.
-                </AlertDialogBody>
-                <AlertDialogFooter>
-                  <Button
-                    ref={cancelRef}
-                    onClick={() => {
-                      setDeleteStudyBlock(null);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    colorScheme="red"
-                    onClick={async () => {
-                      setIsDeletingSb(true);
-                      await fetch(`/api/block/${deleteStudyBlock?.id ?? ""}`, { method: "DELETE" });
-                      await context.redownload();
-                      toast({
-                        title: "Study block deleted.",
-                        description: deleteStudyBlock?.name + " deleted.",
-                        duration: 4000,
-                        isClosable: true,
-                        status: "success",
-                      });
-                      setIsDeletingSb(false);
-                      setDeleteStudyBlock(null);
-                    }}
-                    isLoading={isDeletingStudyBlock}
-                    ml={3}
-                  >
-                    Delete
-                  </Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialogOverlay>
-          </AlertDialog>
-          <CreateCourseModal blockId={courseCreateBlockId} isOpen={!!courseCreateBlockId} onClose={() => setCourseCreateBlockId("")} />
           <CreateBlockModal isOpen={createBlockDisclosure.isOpen} onClose={createBlockDisclosure.onClose} />
           <div>
             <Box className={"flex flex-col"} px={[6, 12]}>
@@ -145,14 +94,7 @@ const Dashboard = () => {
                       .sort((a, b) => {
                         return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
                       })
-                      .map((studyBlock) => (
-                        <StudyBlockCourseList
-                          setCourseCreateBlockId={setCourseCreateBlockId}
-                          setDeleteStudyBlock={setDeleteStudyBlock}
-                          key={studyBlock.id}
-                          studyBlock={studyBlock}
-                        />
-                      ))}
+                      .map((studyBlock) => <StudyBlockCourseList key={studyBlock.id} studyBlock={studyBlock} />)}
                   {user?.processedStudyBlocks && user?.processedStudyBlocks.length > 0 && (
                     <Button colorScheme="brand" size="sm" onClick={createBlockDisclosure.onOpen}>
                       + New term
@@ -172,14 +114,7 @@ const Dashboard = () => {
                           .sort((a, b) => {
                             return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
                           })
-                          .map((studyBlock) => (
-                            <StudyBlockCourseList
-                              setCourseCreateBlockId={setCourseCreateBlockId}
-                              setDeleteStudyBlock={setDeleteStudyBlock}
-                              key={studyBlock.id}
-                              studyBlock={studyBlock}
-                            />
-                          ))}
+                          .map((studyBlock) => <StudyBlockCourseList key={studyBlock.id} studyBlock={studyBlock} />)}
                     </>
                   )}
                 </Box>

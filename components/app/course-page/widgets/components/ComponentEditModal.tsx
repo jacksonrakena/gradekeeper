@@ -4,9 +4,10 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHea
 import { Box, Input, Text, useColorModeValue } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import { useRef, useState } from "react";
-import { FullSubject, FullSubjectComponent } from "../../../lib/logic/fullEntities";
-import { calculateLetterGrade, isActiveSubcomponent } from "../../../lib/logic/processing";
-import { useUserContext } from "../../../lib/UserContext";
+import { useRecoilValue } from "recoil";
+import { FullSubject, FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
+import { calculateLetterGrade, isActiveSubcomponent } from "../../../../../lib/logic/processing";
+import { ProcessedUserState, useInvalidator } from "../../../../../state/course";
 
 const ComponentEditModal = (props: {
   blockId: string;
@@ -17,8 +18,9 @@ const ComponentEditModal = (props: {
   subject?: FullSubject;
   onReceiveUpdatedData: (data: FullSubjectComponent) => void;
 }) => {
+  const { updateCourse } = useInvalidator();
   const captionColor = useColorModeValue("gray.700", "gray.200");
-  const userContext = useUserContext();
+  const user = useRecoilValue(ProcessedUserState);
   const [subcomponents, setSubcomponents] = useState(props.component?.subcomponents ?? []);
   const [loading, setLoading] = useState(false);
   const previousValueRef = useRef<SubjectSubcomponent[]>(subcomponents);
@@ -64,7 +66,8 @@ const ComponentEditModal = (props: {
               </Thead>
               <Tbody>
                 {subcomponents
-                  ?.sort((d, b) => (d.numberInSequence ?? 0) - (b.numberInSequence ?? 0))
+                  ?.map((e) => e)
+                  .sort((d, b) => (d.numberInSequence ?? 0) - (b.numberInSequence ?? 0))
                   .map((e, i) => {
                     return (
                       <Tr key={e.id}>
@@ -147,9 +150,10 @@ const ComponentEditModal = (props: {
             isLoading={loading}
             colorScheme="brand"
             onClick={async () => {
+              if (!props.component?.subjectId) return;
               setLoading(true);
               const updatedComponent = await (
-                await fetch(`/api/block/${props.blockId}/course/${props.component?.subjectId}/component/${props.component?.id}`, {
+                await fetch(`/api/block/${props.blockId}/course/${props.component.subjectId}/component/${props.component?.id}`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
@@ -159,8 +163,8 @@ const ComponentEditModal = (props: {
                 })
               ).json();
               props.onReceiveUpdatedData(updatedComponent);
-              userContext.updateCourse(props.component?.subjectId ?? "", {
-                ...(props.subject as FullSubject),
+              updateCourse(props.component.subjectId, {
+                ...props.subject!,
                 components:
                   props?.subject?.components.map((f) => {
                     if (f.id === updatedComponent.id) return updatedComponent;

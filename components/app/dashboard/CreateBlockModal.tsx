@@ -15,9 +15,9 @@ import {
 import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useUserContext } from "../../../lib/UserContext";
 
 import { Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import { useInvalidator } from "../../../state/course";
 
 const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
   return (
@@ -75,7 +75,7 @@ const templates: { [key: string]: { name: string; startDate: string; endDate: st
 
 export const CreateBlock = (props: { onClose: () => void }) => {
   const router = useRouter();
-  const context = useUserContext();
+  const { invalidate } = useInvalidator();
   const [institutionTemplates, setTemplates] = useState<{ name: string; startDate: string; endDate: string }[]>();
   const [selectedTemplate, setSelectedTemplate] = useState<{ name: string; startDate: string; endDate: string }>();
   const dtf = new Intl.DateTimeFormat("en-US", {
@@ -109,7 +109,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
             })
               .then((e) => e.json())
               .then((f) => {
-                context.redownload().then(() => {
+                invalidate().then(() => {
                   setSubmitting(false);
                   props.onClose();
                 });

@@ -29,9 +29,10 @@ import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 import { TopBar } from "../components/app/nav/TopBar";
 import themeConstants from "../lib/theme/themeConstants";
-import { useUserContext } from "../lib/UserContext";
+import { ProcessedUserState, useInvalidator } from "../state/course";
 
 const predefinedGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-"];
 const presets = {
@@ -108,7 +109,8 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
 };
 
 const GradeMapEditor = (props: { gradeMap: object }) => {
-  const user = useUserContext();
+  const user = useRecoilValue(ProcessedUserState);
+  const { invalidate } = useInvalidator();
   const toast = useToast();
   const [gradeMap, setGradeMap] = useState(props.gradeMap);
   const [saving, isSaving] = useState(false);
@@ -142,7 +144,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
               });
               if (res.ok) {
                 const data = await res.json();
-                user.setUser(data);
+                await invalidate();
                 isSaving(false);
                 toast({
                   title: "Updated.",
@@ -176,7 +178,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
 
 const Account: NextPage = () => {
   const data = useSession();
-  const user = useUserContext();
+  const user = useRecoilValue(ProcessedUserState);
   const router = useRouter();
   const deleteModal = useDisclosure();
   const cancelRef = useRef<any>();
@@ -240,7 +242,7 @@ const Account: NextPage = () => {
                 </Box>
               </Flex>
             </Flex>
-            {user?.user?.gradeMap && <GradeMapEditor gradeMap={user?.user?.gradeMap as object} />}
+            {user?.gradeMap && <GradeMapEditor gradeMap={user?.gradeMap as object} />}
           </Stack>
 
           <Box>
@@ -254,7 +256,7 @@ const Account: NextPage = () => {
                       service: "AWCH_GK_PUBLIC_VCL",
                       server: "SYD02.SECURE.GRADEKEEPER.XYZ",
                     },
-                    data: user?.user,
+                    data: user,
                   })
                 )}`}
                 as={"a"}

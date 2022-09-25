@@ -1,14 +1,18 @@
-import { Box, Flex, Icon, Tag, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, BoxProps, Flex, Icon, Tag, Text, useColorModeValue } from "@chakra-ui/react";
+import { PropsWithChildren } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { ProcessedCourseInfo } from "../../../../lib/logic/processing";
 import themeConstants from "../../../../lib/theme/themeConstants";
 
-const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any }) => {
-  const subject = props.subject;
+export const Pill = (
+  props: PropsWithChildren<{
+    boxProps?: Partial<BoxProps>;
+  }>
+) => {
   return (
     <Box
       className="my-4 shadow-md hover:cursor-pointer"
-      onClick={props.onClick}
+      {...props.boxProps}
       style={{
         padding: "10px",
         paddingLeft: "25px",
@@ -23,6 +27,19 @@ const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any })
       }}
       _hover={{
         transform: "scale(1.01)",
+      }}
+    >
+      {props.children}
+    </Box>
+  );
+};
+
+const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any }) => {
+  const subject = props.subject;
+  return (
+    <Pill
+      boxProps={{
+        onClick: props.onClick,
       }}
     >
       <Text size="md" fontWeight={"semibold"}>
@@ -70,7 +87,7 @@ const CoursePill = (props: { subject: ProcessedCourseInfo; onClick: () => any })
           </div>
         </>
       )}
-    </Box>
+    </Pill>
   );
 };
 

@@ -30,6 +30,7 @@ import {
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { PropsWithChildren, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 import { FullSubjectComponent } from "../../../lib/logic/fullEntities";
 import {
   adjust,
@@ -39,15 +40,15 @@ import {
   _null,
 } from "../../../lib/logic/processing";
 import themeConstants from "../../../lib/theme/themeConstants";
-import { useUserContext } from "../../../lib/UserContext";
+import { ProcessedUserState, useInvalidator } from "../../../state/course";
 import { GkEditable } from "../../generic/GkEditable";
 import Footer from "../Footer";
 import { TopBar } from "../nav/TopBar";
-import AveragesWidget from "./AveragesWidget";
-import ComponentEditModal from "./ComponentEditModal";
-import ComponentRow from "./ComponentRow";
-import CourseCompletedWidget from "./CourseCompletedWidget";
-import ProgressBarCaption from "./ProgressBarCaption";
+import AveragesWidget from "./widgets/AveragesWidget";
+import ComponentEditModal from "./widgets/components/ComponentEditModal";
+import ComponentRow from "./widgets/components/ComponentRow";
+import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
+import ProgressBarCaption from "./widgets/ProgressBarCaption";
 
 const CourseView = (
   props: PropsWithChildren<{
@@ -55,8 +56,9 @@ const CourseView = (
     studyBlock: ProcessedStudyBlock;
   }>
 ) => {
-  const user = useUserContext();
+  const user = useRecoilValue(ProcessedUserState);
   const router = useRouter();
+  const { updateCourse } = useInvalidator();
 
   const studyBlock = props.studyBlock;
   const course = props.course;
@@ -79,7 +81,7 @@ const CourseView = (
       <Head>
         <title>{course?.longName ?? "Loading..."}</title>
       </Head>
-      <TopBar currentSubjectId={id?.toString()} />
+      <TopBar />
       {component !== null ? (
         <ComponentEditModal
           subject={course}
@@ -116,7 +118,7 @@ const CourseView = (
                   });
                   if (d.ok) {
                     const newcourse = await d.json();
-                    user.updateCourse(newcourse.id, newcourse);
+                    updateCourse(newcourse.id, newcourse);
                     setSectionLoadingUpdate("");
                   } else {
                   }
@@ -187,7 +189,7 @@ const CourseView = (
                             status: "success",
                           });
                           router.push("/");
-                          user.updateCourse(course?.id, undefined);
+                          updateCourse(course?.id, null);
                         });
                       }}
                       isLoading={deleting}

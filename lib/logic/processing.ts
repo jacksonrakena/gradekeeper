@@ -161,12 +161,12 @@ export function isActiveSubcomponent(
 
 export function getUncompletedAndCompletedActiveSubcomponents(component: FullSubjectComponent): SubjectSubcomponent[] {
   var sorted = component.subcomponents
+    .map((e) => e)
     .sort((first, second) => {
       if (first.gradeValuePercentage < second.gradeValuePercentage) return 1;
       if (first.gradeValuePercentage === second.gradeValuePercentage) return 0;
       return -1;
-    })
-    .map((e) => e);
+    });
 
   for (var i = 0; i < component.numberOfSubComponentsToDrop_Lowest; i++) {
     sorted.pop();

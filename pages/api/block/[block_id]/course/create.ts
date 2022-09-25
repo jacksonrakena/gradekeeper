@@ -33,7 +33,9 @@ export default gkAuthorizedRoute(
       if (inputdto.components.map((e) => Number.parseInt(e.numberOfSubcomponents)).reduce((a, b) => a + b, 0) > 100) {
         return res.status(400).json({ error: "Total number of subcomponents must not exceed 100." });
       }
-      if (inputdto.components.map((e) => Number.parseInt(e.weighting)).reduce((a, b) => a + b) !== 1) {
+      if (inputdto.components.map((e) => Number.parseFloat(e.weighting)).reduce((a, b) => a + b) !== 1) {
+        console.log(JSON.stringify(inputdto.components));
+        console.log(inputdto.components.map((e) => Number.parseFloat(e.weighting)).reduce((a, b) => a + b));
         return res.status(400).json({ error: "Course components must add up to 100%." });
       }
       const subjectCreationQuery = ctx.services.db.subject.create({
