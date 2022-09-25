@@ -8,7 +8,7 @@ import { Chakra } from "../lib/theme/Chakra";
 import { useInvalidator } from "../state/course";
 import "../styles/globals.css";
 
-function GradekeeperAppRoot({ Component, pageProps: { session, ...pageProps }, router }: AppProps) {
+function GradekeeperAppRoot({ Component, pageProps: { session, ...pageProps }, router }: AppProps<any>) {
   return (
     <>
       <Head>
