@@ -137,7 +137,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
             isLoading={saving}
             onClick={async () => {
               isSaving(true);
-              const res = await fetch(`/api/user`, {
+              const res = await fetch(`/api/users/me`, {
                 headers: { "Content-Type": "application/json" },
                 method: "POST",
                 body: JSON.stringify({ gradeMap: gradeMap }),
@@ -201,7 +201,7 @@ const Account: NextPage = () => {
                 isLoading={isDeleting}
                 onClick={async () => {
                   setIsDeleting(true);
-                  const response = await fetch("/api/user", {
+                  const response = await fetch("/api/users/me", {
                     method: "DELETE",
                   });
                   if (response.ok) {

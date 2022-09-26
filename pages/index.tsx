@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Dashboard from "../components/app/dashboard/Dashboard";
 import MarketingHome from "../components/marketing/MarketingHome";
 import { GetUserResponse } from "../state/course";
-import { getUserQuery } from "./api/user";
+import { getUserQuery } from "./api/users/me";
 
 
 const Home: NextPage = () => {

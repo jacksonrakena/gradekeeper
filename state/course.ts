@@ -3,7 +3,7 @@ import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import { FullSubject, FullSubjectComponent } from "../lib/logic/fullEntities";
 import { ProcessedCourseInfo, ProcessedStudyBlock, ProcessedUserInfo, processStudyBlock } from "../lib/logic/processing";
 
-import { getUserQuery } from "../pages/api/user";
+import { getUserQuery } from "../pages/api/users/me";
 
 export type GetUserResponse = Prisma.UserGetPayload<typeof getUserQuery>;
 export type DownloadedStudyBlock = GetUserResponse["studyBlocks"][number];
@@ -11,7 +11,7 @@ export type DownloadedStudyBlock = GetUserResponse["studyBlocks"][number];
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 async function download(): Promise<GetUserResponse> {
   try {
-    const d = await fetch("/api/user");
+    const d = await fetch("/api/users/me");
     const e = await d.json();
     const prismaResponse: Prisma.UserGetPayload<typeof getUserQuery> = e;
     return prismaResponse;
