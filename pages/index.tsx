@@ -1,7 +1,11 @@
+import { Prisma } from "@prisma/client";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import Dashboard from "../components/app/dashboard/course-list/Dashboard";
+import Dashboard from "../components/app/dashboard/Dashboard";
 import MarketingHome from "../components/marketing/MarketingHome";
+import { GetUserResponse } from "../state/course";
+import { getUserQuery } from "./api/users/me";
+
 
 const Home: NextPage = () => {
   const data = useSession();

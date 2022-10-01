@@ -30,7 +30,6 @@ export const CreateCourseComponentRow = (props: {
         <NumberInput
           variant="filled"
           onChange={(e, a) => {
-            console.log(a);
             props.onUpdate({
               ...props.original,
               numberOfSubcomponents: e,

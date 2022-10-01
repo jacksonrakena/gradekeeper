@@ -1,6 +1,6 @@
 import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react";
-import { ProcessedCourseInfo } from "../../../lib/logic/processing";
-import themeConstants from "../../../lib/theme/themeConstants";
+import { ProcessedCourseInfo } from "../../../../lib/logic/processing";
+import themeConstants from "../../../../lib/theme/themeConstants";
 
 const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
   const actual = props.course.grades.actual;
@@ -18,7 +18,6 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
         .map((e) => d.subjectWeighting / (d.subcomponents.length - d.numberOfSubComponentsToDrop_Lowest))
     )
     .flat();
-  console.log(remainingPieces);
   return (
     <Box
       className="grow m-4 p-6 shadow-md rounded-md"

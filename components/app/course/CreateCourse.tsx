@@ -27,8 +27,9 @@ import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from 
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { TwitterPicker } from "react-color";
+import { useRecoilValue } from "recoil";
 import { randomColor } from "../../../lib/logic/processing";
-import { useUserContext } from "../../../lib/UserContext";
+import { ProcessedUserState, useInvalidator } from "../../../state/course";
 import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
@@ -40,6 +41,7 @@ export type ComponentDto = {
 };
 
 export const CreateCourse = (props: { block_id: string }) => {
+  const { invalidate } = useInvalidator();
   const block_id = props.block_id;
   const toast = useToast();
   const router = useRouter();
@@ -52,11 +54,9 @@ export const CreateCourse = (props: { block_id: string }) => {
     },
   ];
   const [components, setComponents] = useState(emptyComponents);
-  const userContext = useUserContext();
-  const studyBlock = userContext.user?.processedStudyBlocks.filter((d) => d.id === block_id?.toString())[0];
+  const user = useRecoilValue(ProcessedUserState);
   const tablecolor = useColorModeValue("bg-gray-50", "");
   const [tabIndex, setTabIndex] = useState(0);
-  if (!userContext.user) return <div>Loading</div>;
   return (
     <div>
       <div>Let&apos;s make a new course.</div>
@@ -97,7 +97,7 @@ export const CreateCourse = (props: { block_id: string }) => {
           }).then(async (e) => {
             const f = await e.json();
             if (e.ok) {
-              userContext.redownload().then(() => {
+              invalidate().then(() => {
                 setSubmitting(false);
                 router.push(`/blocks/${block_id}/courses/${f.id}`);
               });

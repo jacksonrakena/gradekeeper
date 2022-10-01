@@ -14,14 +14,8 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
-  Table,
-  TableContainer,
-  Tbody,
   Text,
-  Th,
-  Thead,
   Tooltip,
-  Tr,
   useClipboard,
   useColorModeValue,
   useDisclosure,
@@ -30,24 +24,17 @@ import {
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { PropsWithChildren, useRef, useState } from "react";
-import { FullSubjectComponent } from "../../../lib/logic/fullEntities";
-import {
-  adjust,
-  calculateProjectedGradeForComponent,
-  ProcessedCourseInfo,
-  ProcessedStudyBlock,
-  _null,
-} from "../../../lib/logic/processing";
+import { useRecoilValue } from "recoil";
+import { adjust, ProcessedCourseInfo, ProcessedStudyBlock } from "../../../lib/logic/processing";
 import themeConstants from "../../../lib/theme/themeConstants";
-import { useUserContext } from "../../../lib/UserContext";
+import { ProcessedUserState, useInvalidator } from "../../../state/course";
 import { GkEditable } from "../../generic/GkEditable";
 import Footer from "../Footer";
 import { TopBar } from "../nav/TopBar";
-import AveragesWidget from "./AveragesWidget";
-import ComponentEditModal from "./ComponentEditModal";
-import ComponentRow from "./ComponentRow";
-import CourseCompletedWidget from "./CourseCompletedWidget";
-import ProgressBarCaption from "./ProgressBarCaption";
+import AveragesWidget from "./widgets/AveragesWidget";
+import { ResultsWidget } from "./widgets/components/ResultsWidget";
+import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
+import ProgressBarCaption from "./widgets/ProgressBarCaption";
 
 const CourseView = (
   props: PropsWithChildren<{
@@ -55,8 +42,9 @@ const CourseView = (
     studyBlock: ProcessedStudyBlock;
   }>
 ) => {
-  const user = useUserContext();
+  const user = useRecoilValue(ProcessedUserState);
   const router = useRouter();
+  const { updateCourse } = useInvalidator();
 
   const studyBlock = props.studyBlock;
   const course = props.course;
@@ -64,7 +52,6 @@ const CourseView = (
   const gradeMap = props.course.status.gradeMap;
 
   const cb = useClipboard(course.id?.toString() || "");
-  const [component, setTargetComponent] = useState(_null<FullSubjectComponent>());
   const [deleting, isDeleting] = useState(false);
   const captionColor = useColorModeValue("gray.700", "gray.200");
   const disc = useDisclosure();
@@ -73,29 +60,14 @@ const CourseView = (
   const [name, setName] = useState(course?.longName);
   const contrastingColor = useColorModeValue("white", themeConstants.darkModeContrastingColor);
   const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
+  const tooltipColor = useColorModeValue("white", "black");
   return (
     <div>
       <Head>
         <title>{course?.longName ?? "Loading..."}</title>
       </Head>
-      <TopBar currentSubjectId={id?.toString()} />
-      {component !== null ? (
-        <ComponentEditModal
-          subject={course}
-          blockId={course?.studyBlockId ?? ""}
-          onReceiveUpdatedData={(newcomp) => {
-            setTargetComponent(null);
-          }}
-          gradeMap={gradeMap}
-          onClose={() => {
-            setTargetComponent(null);
-          }}
-          showing={component !== null}
-          component={component}
-        />
-      ) : (
-        <></>
-      )}
+      <TopBar />
+
       <>
         <Box bgColor={course?.color} className="p-8">
           <Box className="text-3xl">
@@ -115,7 +87,7 @@ const CourseView = (
                   });
                   if (d.ok) {
                     const newcourse = await d.json();
-                    user.updateCourse(newcourse.id, newcourse);
+                    updateCourse(newcourse.id, newcourse);
                     setSectionLoadingUpdate("");
                   } else {
                   }
@@ -186,7 +158,7 @@ const CourseView = (
                             status: "success",
                           });
                           router.push("/");
-                          user.updateCourse(course?.id, undefined);
+                          updateCourse(course?.id, null);
                         });
                       }}
                       isLoading={deleting}
@@ -208,38 +180,7 @@ const CourseView = (
         )}
 
         <div className="flex flex-wrap">
-          <div className="grow m-4 p-6 shadow-md rounded-md overflow-auto" style={{ backgroundColor: contrastingColor }}>
-            <Box className="text-2xl mb-2 font-bold">Results</Box>
-            <TableContainer>
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th pl={0}>Name</Th>
-                    <Th pl={0}>Weight</Th>
-                    <Th pl={0}>Score</Th>
-                    <Th pl={0}>Grade</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {course?.components?.map((e, i) => {
-                    console.log(e);
-                    const grade = calculateProjectedGradeForComponent(e);
-                    return (
-                      <ComponentRow
-                        onRequestModalOpen={() => {
-                          setTargetComponent(e);
-                        }}
-                        subject={course}
-                        key={e.id}
-                        component={e}
-                        componentGrade={grade}
-                      />
-                    );
-                  })}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </div>
+          <ResultsWidget contrastingColor={contrastingColor} course={course} />
 
           {!course.status.isCompleted && <AveragesWidget course={course} />}
         </div>
@@ -312,6 +253,7 @@ const CourseView = (
                         position="top"
                       >
                         <Tooltip
+                          color={tooltipColor}
                           label={
                             "Lowest possible grade: " +
                             props.course.grades.actual?.letter +
@@ -329,6 +271,7 @@ const CourseView = (
                         position="top"
                       >
                         <Tooltip
+                          color={tooltipColor}
                           label={
                             "Maximum possible grade: " +
                             props.course.grades.maximumPossible?.letter +

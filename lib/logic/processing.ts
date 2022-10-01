@@ -1,5 +1,5 @@
 import { Prisma, StudyBlock, SubjectSubcomponent } from "@prisma/client";
-import { getUserQuery } from "../../pages/api/user";
+import { getUserQuery } from "../../pages/api/users/me";
 import { FullSubject, FullSubjectComponent } from "./fullEntities";
 
 export function _null<T>(): T | null {
@@ -83,7 +83,10 @@ export const UnknownGrade: ObjectGrade = { numerical: 0, letter: "U", isUnknown:
 export function calculateAverageOfList(list: number[], drop: number): number | null {
   if (list.length === 0) return 0;
   if (list.length - drop <= 0) return null;
-  const sorted = list.sort((a, b) => b - a).slice(0, 0 - drop);
+  const sorted = list
+    .map((a) => a)
+    .sort((a, b) => b - a)
+    .slice(0, 0 - drop);
   return sorted.reduce((a, b) => a + b, 0) / sorted.length;
 }
 
@@ -161,12 +164,12 @@ export function isActiveSubcomponent(
 
 export function getUncompletedAndCompletedActiveSubcomponents(component: FullSubjectComponent): SubjectSubcomponent[] {
   var sorted = component.subcomponents
+    .map((e) => e)
     .sort((first, second) => {
       if (first.gradeValuePercentage < second.gradeValuePercentage) return 1;
       if (first.gradeValuePercentage === second.gradeValuePercentage) return 0;
       return -1;
-    })
-    .map((e) => e);
+    });
 
   for (var i = 0; i < component.numberOfSubComponentsToDrop_Lowest; i++) {
     sorted.pop();

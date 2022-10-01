@@ -29,9 +29,10 @@ import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 import { TopBar } from "../components/app/nav/TopBar";
 import themeConstants from "../lib/theme/themeConstants";
-import { useUserContext } from "../lib/UserContext";
+import { ProcessedUserState, useInvalidator } from "../state/course";
 
 const predefinedGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-"];
 const presets = {
@@ -73,7 +74,6 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
       <HStack>
         <Switch
           onChange={(c) => {
-            console.log(c.target.checked);
             var newGradeMap = props.userGradeMap;
             if (c.target.checked) {
               newGradeMap = { ...newGradeMap, [value ? value[0].toString() : uninitDefault]: props.gradeString };
@@ -84,7 +84,6 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
                   return d[0] !== value[0].toString();
                 })
               );
-            console.log(newGradeMap);
             props.onChange(newGradeMap);
           }}
           isChecked={definedGrades.includes(props.gradeString)}
@@ -95,7 +94,6 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
         <NumberInput
           onChange={(c) => {
             var newmap = Object.fromEntries(Object.entries(props.userGradeMap).filter((e) => e[1] !== props.gradeString));
-            console.log({ ...newmap, [c]: props.gradeString });
             props.onChange({ ...newmap, [c]: props.gradeString });
           }}
           m={0}
@@ -111,7 +109,8 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
 };
 
 const GradeMapEditor = (props: { gradeMap: object }) => {
-  const user = useUserContext();
+  const user = useRecoilValue(ProcessedUserState);
+  const { invalidate } = useInvalidator();
   const toast = useToast();
   const [gradeMap, setGradeMap] = useState(props.gradeMap);
   const [saving, isSaving] = useState(false);
@@ -138,14 +137,14 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
             isLoading={saving}
             onClick={async () => {
               isSaving(true);
-              const res = await fetch(`/api/user`, {
+              const res = await fetch(`/api/users/me`, {
                 headers: { "Content-Type": "application/json" },
                 method: "POST",
                 body: JSON.stringify({ gradeMap: gradeMap }),
               });
               if (res.ok) {
                 const data = await res.json();
-                user.setUser(data);
+                await invalidate();
                 isSaving(false);
                 toast({
                   title: "Updated.",
@@ -179,7 +178,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
 
 const Account: NextPage = () => {
   const data = useSession();
-  const user = useUserContext();
+  const user = useRecoilValue(ProcessedUserState);
   const router = useRouter();
   const deleteModal = useDisclosure();
   const cancelRef = useRef<any>();
@@ -202,7 +201,7 @@ const Account: NextPage = () => {
                 isLoading={isDeleting}
                 onClick={async () => {
                   setIsDeleting(true);
-                  const response = await fetch("/api/user", {
+                  const response = await fetch("/api/users/me", {
                     method: "DELETE",
                   });
                   if (response.ok) {
@@ -243,7 +242,7 @@ const Account: NextPage = () => {
                 </Box>
               </Flex>
             </Flex>
-            {user?.user?.gradeMap && <GradeMapEditor gradeMap={user?.user?.gradeMap as object} />}
+            {user?.gradeMap && <GradeMapEditor gradeMap={user?.gradeMap as object} />}
           </Stack>
 
           <Box>
@@ -257,7 +256,7 @@ const Account: NextPage = () => {
                       service: "AWCH_GK_PUBLIC_VCL",
                       server: "SYD02.SECURE.GRADEKEEPER.XYZ",
                     },
-                    data: user?.user,
+                    data: user,
                   })
                 )}`}
                 as={"a"}

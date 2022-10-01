@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { Prisma, PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { gkAuthorizedRoute } from "../../lib/api/gkRoute";
+import { gkAuthorizedRoute } from "../../../lib/api/gkRoute";
 
 export const getUserQuery = Prisma.validator<Prisma.UserArgs>()({
   select: { gradeMap: true, studyBlocks: { include: { subjects: { include: { components: { include: { subcomponents: true } } } } } } },
