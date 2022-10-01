@@ -1,4 +1,3 @@
-import { Browser } from "@capacitor/browser";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Button, Container, Heading, Img, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { signIn } from "next-auth/react";

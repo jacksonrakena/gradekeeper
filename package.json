@@ -17,7 +17,6 @@
     "@emotion/styled": "^11.10.0",
     "@prisma/client": "^4.2.1",
     "@sentry/nextjs": "^7.10.0",
-    "@supabase/supabase-js": "^1.35.6",
     "@types/react-modal": "^3.13.1",
     "cuid": "^2.1.8",
     "formik": "^2.2.9",
