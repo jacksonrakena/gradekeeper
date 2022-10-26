@@ -4,8 +4,8 @@ const Footer = () => {
   return (
     <Box color={"GrayText"} fontSize={"sm"}>
       &copy; Animals With Cool Hats, Inc. <br />
-      <Link href="/legal/privacy">Privacy</Link> &bull; <Link href="https://forms.office.com/r/rM3wq1QbH0">Feedback</Link> &bull;{" "}
-      <Link href="/legal/donate">Donate</Link>
+      <Link href="https://redirects.jacksonrakena.com/discord">Join our Discord for support</Link> &bull;{" "}
+      <Link href="/legal/privacy">Privacy</Link> &bull; <Link href="/legal/donate">Donate</Link>
     </Box>
   );
 };
