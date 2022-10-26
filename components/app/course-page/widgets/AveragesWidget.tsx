@@ -8,7 +8,7 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
     props.course.status.gradeMap &&
     Object.keys(props.course.status.gradeMap)
       .map(Number.parseFloat)
-      .filter((d) => actual?.numerical < d);
+      .filter((d) => actual?.numerical < d && d <= 100);
 
   const remainingComponents = props.course?.status.componentsRemaining;
   const remainingPieces = remainingComponents
@@ -36,6 +36,7 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
             <Tbody>
               {unachievedGrades
                 ?.sort((a, b) => b - a)
+                .filter((e) => ((e - actual.numerical) / remainingPieces.reduce((a, b) => a + b)) * 100 <= 100)
                 .map((e) => (
                   <Tr key={e}>
                     <Td>
