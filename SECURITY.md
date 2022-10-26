@@ -14,4 +14,4 @@ described by the below table.
 
 ## Reporting a Vulnerability
 
-Please report vulnerabilities by emailing `jackson@rakena.co.nz`.  
+Please report vulnerabilities by emailing `jackson@rakena.co.nz`.
