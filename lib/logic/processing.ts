@@ -16,12 +16,39 @@ export { fetcher };
 
 export type ProcessedStudyBlock = StudyBlock & {
   processedCourses: ProcessedCourseInfo[];
+  gpaEstimate: CourseGrade;
 };
 export type ProcessedUserInfo = Omit<Prisma.UserGetPayload<typeof getUserQuery>, "studyBlocks"> & {
   processedStudyBlocks: ProcessedStudyBlock[];
 };
 export function processStudyBlock(rawStudyBlock: StudyBlock & { subjects: FullSubject[] }, gradeMap: any): ProcessedStudyBlock {
-  return { ...rawStudyBlock, processedCourses: rawStudyBlock.subjects.map((rawSubject) => processCourseInfo(rawSubject, gradeMap)) };
+  const r = {
+    ...rawStudyBlock,
+    processedCourses: rawStudyBlock.subjects.map((rawSubject) => processCourseInfo(rawSubject, gradeMap)),
+    gpaEstimate: { isUnknown: false, letter: "A", numerical: 0.95 },
+  };
+
+  let markTotal = 0;
+
+  const gpaMap: { [x: string]: number } = {
+    "A+": 9,
+    A: 8,
+    "A-": 7,
+    "B+": 6,
+    B: 5,
+    "B-": 4,
+    "C+": 3,
+    C: 2,
+    "C-": 1,
+  };
+  for (let c of r.processedCourses) {
+    if (gpaMap[c.grades.projected.letter]) markTotal += gpaMap[c.grades.projected.letter];
+  }
+  markTotal /= r.processedCourses.length;
+  markTotal = Math.floor(markTotal);
+
+  r.gpaEstimate.numerical = gpaMap[Object.keys(gpaMap)[Object.values(gpaMap).indexOf(markTotal)]];
+  return r;
 }
 
 export function processCourseInfo(course: FullSubject, gradeMap: object): ProcessedCourseInfo {

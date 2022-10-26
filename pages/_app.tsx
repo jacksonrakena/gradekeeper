@@ -3,9 +3,9 @@ import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { PropsWithChildren, useEffect } from "react";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilValue } from "recoil";
 import { Chakra } from "../lib/theme/Chakra";
-import { useInvalidator } from "../state/course";
+import { useInvalidator, UserState } from "../state/course";
 import "../styles/globals.css";
 
 function GradekeeperAppRoot({ Component, pageProps: { session, ...pageProps }, router }: AppProps<any>) {
@@ -31,8 +31,9 @@ function GradekeeperAppRoot({ Component, pageProps: { session, ...pageProps }, r
 
 const InvalidatorManager = (props: PropsWithChildren) => {
   const { invalidate } = useInvalidator();
+  const user = useRecoilValue(UserState);
   useEffect(() => {
-    invalidate();
+    if (!user) invalidate();
   }, []);
   return <>{props.children}</>;
 };
