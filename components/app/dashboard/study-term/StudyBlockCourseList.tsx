@@ -45,10 +45,12 @@ const StudyBlockCourseList = (props: { studyBlock: ProcessedStudyBlock }) => {
         <Text>
           {dtf.format(sbStart)} &#8212; {dtf.format(sbEnd)}
         </Text>
-        <Text color={"GrayText"}>
-          GPA estimate: {props.studyBlock.gpaEstimate?.numerical} ({props.studyBlock.gpaEstimate?.letter}) &bull; American{" "}
-          {props.studyBlock.usGpaEstimate?.numerical} ({props.studyBlock.usGpaEstimate?.letter})
-        </Text>
+        {props.studyBlock.gpaEstimate?.letter !== "Unknown" && (
+          <Text color={"GrayText"}>
+            GPA estimate: {props.studyBlock.gpaEstimate?.numerical} ({props.studyBlock.gpaEstimate?.letter}) &bull; American{" "}
+            {props.studyBlock.usGpaEstimate?.numerical} ({props.studyBlock.usGpaEstimate?.letter})
+          </Text>
+        )}
 
         {studyBlock.processedCourses.map((subject) => (
           <CoursePill
