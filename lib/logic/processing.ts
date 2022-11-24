@@ -17,18 +17,38 @@ export { fetcher };
 export type ProcessedStudyBlock = StudyBlock & {
   processedCourses: ProcessedCourseInfo[];
   gpaEstimate: CourseGrade;
+  usGpaEstimate: CourseGrade;
 };
 export type ProcessedUserInfo = Omit<Prisma.UserGetPayload<typeof getUserQuery>, "studyBlocks"> & {
   processedStudyBlocks: ProcessedStudyBlock[];
 };
+export function calculateGpaBasedOnTable(
+  processedCourses: ProcessedCourseInfo[],
+  gpaMap: { [x: string]: number }
+): {
+  isUnknown: boolean;
+  letter: string;
+  numerical: number;
+} {
+  let markTotal = 0;
+  for (let c of processedCourses) {
+    if (gpaMap[c.grades.projected.letter]) markTotal += gpaMap[c.grades.projected.letter];
+  }
+  markTotal /= processedCourses.length;
+  let floored = Math.floor(markTotal);
+  return {
+    isUnknown: false,
+    letter: Object.values(gpaMap).includes(floored) ? Object.keys(gpaMap)[Object.values(gpaMap).indexOf(floored)] : "Unknown",
+    numerical: markTotal,
+  };
+}
 export function processStudyBlock(rawStudyBlock: StudyBlock & { subjects: FullSubject[] }, gradeMap: any): ProcessedStudyBlock {
   const r = {
     ...rawStudyBlock,
     processedCourses: rawStudyBlock.subjects.map((rawSubject) => processCourseInfo(rawSubject, gradeMap)),
     gpaEstimate: { isUnknown: false, letter: "A", numerical: 0.95 },
+    usGpaEstimate: { isUnknown: false, letter: "A", numerical: 0.95 },
   };
-
-  let markTotal = 0;
 
   const gpaMap: { [x: string]: number } = {
     "A+": 9,
@@ -41,13 +61,19 @@ export function processStudyBlock(rawStudyBlock: StudyBlock & { subjects: FullSu
     C: 2,
     "C-": 1,
   };
-  for (let c of r.processedCourses) {
-    if (gpaMap[c.grades.projected.letter]) markTotal += gpaMap[c.grades.projected.letter];
-  }
-  markTotal /= r.processedCourses.length;
-  markTotal = Math.floor(markTotal);
 
-  r.gpaEstimate.numerical = gpaMap[Object.keys(gpaMap)[Object.values(gpaMap).indexOf(markTotal)]];
+  r.gpaEstimate = calculateGpaBasedOnTable(r.processedCourses, gpaMap);
+  r.usGpaEstimate = calculateGpaBasedOnTable(r.processedCourses, {
+    "A+": 4,
+    A: 4,
+    "A-": 3.7,
+    "B+": 3.3,
+    B: 3,
+    "B-": 2.7,
+    "C+": 2.3,
+    C: 2,
+    "C-": 1.7,
+  });
   return r;
 }
 
