@@ -16,6 +16,8 @@ import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import { templates } from "../../../data/block-templates";
+
 import { Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import { useInvalidator } from "../../../state/course";
 
@@ -35,43 +37,6 @@ const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
   );
 };
 export default CreateBlockModal;
-
-const templates: { [key: string]: { name: string; startDate: string; endDate: string }[] } = {
-  "Victoria University of Wellington": [
-    {
-      name: "Trimester 1, 2022",
-      startDate: "2022-02-28",
-      endDate: "2022-06-26",
-    },
-    {
-      name: "Trimester 2, 2022",
-      startDate: "2022-07-11",
-      endDate: "2022-11-13",
-    },
-    {
-      name: "Trimester 3, 2022",
-      startDate: "2022-11-14",
-      endDate: "2023-02-13",
-    },
-  ],
-  "University of Canterbury": [
-    {
-      name: "Semester 1, 2022",
-      startDate: "2022-02-21",
-      endDate: "2022-06-25",
-    },
-    {
-      name: "Semester 2, 2022",
-      startDate: "2022-07-18",
-      endDate: "2022-10-21",
-    },
-    {
-      name: "Summer School, 2022",
-      startDate: "2022-11-14",
-      endDate: "2023-02-17",
-    },
-  ],
-};
 
 export const CreateBlock = (props: { onClose: () => void }) => {
   const router = useRouter();
