@@ -13,6 +13,7 @@ async function download(): Promise<GetUserResponse> {
   try {
     const d = await fetch("/api/users/me");
     const e = await d.json();
+    if (e.error) throw 'Received error from server: "' + e.error + '"';
     const prismaResponse: Prisma.UserGetPayload<typeof getUserQuery> = e;
     return prismaResponse;
   } catch (e) {
