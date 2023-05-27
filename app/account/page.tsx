@@ -1,3 +1,5 @@
+"use client";
+
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   AlertDialog,
@@ -30,9 +32,9 @@ import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { TopBar } from "../components/app/nav/TopBar";
-import themeConstants from "../lib/theme/themeConstants";
-import { ProcessedUserState, useInvalidator } from "../state/course";
+import { TopBar } from "../../components/app/nav/TopBar";
+import themeConstants from "../../lib/theme/themeConstants";
+import { ProcessedUserState, useInvalidator } from "../../state/course";
 
 const predefinedGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-"];
 const presets = {

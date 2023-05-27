@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { AiOutlineHome } from "react-icons/ai";
 import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
@@ -27,6 +28,7 @@ import { ThemeNameState } from "../../../state/theme";
 const AccountButton = (props: { session: Session }) => {
   const session = props.session;
   const colorMode = useColorMode();
+  const router = useRouter();
   const [theme, setTheme] = useRecoilState(ThemeNameState);
   return (
     <Menu colorScheme={"brand"} variant={"unfilled"}>
@@ -37,7 +39,7 @@ const AccountButton = (props: { session: Session }) => {
         </Flex>
       </MenuButton>
       <MenuList overflow={"hidden"}>
-        <MenuItem onClick={/*() => router.push("/")*/ null}>
+        <MenuItem onClick={() => router.push("/")}>
           <Flex alignItems={"center"}>
             <Icon w={4} h={4} as={AiOutlineHome} mr={2} /> Home
           </Flex>
@@ -69,7 +71,7 @@ const AccountButton = (props: { session: Session }) => {
         <MenuDivider />
         <MenuItem
           onClick={() => {
-            //router.push("/account");
+            router.push("/account");
           }}
         >
           <Flex alignItems={"center"}>
