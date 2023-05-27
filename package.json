@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "dev:studio": "dotenv -e .env.local -- npx prisma studio"
+    "dev:studio": "dotenv -e .env.local -- npx prisma studio",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.19",
