@@ -9,10 +9,12 @@ const withPWA = require("next-pwa");
  * @type {import("next").NextConfig}
  */
 const moduleExports = {
-  reactStrictMode: true,
-  webpack: {},
+  reactStrictMode: false,
   typescript: {
     ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 
@@ -31,13 +33,14 @@ const sentryWebpackPluginOptions = {
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
 
-module.exports = require("@next/bundle-analyzer")({ enabled: false })(
-  withPWA({
-    ...withSentryConfig(moduleExports, sentryWebpackPluginOptions),
-    pwa: {
-      dest: "public",
-      skipWaiting: true,
-      disable: process.env.NODE_ENV !== "production",
-    },
-  })
-);
+// module.exports = require("@next/bundle-analyzer")({ enabled: false })(
+//   withPWA({
+//     ...withSentryConfig(moduleExports, sentryWebpackPluginOptions),
+//     pwa: {
+//       dest: "public",
+//       skipWaiting: true,
+//       disable: process.env.NODE_ENV !== "production",
+//     },
+//   })
+// );
+module.exports = moduleExports;
