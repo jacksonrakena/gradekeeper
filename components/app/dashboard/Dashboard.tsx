@@ -1,22 +1,9 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Box,
-  Button,
-  Divider,
-  Heading,
-  Spinner,
-  Text,
-  useDisclosure,
-  useToast,
-} from "@chakra-ui/react";
+"use client";
+
+import { Alert, AlertDescription, AlertIcon, Box, Button, Divider, Heading, Spinner, Text, useDisclosure } from "@chakra-ui/react";
 import Head from "next/head";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { ProcessedStudyBlock, _null } from "../../../lib/logic/processing";
-import { ProcessedUserState, SelectedCourseIdState, SelectedStudyBlockIdState } from "../../../state/course";
+import { useRecoilValue } from "recoil";
+import { ProcessedUserState } from "../../../state/course";
 import Footer from "../Footer";
 import { TopBar } from "../nav/TopBar";
 import CreateBlockModal from "./CreateBlockModal";
@@ -25,16 +12,8 @@ import { StudyBlockCourseList } from "./study-term/StudyBlockCourseList";
 const Dashboard = () => {
   const user = useRecoilValue(ProcessedUserState);
   const isLoading = !user;
-  const cancelRef = useRef<any>();
-  const [deleteStudyBlock, setDeleteStudyBlock] = useState(_null<ProcessedStudyBlock>());
-  const toast = useToast();
-  const router = useRouter();
-  const [isDeletingStudyBlock, setIsDeletingSb] = useState(false);
-  const [courseCreateBlockId, setCourseCreateBlockId] = useState("");
   const createBlockDisclosure = useDisclosure();
 
-  const [currentCourseId, setCurrentCourseId] = useRecoilState(SelectedCourseIdState);
-  const [currentBlockId, setCurrentBlockId] = useRecoilState(SelectedStudyBlockIdState);
   // useEffect(() => {
   //   if (currentCourseId) setCurrentCourseId(null);
   //   if (currentBlockId) setCurrentBlockId(null);
