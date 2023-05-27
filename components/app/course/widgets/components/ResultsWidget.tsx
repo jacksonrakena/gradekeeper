@@ -1,7 +1,7 @@
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { useState } from "react";
 import { FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
-import { calculateProjectedGradeForComponent, ProcessedCourseInfo } from "../../../../../lib/logic/processing";
+import { calculateProjectedGradeForComponent, ProcessedCourseInfo } from "../../../../../lib/logic/core";
 import ComponentEditModal from "./ComponentEditModal";
 import ComponentRow from "./ComponentRow";
 

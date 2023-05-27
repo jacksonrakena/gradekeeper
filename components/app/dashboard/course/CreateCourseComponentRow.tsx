@@ -1,7 +1,7 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import { IconButton, Input, NumberInput, NumberInputField, Td, Tr } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { singularMap } from "../../../../lib/logic/processing";
+import { singularMap } from "../../../../lib/logic/core";
 import { ComponentDto } from "./CreateCourse";
 
 export const CreateCourseComponentRow = (props: {

@@ -6,9 +6,9 @@ import { nextAuthOptions } from "../../app/api/auth/[...nextauth]/route";
 
 const googleOauthClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID!);
 
-export type RouteHandler = (req: NextRequest) => Promise<NextResponse>;
+export type RouteHandler = (req: NextRequest, ...args) => Promise<NextResponse>;
 export type AuthorizedRequestContext = { userId: string; services: { db: PrismaClient } };
-export type AuthorizedRouteHandler = (req: NextRequest, ctx: AuthorizedRequestContext) => Promise<NextResponse>;
+export type AuthorizedRouteHandler = (req: NextRequest, ctx: AuthorizedRequestContext, ...args) => Promise<NextResponse>;
 
 export function gkRoute(handler: RouteHandler): RouteHandler {
   return handler;
@@ -16,7 +16,7 @@ export function gkRoute(handler: RouteHandler): RouteHandler {
 
 const prisma = new PrismaClient();
 export function gkAuthorizedRoute(handler: AuthorizedRouteHandler): RouteHandler {
-  return gkRoute(async (req) => {
+  return gkRoute(async (req, ...args) => {
     var userId = await tryVerifySession();
 
     if (!userId) {
@@ -27,7 +27,7 @@ export function gkAuthorizedRoute(handler: AuthorizedRouteHandler): RouteHandler
       return NextResponse.json({ error: "Not authorized" }, { status: 400 });
     }
 
-    return await handler(req, { services: { db: prisma }, userId: userId });
+    return await handler(req, { services: { db: prisma }, userId: userId }, ...args);
   });
 }
 

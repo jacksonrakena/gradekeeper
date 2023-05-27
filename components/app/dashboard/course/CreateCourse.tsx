@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { TwitterPicker } from "react-color";
 import { useRecoilValue } from "recoil";
-import { randomColor } from "../../../../lib/logic/processing";
+import { randomColor } from "../../../../lib/logic/core";
 import { ProcessedUserState, useInvalidator } from "../../../../lib/state/course";
 import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 

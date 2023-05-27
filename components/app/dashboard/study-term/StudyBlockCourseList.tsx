@@ -3,7 +3,7 @@ import { Box, Flex, Heading, IconButton, Text, useDisclosure } from "@chakra-ui/
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { ProcessedStudyBlock } from "../../../../lib/logic/processing";
+import { ProcessedStudyBlock } from "../../../../lib/logic/core";
 import { ProcessedUserState } from "../../../../lib/state/course";
 import CoursePill, { Pill } from "./CoursePill";
 import CreateCourseModal from "./CreateCourseModal";

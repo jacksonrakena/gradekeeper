@@ -5,7 +5,7 @@ import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/tabl
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
-import { calculateLetterGrade, isActiveSubcomponent } from "../../../../../lib/logic/processing";
+import { calculateLetterGrade, isActiveSubcomponent } from "../../../../../lib/logic/core";
 import { SelectedCourseState, SelectedStudyBlockState, useInvalidator } from "../../../../../lib/state/course";
 
 const ComponentEditModal = (props: { gradeMap: any; showing: boolean; component: FullSubjectComponent; onClose: () => void }) => {

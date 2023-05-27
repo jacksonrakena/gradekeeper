@@ -13,7 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <InvalidatorManager>
         <SessionProvider>
           <CacheProvider>
-            <Chakra cookies={null}>{children}</Chakra>
+            <Chakra>{children}</Chakra>
           </CacheProvider>
         </SessionProvider>
       </InvalidatorManager>

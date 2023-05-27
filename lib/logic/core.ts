@@ -1,6 +1,7 @@
-import { Prisma, StudyBlock, SubjectSubcomponent } from "@prisma/client";
-import { getUserQuery } from "../../pages/api/users/me";
-import { FullSubject, FullSubjectComponent } from "./fullEntities";
+import { Prisma, StudyBlock, Subject, SubjectComponent, SubjectSubcomponent } from "@prisma/client";
+import { getUserQuery } from "../../app/api/users/me/route";
+export type FullSubject = Subject & { components: FullSubjectComponent[] };
+export type FullSubjectComponent = SubjectComponent & { subcomponents: SubjectSubcomponent[] };
 
 export function _null<T>(): T | null {
   return null;

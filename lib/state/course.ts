@@ -1,9 +1,15 @@
 import { Prisma, SubjectSubcomponent } from "@prisma/client";
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
-import { FullSubject, FullSubjectComponent } from "../logic/fullEntities";
-import { ProcessedCourseInfo, ProcessedStudyBlock, ProcessedUserInfo, processStudyBlock } from "../logic/processing";
+import {
+  FullSubject,
+  FullSubjectComponent,
+  ProcessedCourseInfo,
+  ProcessedStudyBlock,
+  ProcessedUserInfo,
+  processStudyBlock,
+} from "../logic/core";
 
-import { getUserQuery } from "../pages/api/users/me";
+import { getUserQuery } from "../../app/api/users/me/route";
 
 export type GetUserResponse = Prisma.UserGetPayload<typeof getUserQuery>;
 export type DownloadedStudyBlock = GetUserResponse["studyBlocks"][number];

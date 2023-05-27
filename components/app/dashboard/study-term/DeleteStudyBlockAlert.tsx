@@ -9,7 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { ProcessedStudyBlock } from "../../../../lib/logic/processing";
+import { ProcessedStudyBlock } from "../../../../lib/logic/core";
 import { useInvalidator } from "../../../../lib/state/course";
 
 export const DeleteStudyBlockAlert = (props: {
