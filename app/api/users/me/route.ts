@@ -1,11 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { AuthorizedRequestContext, gkAuthorizedRoute } from "../../../../lib/api/gkRoute";
+import { getUserQuery } from "../../../../lib/logic/types";
 
-export const getUserQuery = Prisma.validator<Prisma.UserArgs>()({
-  select: { gradeMap: true, studyBlocks: { include: { subjects: { include: { components: { include: { subcomponents: true } } } } } } },
-});
 const GET = gkAuthorizedRoute(async (req: NextRequest, ctx: AuthorizedRequestContext) => {
   const primsa = new PrismaClient();
   const data = await primsa.user.findUnique({

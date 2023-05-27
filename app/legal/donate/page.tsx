@@ -1,4 +1,5 @@
 // @ts-nocheck
+"use client";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 

@@ -8,8 +8,7 @@ import {
   ProcessedUserInfo,
   processStudyBlock,
 } from "../logic/core";
-
-import { getUserQuery } from "../../app/api/users/me/route";
+import { getUserQuery } from "../logic/types";
 
 export type GetUserResponse = Prisma.UserGetPayload<typeof getUserQuery>;
 export type DownloadedStudyBlock = GetUserResponse["studyBlocks"][number];

@@ -1,5 +1,5 @@
 import { Prisma, StudyBlock, Subject, SubjectComponent, SubjectSubcomponent } from "@prisma/client";
-import { getUserQuery } from "../../app/api/users/me/route";
+import { getUserQuery } from "./types";
 export type FullSubject = Subject & { components: FullSubjectComponent[] };
 export type FullSubjectComponent = SubjectComponent & { subcomponents: SubjectSubcomponent[] };
 

@@ -1,7 +1,7 @@
 // @ts-nocheck
+"use client";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Heading, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
-
 const CompletedDonation: NextPage = () => {
   return (
     <Box m={12}>

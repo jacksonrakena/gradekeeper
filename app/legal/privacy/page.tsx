@@ -1,3 +1,4 @@
+"use client";
 import { Box, Code, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { PropsWithChildren } from "react";

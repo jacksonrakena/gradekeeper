@@ -2,8 +2,7 @@ import { EditIcon } from "@chakra-ui/icons";
 import { Box, Flex, SkeletonText, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
-import { ProcessedCourseInfo, calculateLetterGrade } from "../../../../../lib/logic/core";
+import { FullSubjectComponent, ProcessedCourseInfo, calculateLetterGrade } from "../../../../../lib/logic/core";
 import { ProcessedUserState, useInvalidator } from "../../../../../lib/state/course";
 import { GkEditable } from "../../../../generic/GkEditable";
 

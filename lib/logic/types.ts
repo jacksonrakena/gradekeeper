@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client";
+
 export type User = {
   id: String;
   gradeMap: any;
@@ -37,3 +39,7 @@ export type SubjectSubcomponent = {
   isCompleted: boolean;
   gradeValuePercentage: number;
 };
+
+export const getUserQuery = Prisma.validator<Prisma.UserArgs>()({
+  select: { gradeMap: true, studyBlocks: { include: { subjects: { include: { components: { include: { subcomponents: true } } } } } } },
+});
