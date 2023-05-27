@@ -2,7 +2,7 @@
 import { PrismaClient } from "@prisma/client";
 import cuid from "cuid";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ComponentDto } from "../../../../../components/app/course/CreateCourse";
+import { ComponentDto } from "../../../../../components/app/dashboard/course/CreateCourse";
 import { gkAuthorizedRoute } from "../../../../../lib/api/gkRoute";
 import { singularMap } from "../../../../../lib/logic/processing";
 

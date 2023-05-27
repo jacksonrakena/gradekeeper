@@ -19,7 +19,7 @@ import { useState } from "react";
 import { templates } from "../../../data/block-templates";
 
 import { Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
-import { useInvalidator } from "../../../state/course";
+import { useInvalidator } from "../../../lib/state/course";
 
 const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
   return (

@@ -22,8 +22,8 @@ import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscSettingsGear } from "react-icons/vsc";
 import { useRecoilState } from "recoil";
+import { ThemeNameState } from "../../../lib/state/theme";
 import { defaultThemes } from "../../../lib/theme/theme";
-import { ThemeNameState } from "../../../state/theme";
 
 const AccountButton = (props: { session: Session }) => {
   const session = props.session;

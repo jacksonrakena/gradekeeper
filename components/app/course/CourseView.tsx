@@ -25,16 +25,16 @@ import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { adjust, ProcessedCourseInfo, ProcessedStudyBlock } from "../../../lib/logic/processing";
+import { ProcessedCourseInfo, ProcessedStudyBlock, adjust } from "../../../lib/logic/processing";
+import { ProcessedUserState, useInvalidator } from "../../../lib/state/course";
 import themeConstants from "../../../lib/theme/themeConstants";
-import { ProcessedUserState, useInvalidator } from "../../../state/course";
 import { GkEditable } from "../../generic/GkEditable";
 import Footer from "../Footer";
 import { TopBar } from "../nav/TopBar";
 import AveragesWidget from "./widgets/AveragesWidget";
-import { ResultsWidget } from "./widgets/components/ResultsWidget";
 import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
 import ProgressBarCaption from "./widgets/ProgressBarCaption";
+import { ResultsWidget } from "./widgets/components/ResultsWidget";
 
 const CourseView = (
   props: PropsWithChildren<{

@@ -1,11 +1,11 @@
 "use client";
 
 import { CacheProvider } from "@chakra-ui/next-js";
-import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useEffect } from "react";
 import { RecoilRoot, useRecoilValue } from "recoil";
-import { useInvalidator, UserState } from "../state/course";
+import { UserState, useInvalidator } from "../lib/state/course";
+import { Chakra } from "../lib/theme/Chakra";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <InvalidatorManager>
         <SessionProvider>
           <CacheProvider>
-            <ChakraProvider>{children}</ChakraProvider>
+            <Chakra cookies={null}>{children}</Chakra>
           </CacheProvider>
         </SessionProvider>
       </InvalidatorManager>

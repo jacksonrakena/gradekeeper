@@ -3,7 +3,7 @@ import { Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, T
 import { Subject } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useRecoilValue } from "recoil";
-import { ProcessedUserState, SelectedCourseState, SelectedStudyBlockState } from "../../../state/course";
+import { ProcessedUserState, SelectedCourseState, SelectedStudyBlockState } from "../../../lib/state/course";
 
 const CourseSwitcher = ({ blockMap }: { blockMap: any }) => {
   const currentCourse = useRecoilValue(SelectedCourseState);

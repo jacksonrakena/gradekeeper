@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
 import { calculateLetterGrade, isActiveSubcomponent } from "../../../../../lib/logic/processing";
-import { SelectedCourseState, SelectedStudyBlockState, useInvalidator } from "../../../../../state/course";
+import { SelectedCourseState, SelectedStudyBlockState, useInvalidator } from "../../../../../lib/state/course";
 
 const ComponentEditModal = (props: { gradeMap: any; showing: boolean; component: FullSubjectComponent; onClose: () => void }) => {
   const { updateCourse } = useInvalidator();

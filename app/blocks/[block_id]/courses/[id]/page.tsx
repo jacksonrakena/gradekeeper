@@ -4,14 +4,14 @@ import { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import CourseView from "../../../../../components/app/course-page/CourseView";
+import CourseView from "../../../../../components/app/course/CourseView";
 import { TopBar } from "../../../../../components/app/nav/TopBar";
 import {
   SelectedCourseIdState,
   SelectedCourseState,
   SelectedStudyBlockIdState,
   SelectedStudyBlockState,
-} from "../../../../../state/course";
+} from "../../../../../lib/state/course";
 
 const CoursePage: NextPage = ({ params }: { params: { block_id: string; id: string } }) => {
   const router = useRouter();

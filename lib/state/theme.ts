@@ -1,5 +1,5 @@
 import { atom, selector } from "recoil";
-import { defaultThemes } from "../lib/theme/theme";
+import { defaultThemes } from "../theme/theme";
 import { persistToLocalStorage } from "./utils";
 
 export const ThemeNameState = atom<keyof typeof defaultThemes>({

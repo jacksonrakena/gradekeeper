@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { BiImport } from "react-icons/bi";
-import { CreateCourse } from "../../course/CreateCourse";
+import { CreateCourse } from "../course/CreateCourse";
 import { CourseImportModal } from "./CourseImportModal";
 
 const CreateCourseModal = (props: { isOpen: boolean; onClose: () => void; blockId: string }) => {

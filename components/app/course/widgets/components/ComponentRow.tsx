@@ -3,8 +3,8 @@ import { Box, Flex, SkeletonText, Td, Text, Tooltip, Tr } from "@chakra-ui/react
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
-import { calculateLetterGrade, ProcessedCourseInfo } from "../../../../../lib/logic/processing";
-import { ProcessedUserState, useInvalidator } from "../../../../../state/course";
+import { ProcessedCourseInfo, calculateLetterGrade } from "../../../../../lib/logic/processing";
+import { ProcessedUserState, useInvalidator } from "../../../../../lib/state/course";
 import { GkEditable } from "../../../../generic/GkEditable";
 
 const ComponentRow = (props: {

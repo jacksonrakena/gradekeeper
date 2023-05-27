@@ -1,7 +1,7 @@
 import { Prisma, SubjectSubcomponent } from "@prisma/client";
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
-import { FullSubject, FullSubjectComponent } from "../lib/logic/fullEntities";
-import { ProcessedCourseInfo, ProcessedStudyBlock, ProcessedUserInfo, processStudyBlock } from "../lib/logic/processing";
+import { FullSubject, FullSubjectComponent } from "../logic/fullEntities";
+import { ProcessedCourseInfo, ProcessedStudyBlock, ProcessedUserInfo, processStudyBlock } from "../logic/processing";
 
 import { getUserQuery } from "../pages/api/users/me";
 

@@ -3,7 +3,7 @@
 import { Alert, AlertDescription, AlertIcon, Box, Button, Divider, Heading, Spinner, Text, useDisclosure } from "@chakra-ui/react";
 import Head from "next/head";
 import { useRecoilValue } from "recoil";
-import { ProcessedUserState } from "../../../state/course";
+import { ProcessedUserState } from "../../../lib/state/course";
 import Footer from "../Footer";
 import { TopBar } from "../nav/TopBar";
 import CreateBlockModal from "./CreateBlockModal";

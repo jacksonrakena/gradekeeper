@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { ProcessedStudyBlock } from "../../../../lib/logic/processing";
-import { ProcessedUserState } from "../../../../state/course";
+import { ProcessedUserState } from "../../../../lib/state/course";
 import CoursePill, { Pill } from "./CoursePill";
 import CreateCourseModal from "./CreateCourseModal";
 import { DeleteStudyBlockAlert } from "./DeleteStudyBlockAlert";

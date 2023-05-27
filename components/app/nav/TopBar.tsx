@@ -1,7 +1,7 @@
 import { Button, SkeletonText } from "@chakra-ui/react";
 import { signIn, useSession } from "next-auth/react";
 import { useRecoilValue } from "recoil";
-import { ProcessedUserState, SelectedCourseIdState } from "../../../state/course";
+import { ProcessedUserState, SelectedCourseIdState } from "../../../lib/state/course";
 import AccountButton from "./AccountButton";
 import CourseSwitcher from "./CourseSwitcher";
 

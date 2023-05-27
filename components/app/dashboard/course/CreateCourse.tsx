@@ -28,8 +28,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { TwitterPicker } from "react-color";
 import { useRecoilValue } from "recoil";
-import { randomColor } from "../../../lib/logic/processing";
-import { ProcessedUserState, useInvalidator } from "../../../state/course";
+import { randomColor } from "../../../../lib/logic/processing";
+import { ProcessedUserState, useInvalidator } from "../../../../lib/state/course";
 import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
