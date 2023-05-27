@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
-import router from "next/navigation";
 import { AiOutlineHome } from "react-icons/ai";
 import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
@@ -38,7 +37,7 @@ const AccountButton = (props: { session: Session }) => {
         </Flex>
       </MenuButton>
       <MenuList overflow={"hidden"}>
-        <MenuItem onClick={() => router.push("/")}>
+        <MenuItem onClick={/*() => router.push("/")*/ null}>
           <Flex alignItems={"center"}>
             <Icon w={4} h={4} as={AiOutlineHome} mr={2} /> Home
           </Flex>
@@ -70,7 +69,7 @@ const AccountButton = (props: { session: Session }) => {
         <MenuDivider />
         <MenuItem
           onClick={() => {
-            router.push("/account");
+            //router.push("/account");
           }}
         >
           <Flex alignItems={"center"}>
@@ -83,7 +82,7 @@ const AccountButton = (props: { session: Session }) => {
           <MenuItem
             onClick={() => {
               signOut({ redirect: false }).then(() => {
-                router.push("/");
+                //router.push("/");
               });
             }}
             textColor={"red.500"}

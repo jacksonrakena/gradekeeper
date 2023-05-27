@@ -35,10 +35,10 @@ const Dashboard = () => {
 
   const [currentCourseId, setCurrentCourseId] = useRecoilState(SelectedCourseIdState);
   const [currentBlockId, setCurrentBlockId] = useRecoilState(SelectedStudyBlockIdState);
-  useEffect(() => {
-    if (currentCourseId) setCurrentCourseId(null);
-    if (currentBlockId) setCurrentBlockId(null);
-  }, [router.pathname]);
+  // useEffect(() => {
+  //   if (currentCourseId) setCurrentCourseId(null);
+  //   if (currentBlockId) setCurrentBlockId(null);
+  // }, [router.pathname]);
 
   const closedStudyBlocks = user?.processedStudyBlocks
     .filter((e) => Date.now() > new Date(e.endDate).getTime())
