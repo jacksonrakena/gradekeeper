@@ -12,7 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { ProcessedStudyBlock, _null } from "../../../lib/logic/processing";

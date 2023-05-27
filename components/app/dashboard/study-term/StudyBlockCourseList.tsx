@@ -1,6 +1,6 @@
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, IconButton, Text, useDisclosure } from "@chakra-ui/react";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { ProcessedStudyBlock } from "../../../../lib/logic/processing";
@@ -15,6 +15,7 @@ const StudyBlockCourseList = (props: { studyBlock: ProcessedStudyBlock }) => {
   const courseCreateDisclosure = useDisclosure();
   const user = useRecoilValue(ProcessedUserState);
   const sbStart = new Date(studyBlock.startDate);
+  const router = useRouter();
   const sbEnd = new Date(studyBlock.endDate);
   const dtf = new Intl.DateTimeFormat("en-US", {
     month: "long",

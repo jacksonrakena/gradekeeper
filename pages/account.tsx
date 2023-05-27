@@ -27,7 +27,7 @@ import {
 import { NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { TopBar } from "../components/app/nav/TopBar";

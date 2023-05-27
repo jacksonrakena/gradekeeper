@@ -29,7 +29,7 @@ function GradekeeperAppRoot({ Component, pageProps: { session, ...pageProps }, r
   );
 }
 
-const InvalidatorManager = (props: PropsWithChildren) => {
+export const InvalidatorManager = (props: PropsWithChildren) => {
   const { invalidate } = useInvalidator();
   const user = useRecoilValue(UserState);
   useEffect(() => {

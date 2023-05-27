@@ -1,6 +1,6 @@
 import { Center, Spinner } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import CourseView from "../../../../components/app/course-page/CourseView";

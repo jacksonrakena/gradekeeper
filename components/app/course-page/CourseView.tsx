@@ -22,7 +22,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { PropsWithChildren, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { adjust, ProcessedCourseInfo, ProcessedStudyBlock } from "../../../lib/logic/processing";

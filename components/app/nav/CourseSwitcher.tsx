@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { Subject } from "@prisma/client";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useRecoilValue } from "recoil";
 import { ProcessedUserState, SelectedCourseState, SelectedStudyBlockState } from "../../../state/course";
 
