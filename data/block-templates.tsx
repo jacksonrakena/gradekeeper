@@ -17,13 +17,13 @@ export const templates: { [key: string]: { name: string; startDate: string; endD
     },
     {
       name: "Trimester 1, 2023",
-      startDate: "2022-02-27",
-      endDate: "2022-06-24",
+      startDate: "2023-02-27",
+      endDate: "2023-06-24",
     },
     {
       name: "Trimester 2, 2023",
-      startDate: "2022-07-10",
-      endDate: "2022-11-04",
+      startDate: "2023-07-10",
+      endDate: "2023-11-04",
     },
     {
       name: "Trimester 3, 2023",
