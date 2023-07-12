@@ -5,8 +5,7 @@ const config: ThemeConfig = {
   initialColorMode: "system",
   useSystemColorMode: true,
 };
-{
-}
+
 const regular = (
   theme: any,
   opts: any = {
