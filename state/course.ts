@@ -138,7 +138,7 @@ export const ProcessedUserState = selector<ProcessedUserInfo | null>({
     if (!userState) return null;
     const d = {
       ...userState,
-      processedStudyBlocks: userState.studyBlocks.map((rawStudyBlock) => processStudyBlock(rawStudyBlock, userState.gradeMap)),
+      processedStudyBlocks: userState.studyBlocks?.map((rawStudyBlock) => processStudyBlock(rawStudyBlock, userState.gradeMap)) ?? [],
     };
     console.log("Processed data: ", d);
     return d;
