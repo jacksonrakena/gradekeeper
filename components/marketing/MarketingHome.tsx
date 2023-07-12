@@ -42,7 +42,7 @@ const MarketingHome = () => {
           </Box>
         </Stack>
         <Text color="#555555" textAlign={"center"} fontSize="sm">
-          Copyright &copy; 2022 Jackson Rakena <br />
+          Copyright &copy; 2023 Jackson Rakena <br />
           This is beta software. <br />
         </Text>
       </Container>
