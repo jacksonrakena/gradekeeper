@@ -1,13 +1,14 @@
 import { Button, SkeletonText } from "@chakra-ui/react";
-import { signIn, useSession } from "next-auth/react";
 import { useRecoilValue } from "recoil";
+import { useAuth } from "../../../state/auth";
 import { ProcessedUserState, SelectedCourseIdState } from "../../../state/course";
 import AccountButton from "./AccountButton";
 import CourseSwitcher from "./CourseSwitcher";
 
 export const TopBar = () => {
-  const sessiondata = useSession();
-  const session = sessiondata.data;
+  const auth = useAuth();
+  // const sessiondata = useSession();
+  // const session = sessiondata.data;
   const user = useRecoilValue(ProcessedUserState);
   const currentSubjectId = useRecoilValue(SelectedCourseIdState);
   const studyBlocks = user?.processedStudyBlocks;
@@ -28,12 +29,12 @@ export const TopBar = () => {
           {subjects && currentSubject && studyBlocks && currentSubjectId && <CourseSwitcher blockMap={blockMap} />}
         </div>
         <div>
-          <SkeletonText isLoaded={sessiondata.status !== "loading"}>
-            {session ? (
-              <AccountButton session={sessiondata.data} />
+          <SkeletonText isLoaded={auth.loggedIn}>
+            {auth.loggedIn ? (
+              <AccountButton />
             ) : (
               <>
-                <Button colorScheme={"brand"} onClick={() => signIn()}>
+                <Button colorScheme={"brand"} onClick={() => {}}>
                   Sign in
                 </Button>
               </>

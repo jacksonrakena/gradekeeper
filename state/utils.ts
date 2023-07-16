@@ -3,7 +3,7 @@ import { AtomEffect } from "recoil";
 export const persistToLocalStorage: (key: string) => AtomEffect<any> =
   (key: any) =>
   ({ setSelf, onSet }) => {
-    if (!global.window) return;
+    //if (!global.window) return;
     const savedValue = window.localStorage.getItem(key);
     if (savedValue != null) {
       setSelf(JSON.parse(savedValue));

@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { ThemeState } from "../../state/theme";
 
 // @ts-ignore
-export function Chakra({ cookies, children }) {
+export function Chakra({ children }) {
   const theme = useRecoilValue(ThemeState);
   return <ChakraProvider theme={theme}>{children}</ChakraProvider>;
 }

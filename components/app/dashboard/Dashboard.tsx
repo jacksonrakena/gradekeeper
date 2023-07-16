@@ -11,9 +11,8 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+
+import { useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { ProcessedStudyBlock, _null } from "../../../lib/logic/processing";
 import { ProcessedUserState, SelectedCourseIdState, SelectedStudyBlockIdState } from "../../../state/course";
@@ -28,17 +27,16 @@ const Dashboard = () => {
   const cancelRef = useRef<any>();
   const [deleteStudyBlock, setDeleteStudyBlock] = useState(_null<ProcessedStudyBlock>());
   const toast = useToast();
-  const router = useRouter();
   const [isDeletingStudyBlock, setIsDeletingSb] = useState(false);
   const [courseCreateBlockId, setCourseCreateBlockId] = useState("");
   const createBlockDisclosure = useDisclosure();
 
   const [currentCourseId, setCurrentCourseId] = useRecoilState(SelectedCourseIdState);
   const [currentBlockId, setCurrentBlockId] = useRecoilState(SelectedStudyBlockIdState);
-  useEffect(() => {
-    if (currentCourseId) setCurrentCourseId(null);
-    if (currentBlockId) setCurrentBlockId(null);
-  }, [router.pathname]);
+  // useEffect(() => {
+  //   if (currentCourseId) setCurrentCourseId(null);
+  //   if (currentBlockId) setCurrentBlockId(null);
+  // }, [router.pathname]);
 
   const closedStudyBlocks = user?.processedStudyBlocks
     .filter((e) => Date.now() > new Date(e.endDate).getTime())
@@ -52,9 +50,9 @@ const Dashboard = () => {
       <div className="mb-12">
         <TopBar />
         <>
-          <Head>
+          {/* <Head>
             <title>My courses</title>
-          </Head>
+          </Head> */}
           <CreateBlockModal isOpen={createBlockDisclosure.isOpen} onClose={createBlockDisclosure.onClose} />
           <div>
             <Box className={"flex flex-col"} px={[6, 12]}>

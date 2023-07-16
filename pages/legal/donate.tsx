@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { Box, Heading, Text } from "@chakra-ui/react";
-import { NextPage } from "next";
 
-const Donations: NextPage = () => {
+
+const Donations = () => {
   return (
     <Box m={12}>
       <Heading mb={4}>Help support Gradekeeper</Heading>

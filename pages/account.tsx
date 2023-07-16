@@ -6,7 +6,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Avatar,
   Box,
   Button,
   Code,
@@ -24,10 +23,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { NextPage } from "next";
-import { signOut, useSession } from "next-auth/react";
-import Head from "next/head";
-import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { TopBar } from "../components/app/nav/TopBar";
@@ -176,10 +171,9 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
   );
 };
 
-const Account: NextPage = () => {
-  const data = useSession();
+const Account = () => {
   const user = useRecoilValue(ProcessedUserState);
-  const router = useRouter();
+
   const deleteModal = useDisclosure();
   const cancelRef = useRef<any>();
   const toast = useToast();
@@ -205,13 +199,13 @@ const Account: NextPage = () => {
                     method: "DELETE",
                   });
                   if (response.ok) {
-                    const r = await signOut({ redirect: false, callbackUrl: "/" });
+                    //const r = await signOut({ redirect: false, callbackUrl: "/" });
                     toast({
                       title: "Account deleted.",
                       duration: 4000,
                       status: "success",
                     });
-                    router.push(r.url);
+                    //router.push(r.url);
                   }
                 }}
                 ml={3}
@@ -223,9 +217,6 @@ const Account: NextPage = () => {
         </AlertDialogOverlay>
       </AlertDialog>
 
-      <Head>
-        <title>My account</title>
-      </Head>
       <TopBar />
       <Box paddingX={[6, 12]}>
         <Heading paddingBottom={6}>My account</Heading>
@@ -233,13 +224,13 @@ const Account: NextPage = () => {
           <Stack spacing={12}>
             <Flex direction="column" p={4} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={accCardBg}>
               <Flex alignItems="center">
-                <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"md"} mr={4} />
+                {/* <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"md"} mr={4} />
                 <Box>
                   <Heading size="md">{data.data?.user?.name}</Heading>
                   <Text fontSize="md" color={"GrayText"}>
                     {data.data?.user?.email}
                   </Text>
-                </Box>
+                </Box> */}
               </Flex>
             </Flex>
             {user?.gradeMap && <GradeMapEditor gradeMap={user?.gradeMap as object} />}

@@ -11,7 +11,6 @@ import {
   ModalHeader,
   useToast,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { useInvalidator } from "../../../../state/course";
 

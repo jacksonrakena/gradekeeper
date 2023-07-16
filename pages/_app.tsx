@@ -1,8 +1,6 @@
+"use client";
 import { SlideFade } from "@chakra-ui/react";
-import { SessionProvider } from "next-auth/react";
-import { AppProps } from "next/app";
-import Head from "next/head";
-import { PropsWithChildren, useEffect } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import { Chakra } from "../lib/theme/Chakra";
 import { useInvalidator, UserState } from "../state/course";
@@ -15,21 +13,25 @@ function GradekeeperAppRoot({ Component, pageProps: { session, ...pageProps }, r
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </Head>
       <RecoilRoot>
-        <InvalidatorManager>
-          <SessionProvider session={session}>
-            <Chakra cookies={pageProps.cookies}>
-              <SlideFade key={router.route} in={true}>
-                <Component {...pageProps} />
-              </SlideFade>
-            </Chakra>
-          </SessionProvider>
-        </InvalidatorManager>
+        <React.Fragment>
+          <AuthContextProvider>
+            <InvalidatorManager>
+              <SessionProvider session={session}>
+                <Chakra cookies={pageProps.cookies}>
+                  <SlideFade key={router.route} in={true}>
+                    <Component {...pageProps} />
+                  </SlideFade>
+                </Chakra>
+              </SessionProvider>
+            </InvalidatorManager>
+          </AuthContextProvider>
+        </React.Fragment>
       </RecoilRoot>
     </>
   );
 }
 
-const InvalidatorManager = (props: PropsWithChildren) => {
+export const InvalidatorManager = (props: PropsWithChildren) => {
   const { invalidate } = useInvalidator();
   const user = useRecoilValue(UserState);
   useEffect(() => {

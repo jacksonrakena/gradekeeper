@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { Subject } from "@prisma/client";
-import { useRouter } from "next/router";
+
 import { useRecoilValue } from "recoil";
 import { ProcessedUserState, SelectedCourseState, SelectedStudyBlockState } from "../../../state/course";
 
@@ -9,7 +9,7 @@ const CourseSwitcher = ({ blockMap }: { blockMap: any }) => {
   const currentCourse = useRecoilValue(SelectedCourseState);
   const currentStudyBlock = useRecoilValue(SelectedStudyBlockState);
   const allStudyBlocks = useRecoilValue(ProcessedUserState)?.processedStudyBlocks;
-  const router = useRouter();
+  //const router = useRouter();
   return (
     <Menu isLazy={true}>
       <MenuButton colorScheme={"brand"} as={Button} rightIcon={<ChevronDownIcon />}>
@@ -18,7 +18,7 @@ const CourseSwitcher = ({ blockMap }: { blockMap: any }) => {
       <MenuList>
         <MenuItem
           onClick={() => {
-            router.push("/");
+            //router.push("/");
           }}
         >
           <Text fontWeight="semibold">Dashboard</Text>
@@ -33,7 +33,7 @@ const CourseSwitcher = ({ blockMap }: { blockMap: any }) => {
                 .map((d: Subject) => (
                   <MenuItem
                     onClick={() => {
-                      router.push(`/blocks/${d.studyBlockId}/courses/${d.id}`);
+                      //router.push(`/blocks/${d.studyBlockId}/courses/${d.id}`);
                     }}
                     key={d.id}
                   >

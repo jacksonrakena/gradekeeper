@@ -13,7 +13,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
-import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { templates } from "../../../data/block-templates";
@@ -39,7 +38,7 @@ const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
 export default CreateBlockModal;
 
 export const CreateBlock = (props: { onClose: () => void }) => {
-  const router = useRouter();
+  //const router = useRouter();
   const { invalidate } = useInvalidator();
   const [institutionTemplates, setTemplates] = useState<{ name: string; startDate: string; endDate: string }[]>();
   const [selectedTemplate, setSelectedTemplate] = useState<{ name: string; startDate: string; endDate: string }>();

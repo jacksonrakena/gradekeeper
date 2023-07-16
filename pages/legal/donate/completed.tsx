@@ -1,8 +1,7 @@
 // @ts-nocheck
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Heading, Text } from "@chakra-ui/react";
-import { NextPage } from "next";
 
-const CompletedDonation: NextPage = () => {
+const CompletedDonation= () => {
   return (
     <Box m={12}>
       <Alert status="success" mb={6}>

@@ -1,6 +1,6 @@
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, IconButton, Text, useDisclosure } from "@chakra-ui/react";
-import router from "next/router";
+
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { ProcessedStudyBlock } from "../../../../lib/logic/processing";

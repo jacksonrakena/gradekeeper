@@ -14,31 +14,30 @@ import {
   MenuOptionGroup,
   useColorMode,
 } from "@chakra-ui/react";
-import { Session } from "next-auth";
-import { signOut } from "next-auth/react";
-import router from "next/router";
+
 import { AiOutlineHome } from "react-icons/ai";
 import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscSettingsGear } from "react-icons/vsc";
 import { useRecoilState } from "recoil";
 import { defaultThemes } from "../../../lib/theme/theme";
+import { useAuth } from "../../../state/auth";
 import { ThemeNameState } from "../../../state/theme";
 
-const AccountButton = (props: { session: Session }) => {
-  const session = props.session;
+const AccountButton = () => {
+  const auth = useAuth();
   const colorMode = useColorMode();
   const [theme, setTheme] = useRecoilState(ThemeNameState);
   return (
     <Menu colorScheme={"brand"} variant={"unfilled"}>
       <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>
         <Flex alignItems="center">
-          <Avatar size="sm" name={session.user?.name ?? ""} src={session.user?.image ?? ""} mr={2}></Avatar>
-          {session.user?.name}
+          <Avatar size="sm" name={auth.cookie?.name} src={auth.cookie?.picture ?? ""} mr={2}></Avatar>
+          {auth.cookie?.name}
         </Flex>
       </MenuButton>
       <MenuList overflow={"hidden"}>
-        <MenuItem onClick={() => router.push("/")}>
+        <MenuItem onClick={() => {}}>
           <Flex alignItems={"center"}>
             <Icon w={4} h={4} as={AiOutlineHome} mr={2} /> Home
           </Flex>
@@ -70,7 +69,7 @@ const AccountButton = (props: { session: Session }) => {
         <MenuDivider />
         <MenuItem
           onClick={() => {
-            router.push("/account");
+            //router.push("/account");
           }}
         >
           <Flex alignItems={"center"}>
@@ -82,9 +81,9 @@ const AccountButton = (props: { session: Session }) => {
           {" "}
           <MenuItem
             onClick={() => {
-              signOut({ redirect: false }).then(() => {
-                router.push("/");
-              });
+              // signOut({ redirect: false }).then(() => {
+              //   router.push("/");
+              // });
             }}
             textColor={"red.500"}
             fontWeight={"semibold"}

@@ -1,7 +1,5 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Button, Container, Heading, Img, Stack, Text, useColorModeValue } from "@chakra-ui/react";
-import { signIn } from "next-auth/react";
-import Head from "next/head";
 import { useState } from "react";
 import themeConstants from "../../lib/theme/themeConstants";
 
@@ -9,9 +7,6 @@ const MarketingHome = () => {
   const [loadingApp, setLoadingApp] = useState(false);
   return (
     <div className="m-12">
-      <Head>
-        <title>Gradekeeper</title>
-      </Head>
       <Container>
         <Stack mb={12} spacing={8}>
           <Heading size="4xl">
@@ -26,7 +21,7 @@ const MarketingHome = () => {
             isLoading={loadingApp}
             onClick={() => {
               setLoadingApp(true);
-              signIn("google");
+              //signIn("google");
             }}
             colorScheme={"brand"}
           >

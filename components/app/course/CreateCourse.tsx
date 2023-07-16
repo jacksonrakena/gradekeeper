@@ -24,7 +24,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
-import { useRouter } from "next/router";
+
 import { useState } from "react";
 import { TwitterPicker } from "react-color";
 import { useRecoilValue } from "recoil";

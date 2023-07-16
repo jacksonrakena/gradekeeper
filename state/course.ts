@@ -11,6 +11,7 @@ export type DownloadedStudyBlock = GetUserResponse["studyBlocks"][number];
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 async function download(): Promise<GetUserResponse> {
   try {
+    //const d = await fetch("/api/users/me");
     const d = await fetch("/api/users/me");
     const e = await d.json();
     if (e.error) throw 'Received error from server: "' + e.error + '"';
