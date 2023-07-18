@@ -25,11 +25,13 @@ import {
 } from "@chakra-ui/react";
 import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
 
+import { Decimal } from "decimal.js";
 import { useState } from "react";
 import { TwitterPicker } from "react-color";
+import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
-import { randomColor } from "../../../lib/logic/processing";
-import { ProcessedUserState, useInvalidator } from "../../../state/course";
+import { randomColor } from "../../../src/lib/logic/processing";
+import { ProcessedUserState, useInvalidator } from "../../../src/lib/state/course";
 import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
@@ -44,7 +46,7 @@ export const CreateCourse = (props: { block_id: string }) => {
   const { invalidate } = useInvalidator();
   const block_id = props.block_id;
   const toast = useToast();
-  const router = useRouter();
+  const navigate = useNavigate();
   const emptyComponents: Partial<ComponentDto>[] = [
     {
       id: randomColor(),
@@ -78,28 +80,29 @@ export const CreateCourse = (props: { block_id: string }) => {
         }}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
+          const object = {
+            name: values.name,
+            codeName: values.codeName,
+            codeNo: values.codeNo,
+            color: values.color,
+            components: components.map((c) => {
+              return {
+                ...c,
+                weighting: new Decimal(c.weighting ?? 100).div(100),
+                dropLowest: Number.parseInt(c.dropLowest ?? "0"),
+              };
+            }),
+          };
           fetch(`/api/block/${block_id}/course/create`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: values.name,
-              codeName: values.codeName,
-              codeNo: values.codeNo,
-              color: values.color,
-              components: components.map((c) => {
-                return {
-                  ...c,
-                  weighting: Number.parseInt(c.weighting ?? "0") / 100,
-                  dropLowest: Number.parseInt(c.dropLowest ?? "0"),
-                };
-              }),
-            }),
+            body: JSON.stringify(object),
           }).then(async (e) => {
             const f = await e.json();
             if (e.ok) {
               invalidate().then(() => {
                 setSubmitting(false);
-                router.push(`/blocks/${block_id}/courses/${f.id}`);
+                navigate(`/blocks/${block_id}/courses/${f.id}`);
               });
             } else {
               setSubmitting(false);

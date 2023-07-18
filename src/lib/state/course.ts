@@ -1,21 +1,14 @@
-import { Prisma, SubjectSubcomponent } from "@prisma/client";
-import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
-import { FullSubject, FullSubjectComponent } from "../lib/logic/fullEntities";
-import { ProcessedUserInfo, processStudyBlock } from "../lib/logic/processing";
-
-import { getUserQuery } from "../pages/api/users/me";
-
-export type GetUserResponse = Prisma.UserGetPayload<typeof getUserQuery>;
-export type DownloadedStudyBlock = GetUserResponse["studyBlocks"][number];
+import { atom, selector, useRecoilState } from "recoil";
+import { beginProcessing, ProcessedUser } from "../logic/processing";
+import { StudyBlock, Subject, SubjectComponent, SubjectSubcomponent, User } from "../logic/types";
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-async function download(): Promise<GetUserResponse> {
+async function download(): Promise<User> {
   try {
-    //const d = await fetch("/api/users/me");
     const d = await fetch("/api/users/me");
     const e = await d.json();
     if (e.error) throw 'Received error from server: "' + e.error + '"';
-    const prismaResponse: Prisma.UserGetPayload<typeof getUserQuery> = e;
+    const prismaResponse: User = e;
     return prismaResponse;
   } catch (e) {
     await wait(1000);
@@ -31,7 +24,7 @@ export const useInvalidator = () => {
     console.log("[invalidator] " + (!!user ? "New" : "Initial") + " user download: ", data);
     setUser(data);
   };
-  const updateStudyBlock = (studyBlockId: string, replacementStudyBlock: DownloadedStudyBlock | null) => {
+  const updateStudyBlock = (studyBlockId: string, replacementStudyBlock: StudyBlock | null) => {
     if (!user) return;
     setUser({
       ...user,
@@ -45,7 +38,7 @@ export const useInvalidator = () => {
             }),
     });
   };
-  const updateCourse = (courseId: string, replacementCourse: FullSubject | null) => {
+  const updateCourse = (courseId: string, replacementCourse: ((e: Subject) => Subject) | null) => {
     if (!user) return;
     setUser({
       ...user,
@@ -56,34 +49,39 @@ export const useInvalidator = () => {
         return {
           ...sb,
           subjects: sb.subjects.map((subj) => {
-            if (subj.id === replacementCourse.id) return replacementCourse;
+            if (subj.id === courseId) return replacementCourse(subj);
             return subj;
           }),
         };
       }),
     });
   };
-  const updateComponent = (componentId: string, replacementComponent: FullSubjectComponent | null) => {
-    if (!course) return;
-    updateCourse(course.id, {
-      ...course,
+  const updateComponent = (
+    courseId: string,
+    componentId: string,
+    replacementComponent: ((e: SubjectComponent) => SubjectComponent) | null
+  ) => {
+    if (!user) return;
+    updateCourse(courseId, (c) => ({
+      ...c,
       components: replacementComponent
-        ? course.components.map((c) => (c.id === componentId ? replacementComponent : c))
-        : course.components.filter((c) => c.id !== componentId),
-    });
+        ? c.components.map((cx) => (cx.id === componentId ? replacementComponent(cx) : cx))
+        : c.components.filter((cx) => cx.id !== componentId),
+    }));
   };
   const updateSubcomponent = (
+    courseId: string,
+    componentId: string,
     subcomponentId: string,
-    component: FullSubjectComponent,
-    replacementSubcomponent: SubjectSubcomponent | null
+    replacementSubcomponent: ((e: SubjectSubcomponent) => SubjectSubcomponent) | null
   ) => {
-    if (!course) return;
-    updateComponent(component.id, {
+    if (!user) return;
+    updateComponent(courseId, componentId, (component) => ({
       ...component,
       subcomponents: replacementSubcomponent
-        ? component.subcomponents.map((c) => (c.id === subcomponentId ? replacementSubcomponent : c))
+        ? component.subcomponents.map((c) => (c.id === subcomponentId ? replacementSubcomponent(c) : c))
         : component.subcomponents.filter((c) => c.id !== subcomponentId),
-    });
+    }));
   };
   return {
     invalidate,
@@ -105,7 +103,7 @@ export const useInvalidator = () => {
 //     const studyBlock = get(SelectedStudyBlockState);
 //     const id = get(SelectedCourseIdState);
 //     if (!studyBlock || !id) return null;
-//     const course = studyBlock?.processedCourses.filter((e) => e.id === id)[0];
+//     const course = studyBlock?.courses.filter((e) => e.id === id)[0];
 //     return course ?? null;
 //   },
 // });
@@ -121,26 +119,23 @@ export const useInvalidator = () => {
 //     const userState = get(ProcessedUserState);
 //     const id = get(SelectedStudyBlockIdState);
 //     if (!userState || !id) return null;
-//     const sb = userState.processedStudyBlocks.filter((e) => e.id === id)[0];
+//     const sb = userState.studyBlocks.filter((e) => e.id === id)[0];
 //     return sb ?? null;
 //   },
 // });
 
-export const UserState = atom<GetUserResponse | null>({
+export const UserState = atom<User | null>({
   key: "UserState",
   default: null,
 });
 
-export const ProcessedUserState = selector<ProcessedUserInfo | null>({
+export const ProcessedUserState = selector<ProcessedUser | null>({
   key: "ProcessedUserState",
   get: ({ get }) => {
     const userState = get(UserState);
     if (!userState) return null;
-    const d = {
-      ...userState,
-      processedStudyBlocks: userState.studyBlocks?.map((rawStudyBlock) => processStudyBlock(rawStudyBlock, userState.gradeMap)) ?? [],
-    };
-    console.log("Processed data: ", d);
-    return d;
+    const processedData = beginProcessing(userState);
+    console.log("Processed data: ", processedData);
+    return processedData;
   },
 });

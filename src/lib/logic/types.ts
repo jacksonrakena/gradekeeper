@@ -1,39 +1,40 @@
 export type User = {
-  id: String;
+  id: string;
   gradeMap: any;
   studyBlocks: StudyBlock[];
 };
 
 export type StudyBlock = {
-  id: String;
-  name: String;
+  id: string;
+  name: string;
   startDate: Date;
   endDate: Date;
   subjects: Subject[];
 };
 
 export type Subject = {
-  id: String;
-  longName: String;
-  courseCodeName: String;
-  courseCodeNumber: String;
-  color: String;
+  id: string;
+  longName: string;
+  courseCodeName: string;
+  courseCodeNumber: string;
+  color: string;
+  studyBlockId: string;
   components: SubjectComponent[];
 };
 
 export type SubjectComponent = {
-  id: String;
-  name: String;
-  nameOfSubcomponentSingular: String;
-  subjectWeighting: number;
+  id: string;
+  name: string;
+  nameOfSubcomponentSingular: string;
+  subjectWeighting: string;
   numberOfSubComponentsToDrop_Lowest: number;
   subcomponents: SubjectSubcomponent[];
 };
 
 export type SubjectSubcomponent = {
-  id: String;
-  numberInSequence?: number;
+  id: string;
+  numberInSequence: number;
   overrideName?: string;
   isCompleted: boolean;
-  gradeValuePercentage: number;
+  gradeValuePercentage: string;
 };

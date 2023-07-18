@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 import { ProcessedStudyBlock } from "../../../lib/logic/processing";
-import { ProcessedUserState } from "../../../state/course";
+import { ProcessedUserState } from "../../../src/lib/state/course";
 import CoursePill, { Pill } from "./CoursePill";
 import CreateCourseModal from "./CreateCourseModal";
 import { DeleteStudyBlockAlert } from "./DeleteStudyBlockAlert";
@@ -49,12 +49,12 @@ const StudyBlockCourseList = (props: { studyBlock: ProcessedStudyBlock }) => {
         </Text>
         {props.studyBlock.gpaEstimate?.letter !== "Unknown" && (
           <Text color={"GrayText"}>
-            GPA estimate: {props.studyBlock.gpaEstimate?.numerical} ({props.studyBlock.gpaEstimate?.letter}) &bull; American{" "}
-            {props.studyBlock.usGpaEstimate?.numerical} ({props.studyBlock.usGpaEstimate?.letter})
+            GPA estimate: {props.studyBlock.gpaEstimate?.numerical.toString()} ({props.studyBlock.gpaEstimate?.letter}) &bull; American{" "}
+            {props.studyBlock.usGpaEstimate?.numerical.toString()} ({props.studyBlock.usGpaEstimate?.letter})
           </Text>
         )}
 
-        {studyBlock.processedCourses.map((subject) => (
+        {studyBlock.courses.map((subject) => (
           <CoursePill
             key={subject.id}
             onClick={() => {

@@ -4,17 +4,16 @@ import React, { PropsWithChildren, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
-import { Chakra } from "../lib/theme/chakra";
 import Account from "../routes/account";
+import { App } from "../routes/app";
 import CourseView from "../routes/blocks/courses/CourseView";
-import Dashboard from "../routes/dashboard/Dashboard";
 import Donations from "../routes/legal/donate";
 import CompletedDonation from "../routes/legal/donate/completed";
 import PrivacyPolicy from "../routes/legal/privacy";
-import MarketingHome from "../routes/MarketingHome";
-import AuthContextProvider, { useAuth } from "../state/auth";
-import { useInvalidator, UserState } from "../state/course";
 import "../styles/globals.css";
+import AuthContextProvider from "./lib/state/auth";
+import { useInvalidator, UserState } from "./lib/state/course";
+import { Chakra } from "./lib/theme/Chakra";
 
 export const InvalidatorManager = (props: PropsWithChildren) => {
   const { invalidate } = useInvalidator();
@@ -24,15 +23,7 @@ export const InvalidatorManager = (props: PropsWithChildren) => {
   }, []);
   return <>{props.children}</>;
 };
-const Inner = () => {
-  const auth = useAuth();
-  return (
-    <>
-      {auth.loggedIn && <Dashboard />}
-      {!auth.loggedIn && <MarketingHome />}
-    </>
-  );
-};
+
 const getCookie = (key: string) => {
   var b = window.document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
   return b ? b.pop() : "";
@@ -93,7 +84,7 @@ const Root = () => {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Inner />,
+    element: <App />,
   },
   {
     path: "blocks/:block_id/courses/:course_id",

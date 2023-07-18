@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { ProcessedStudyBlock } from "../../../lib/logic/processing";
-import { useInvalidator } from "../../../state/course";
+import { useInvalidator } from "../../../src/lib/state/course";
 
 export const DeleteStudyBlockAlert = (props: {
   isDeleteOpen: boolean;
@@ -36,7 +36,7 @@ export const DeleteStudyBlockAlert = (props: {
           </AlertDialogHeader>
           <AlertDialogBody>
             Are you <strong>sure</strong> you want to delete {props.studyBlock.name}? <br />
-            This will delete <strong>{props.studyBlock.processedCourses.length}</strong> courses.
+            This will delete <strong>{props.studyBlock.courses.length}</strong> courses.
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button

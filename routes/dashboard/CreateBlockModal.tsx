@@ -15,10 +15,10 @@ import {
 import { Field, Form, Formik } from "formik";
 import { useState } from "react";
 
-import { templates } from "../../data/block-templates";
+import { templates } from "../../src/lib/data/block-templates";
 
 import { Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
-import { useInvalidator } from "../../state/course";
+import { useInvalidator } from "../../src/lib/state/course";
 
 const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
   return (
@@ -38,7 +38,6 @@ const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
 export default CreateBlockModal;
 
 export const CreateBlock = (props: { onClose: () => void }) => {
-  //const router = useRouter();
   const { invalidate } = useInvalidator();
   const [institutionTemplates, setTemplates] = useState<{ name: string; startDate: string; endDate: string }[]>();
   const [selectedTemplate, setSelectedTemplate] = useState<{ name: string; startDate: string; endDate: string }>();

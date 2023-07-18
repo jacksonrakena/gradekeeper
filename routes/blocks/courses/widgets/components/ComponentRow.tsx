@@ -2,13 +2,13 @@ import { EditIcon } from "@chakra-ui/icons";
 import { Box, Flex, SkeletonText, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
-import { calculateLetterGrade, ProcessedCourseInfo } from "../../../../../lib/logic/processing";
 import { GkEditable } from "../../../../../src/components/generic/GkEditable";
-import { ProcessedUserState, useInvalidator } from "../../../../../state/course";
+import { calculateLetterGrade, ProcessedCourseInfo } from "../../../../../src/lib/logic/processing";
+import { SubjectComponent } from "../../../../../src/lib/logic/types";
+import { ProcessedUserState, useInvalidator } from "../../../../../src/lib/state/course";
 
 const ComponentRow = (props: {
-  component: FullSubjectComponent;
+  component: SubjectComponent;
   subject: ProcessedCourseInfo;
   componentGrade: { value: number; isUnknown: boolean; isAverage: boolean };
   onRequestModalOpen: () => void;

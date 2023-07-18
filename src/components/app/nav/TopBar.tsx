@@ -1,8 +1,6 @@
 import { Button, SkeletonText } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import { useRecoilValue } from "recoil";
-import { useAuth } from "../../../../state/auth";
-import { ProcessedUserState } from "../../../../state/course";
+import { useAuth } from "../../../lib/state/auth";
 import AccountButton from "./AccountButton";
 
 export const TopBar = (props: { leftWidget?: ReactElement }) => {

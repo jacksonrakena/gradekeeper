@@ -3,9 +3,8 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHea
 import { Box, Input, Text } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import { useState } from "react";
-import { FullSubjectComponent } from "../../../../../lib/logic/fullEntities";
-import { calculateLetterGrade, isActiveSubcomponent } from "../../../../../lib/logic/processing";
-import { useInvalidator } from "../../../../../state/course";
+import { calculateLetterGrade, isActiveSubcomponent } from "../../../../../src/lib/logic/processing";
+import { useInvalidator } from "../../../../../src/lib/state/course";
 
 const ComponentEditModal = (props: {
   gradeMap: any;

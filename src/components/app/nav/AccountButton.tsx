@@ -21,9 +21,9 @@ import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscSettingsGear } from "react-icons/vsc";
 import { useNavigate } from "react-router";
 import { useRecoilState } from "recoil";
-import { defaultThemes } from "../../../../lib/theme/theme";
-import { useAuth } from "../../../../state/auth";
-import { ThemeNameState } from "../../../../state/theme";
+import { useAuth } from "../../../lib/state/auth";
+import { ThemeNameState } from "../../../lib/state/theme";
+import { defaultThemes } from "../../../lib/theme/theme";
 
 const AccountButton = () => {
   const auth = useAuth();
