@@ -6,9 +6,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  Avatar,
   Box,
   Button,
-  Code,
   Divider,
   Flex,
   Heading,
@@ -24,9 +24,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
-import { TopBar } from "../components/app/nav/TopBar";
 import themeConstants from "../lib/theme/themeConstants";
+import { TopBar } from "../src/components/app/nav/TopBar";
+import { useAuth } from "../state/auth";
 import { ProcessedUserState, useInvalidator } from "../state/course";
 
 const predefinedGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-"];
@@ -105,6 +107,7 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
 
 const GradeMapEditor = (props: { gradeMap: object }) => {
   const user = useRecoilValue(ProcessedUserState);
+  const auth = useAuth();
   const { invalidate } = useInvalidator();
   const toast = useToast();
   const [gradeMap, setGradeMap] = useState(props.gradeMap);
@@ -173,7 +176,8 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
 
 const Account = () => {
   const user = useRecoilValue(ProcessedUserState);
-
+  const auth = useAuth();
+  const navigate = useNavigate();
   const deleteModal = useDisclosure();
   const cancelRef = useRef<any>();
   const toast = useToast();
@@ -199,13 +203,13 @@ const Account = () => {
                     method: "DELETE",
                   });
                   if (response.ok) {
-                    //const r = await signOut({ redirect: false, callbackUrl: "/" });
+                    auth.logOut();
                     toast({
                       title: "Account deleted.",
                       duration: 4000,
                       status: "success",
                     });
-                    //router.push(r.url);
+                    navigate("/");
                   }
                 }}
                 ml={3}
@@ -224,13 +228,13 @@ const Account = () => {
           <Stack spacing={12}>
             <Flex direction="column" p={4} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={accCardBg}>
               <Flex alignItems="center">
-                {/* <Avatar src={data.data?.user?.image ?? ""} name={data.data?.user?.name ?? ""} size={"md"} mr={4} />
+                <Avatar src={auth.cookie?.picture} name={auth.cookie?.name ?? ""} size={"md"} mr={4} />
                 <Box>
-                  <Heading size="md">{data.data?.user?.name}</Heading>
+                  <Heading size="md">{auth.cookie?.name}</Heading>
                   <Text fontSize="md" color={"GrayText"}>
-                    {data.data?.user?.email}
+                    {auth.cookie?.id}
                   </Text>
-                </Box> */}
+                </Box>
               </Flex>
             </Flex>
             {user?.gradeMap && <GradeMapEditor gradeMap={user?.gradeMap as object} />}
@@ -270,16 +274,11 @@ const Account = () => {
           <Text>Gradekeeper is powered by open-source software.</Text>
           <Text>
             Gradekeeper is{" "}
-            <Link color="brand.500" href="https://github.com/jacksonrakena/gradekeeper" isExternal>
+            <Link color="brand.500" href="https://github.com/gradekeeper/gradekeeper" isExternal>
               open-source <ExternalLinkIcon mx="2px" />
             </Link>
             .
           </Text>
-          {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA && (
-            <Text>
-              Version <Code>{process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA}</Code>
-            </Text>
-          )}
         </Box>
       </Box>
     </>

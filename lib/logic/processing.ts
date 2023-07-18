@@ -1,6 +1,5 @@
-import { Prisma, StudyBlock, SubjectSubcomponent } from "@prisma/client";
-import { getUserQuery } from "../../pages/api/users/me";
 import { FullSubject, FullSubjectComponent } from "./fullEntities";
+import { StudyBlock, SubjectSubcomponent, User } from "./types";
 
 export function _null<T>(): T | null {
   return null;
@@ -19,7 +18,7 @@ export type ProcessedStudyBlock = StudyBlock & {
   gpaEstimate: CourseGrade;
   usGpaEstimate: CourseGrade;
 };
-export type ProcessedUserInfo = Omit<Prisma.UserGetPayload<typeof getUserQuery>, "studyBlocks"> & {
+export type ProcessedUserInfo = Omit<User, "studyBlocks"> & {
   processedStudyBlocks: ProcessedStudyBlock[];
 };
 export function calculateGpaBasedOnTable(
@@ -42,7 +41,7 @@ export function calculateGpaBasedOnTable(
     numerical: markTotal,
   };
 }
-export function processStudyBlock(rawStudyBlock: StudyBlock & { subjects: FullSubject[] }, gradeMap: any): ProcessedStudyBlock {
+export function processStudyBlock(rawStudyBlock: StudyBlock, gradeMap: any): ProcessedStudyBlock {
   const r = {
     ...rawStudyBlock,
     processedCourses: rawStudyBlock.subjects.map((rawSubject) => processCourseInfo(rawSubject, gradeMap)),

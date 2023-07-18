@@ -18,7 +18,7 @@ export type Subject = {
   courseCodeName: String;
   courseCodeNumber: String;
   color: String;
-  components: SubjectComponent;
+  components: SubjectComponent[];
 };
 
 export type SubjectComponent = {

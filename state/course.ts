@@ -1,7 +1,7 @@
 import { Prisma, SubjectSubcomponent } from "@prisma/client";
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import { FullSubject, FullSubjectComponent } from "../lib/logic/fullEntities";
-import { ProcessedCourseInfo, ProcessedStudyBlock, ProcessedUserInfo, processStudyBlock } from "../lib/logic/processing";
+import { ProcessedUserInfo, processStudyBlock } from "../lib/logic/processing";
 
 import { getUserQuery } from "../pages/api/users/me";
 
@@ -26,7 +26,6 @@ async function download(): Promise<GetUserResponse> {
 
 export const useInvalidator = () => {
   const [user, setUser] = useRecoilState(UserState);
-  const course = useRecoilValue(SelectedCourseState);
   const invalidate = async () => {
     const data = await download();
     console.log("[invalidator] " + (!!user ? "New" : "Initial") + " user download: ", data);
@@ -95,37 +94,37 @@ export const useInvalidator = () => {
   };
 };
 
-export const SelectedCourseIdState = atom<string | null>({
-  key: "SelectedCourseIdState",
-  default: null,
-});
+// export const SelectedCourseIdState = atom<string | null>({
+//   key: "SelectedCourseIdState",
+//   default: null,
+// });
 
-export const SelectedCourseState = selector<ProcessedCourseInfo | null>({
-  key: "SelectedCourseState",
-  get: ({ get }) => {
-    const studyBlock = get(SelectedStudyBlockState);
-    const id = get(SelectedCourseIdState);
-    if (!studyBlock || !id) return null;
-    const course = studyBlock?.processedCourses.filter((e) => e.id === id)[0];
-    return course ?? null;
-  },
-});
+// export const SelectedCourseState = selector<ProcessedCourseInfo | null>({
+//   key: "SelectedCourseState",
+//   get: ({ get }) => {
+//     const studyBlock = get(SelectedStudyBlockState);
+//     const id = get(SelectedCourseIdState);
+//     if (!studyBlock || !id) return null;
+//     const course = studyBlock?.processedCourses.filter((e) => e.id === id)[0];
+//     return course ?? null;
+//   },
+// });
 
-export const SelectedStudyBlockIdState = atom<string | null>({
-  key: "SelectedStudyBlockIdState",
-  default: null,
-});
+// export const SelectedStudyBlockIdState = atom<string | null>({
+//   key: "SelectedStudyBlockIdState",
+//   default: null,
+// });
 
-export const SelectedStudyBlockState = selector<ProcessedStudyBlock | null>({
-  key: "SelectedStudyBlockState",
-  get: ({ get }) => {
-    const userState = get(ProcessedUserState);
-    const id = get(SelectedStudyBlockIdState);
-    if (!userState || !id) return null;
-    const sb = userState.processedStudyBlocks.filter((e) => e.id === id)[0];
-    return sb ?? null;
-  },
-});
+// export const SelectedStudyBlockState = selector<ProcessedStudyBlock | null>({
+//   key: "SelectedStudyBlockState",
+//   get: ({ get }) => {
+//     const userState = get(ProcessedUserState);
+//     const id = get(SelectedStudyBlockIdState);
+//     if (!userState || !id) return null;
+//     const sb = userState.processedStudyBlocks.filter((e) => e.id === id)[0];
+//     return sb ?? null;
+//   },
+// });
 
 export const UserState = atom<GetUserResponse | null>({
   key: "UserState",
