@@ -3,13 +3,13 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHea
 import { Box, Input, Text } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import { useState } from "react";
-import { calculateLetterGrade, isActiveSubcomponent } from "../../../../../src/lib/logic/processing";
+import { calculateLetterGrade, isActiveSubcomponent, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
 import { useInvalidator } from "../../../../../src/lib/state/course";
 
 const ComponentEditModal = (props: {
   gradeMap: any;
   showing: boolean;
-  component: FullSubjectComponent;
+  component: ProcessedCourseComponent;
   courseId: string;
   blockId: string;
   onClose: () => void;
@@ -19,7 +19,10 @@ const ComponentEditModal = (props: {
   const [loading, setLoading] = useState(false);
 
   const isSingular = props.component?.subcomponents.length === 1;
-
+  const valueOfEachSubcomponent = props.component.subjectWeighting
+    .div(props.component.subcomponents.length - props.component?.numberOfSubComponentsToDrop_Lowest)
+    .mul(100)
+    .toPrecision(2);
   return (
     <Modal isOpen={props.showing} onClose={props.onClose} size={"xl"}>
       <ModalOverlay />
@@ -28,22 +31,21 @@ const ComponentEditModal = (props: {
         <ModalCloseButton />
         <ModalBody>
           {!isSingular && (
-            <div className="mb-4">
-              Total weight for {props.component?.name} is {props.component?.subjectWeighting!! * 100}%.
+            <Box className="mb-4">
+              Total weight for {props.component.name} is {props.component.subjectWeighting.mul(100).toString()}%.
               <br />
               Each {props.component?.nameOfSubcomponentSingular.toLowerCase()} is worth{" "}
-              {(
-                (props.component?.subjectWeighting!! /
-                  (props.component?.subcomponents.length!! - props.component?.numberOfSubComponentsToDrop_Lowest!!)) *
-                100
-              ).toPrecision(3)}
+              {props.component.subjectWeighting
+                .div(props.component.subcomponents.length - props.component?.numberOfSubComponentsToDrop_Lowest)
+                .mul(100)
+                .toPrecision(2)}
               %. <br />
               {props.component?.numberOfSubComponentsToDrop_Lowest!! > 0 ? (
                 <>The lowest {props.component?.numberOfSubComponentsToDrop_Lowest ?? ""} are being dropped.</>
               ) : (
                 <></>
               )}
-            </div>
+            </Box>
           )}
           <TableContainer>
             <Table variant="simple" size="sm">
@@ -62,9 +64,6 @@ const ComponentEditModal = (props: {
                     return (
                       <Tr key={e.id}>
                         <Td className="p-2">
-                          <span className="hidden md:inline" style={{ fontWeight: "bold" }}>
-                            {props.component?.nameOfSubcomponentSingular}{" "}
-                          </span>
                           <span style={{ fontWeight: "bold" }}>{e.numberInSequence}</span>
                         </Td>
                         <Td>
@@ -72,7 +71,7 @@ const ComponentEditModal = (props: {
                             type="number"
                             id="courseCodeName"
                             size={"sm"}
-                            defaultValue={e.isCompleted ? e.gradeValuePercentage * 100 : ""}
+                            defaultValue={e.isCompleted ? e.gradeValuePercentage.mul(100).toString() : ""}
                             onChange={(newGradeResult) => {
                               if (!newGradeResult.target.value) {
                                 setSubcomponents(

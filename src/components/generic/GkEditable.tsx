@@ -1,4 +1,4 @@
-import { Flex, Text, TextProps } from "@chakra-ui/react";
+import { Box, Flex, TextProps } from "@chakra-ui/react";
 import React, { InputHTMLAttributes, PropsWithChildren, useState } from "react";
 
 export interface GkEditableProps extends PropsWithChildren {
@@ -44,7 +44,7 @@ export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((pro
   }
   return (
     <Flex alignItems={"center"} {...props.displayProps}>
-      <Text
+      <Box
         cursor={"pointer"}
         onClick={() => {
           setEditing(true);
@@ -56,7 +56,7 @@ export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((pro
           {props.icon}
           {props.value}
         </Flex>
-      </Text>
+      </Box>
     </Flex>
   );
 });

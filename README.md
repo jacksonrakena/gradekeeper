@@ -2,38 +2,46 @@
 
 Try it now: [gradekeeper.xyz](https://app.gradekeeper.xyz)
 
-Gradekeeper is an free, open-source Next.js web app that simplifies grade tracking and projections for university students across the globe.
+Gradekeeper is an free, open-source Rust + React web app that simplifies grade tracking and projections for university students across the globe.
 
 ### Running a developer environment
 
 You'll need Node 16 and NPM/Yarn installed. This guide will use NPM.
+You'll also need a Rust compiler that supports the 2021 edition.
 
-1. Install the dependencies:
+#### Server
+First, clone [gradekeeper/server](https://github.com/gradekeeper/server).
+1. Configure the parameters:
 
-```bash
-npm i
-npx prisma generate
-```
-
-2. Configure your development keys.
-
-You'll need to copy `.env.local.template` to `.env.local` and fill out the fields.
+You'll need to copy `.env.template` to `.env` and fill out the fields.
 
 | Field name                             | Description                                                                                                                              |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| DATABASE_URL                           | A MySQL/Prisma-compatible connection string. You can use a local instance or a PlanetScale one.                                          |
-| NEXTAUTH_SECRET                        | A random string of any length, used to encrypt NextAuth JWTs.                                                                            |
+| DATABASE_URL                           | A Postgres connection string.                                         |
+| JWT_SECRET                        | A random string of any length, used to encrypt JWTs.                                                                            |
 | GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET | Your Google credentials for login. You can get these from the [Google Cloud Console](https://console.cloud.google.com/apis/credentials). |
+| CLIENT_REDIRECT_URL | The domain of the client. The server will redirect the user here once they are authorized.
 
-Optionally, you can set `NEXTAUTH_URL` used for redirects, but when using the development server, NextAuth will automatically figure this out.
-
-3. Run the development server.
+2. Run the API server in release mode.
 
 ```bash
+cargo run --release
+```
+
+#### Client
+First, clone [gradekeeper/gradekeeper](https://github.com/gradekeeper/gradekeeper).
+
+1. Install dependencies:
+```
+npm i
+```
+
+2. Start the development server:
+```
 npm run dev
 ```
 
-4. Visit your instance on `http://localhost:3000/`
+3. Visit the development server on the address that Vite generates.
 
 ### Screenshots
 

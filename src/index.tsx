@@ -11,7 +11,7 @@ import Donations from "../routes/legal/donate";
 import CompletedDonation from "../routes/legal/donate/completed";
 import PrivacyPolicy from "../routes/legal/privacy";
 import "../styles/globals.css";
-import AuthContextProvider from "./lib/state/auth";
+import AuthContextProvider, { AuthStateContext, UserCookie } from "./lib/state/auth";
 import { useInvalidator, UserState } from "./lib/state/course";
 import { Chakra } from "./lib/theme/Chakra";
 
@@ -29,7 +29,7 @@ const getCookie = (key: string) => {
   return b ? b.pop() : "";
 };
 const Root = () => {
-  const [authContext, setAuthContext] = useState({
+  const [authContext, setAuthContext] = useState<AuthStateContext>({
     cookie: null,
     loggedIn: false,
     logIn: () => {
@@ -44,7 +44,7 @@ const Root = () => {
   });
   const cookie = getCookie("GK_COOKIE");
   useEffect(() => {
-    if (authContext.loggedIn) {
+    if (authContext.loggedIn && authContext.cookie) {
       if (authContext.cookie?.exp <= Date.now() / 1000) {
         console.log("cookie expired, resetting");
         setAuthContext((c) => ({ ...c, cookie: null, loggedIn: false }));
@@ -53,7 +53,7 @@ const Root = () => {
     if (!authContext.loggedIn) {
       try {
         if (cookie) {
-          const d = jwtDecode(cookie);
+          const d: UserCookie = jwtDecode(cookie);
           console.log("Decoded cookie:", d);
           if (d && d.exp && d.exp > Date.now() / 1000) {
             console.log("valid");

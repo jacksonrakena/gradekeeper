@@ -32,21 +32,6 @@ export default gkAuthorizedRoute(
       if (data) return res.status(200).json({ ...data, otherSubjects: otherSubjects });
       return res.status(404);
     }
-    if (req.method === "DELETE") {
-      const query = await ctx.services.db.subject.findFirst({
-        where: {
-          id: req.query.id?.toString(),
-          studyBlock: { userId: ctx.userId },
-        },
-      });
-      if (!query) return res.status(400).json({});
-      await ctx.services.db.subject.delete({
-        where: {
-          id: query.id,
-        },
-      });
-      return res.status(200).json({});
-    }
     if (req.method === "POST") {
       const toupdate = await ctx.services.db.subject.findFirst({
         where: {

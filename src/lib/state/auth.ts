@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 
-interface UserCookie {
+export interface UserCookie {
   exp: number;
   iat: number;
   id: string;
   name: string;
   picture: string;
 }
-interface AuthStateContext {
+export interface AuthStateContext {
   cookie: UserCookie | null;
   loggedIn: boolean;
   logOut: () => void;

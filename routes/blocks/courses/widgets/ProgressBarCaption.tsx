@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 
 const ProgressBarCaption = (props: PropsWithChildren<{ color: string; atProgressPercentage: number; position: "top" | "bottom" }>) => {
@@ -19,7 +19,7 @@ const ProgressBarCaption = (props: PropsWithChildren<{ color: string; atProgress
       >
         &nbsp;
       </div>
-      <Text
+      <Box
         style={{
           position: "absolute",
           left: props.atProgressPercentage - 1 + "%",
@@ -29,7 +29,7 @@ const ProgressBarCaption = (props: PropsWithChildren<{ color: string; atProgress
         fontWeight={"semibold"}
       >
         {props.children}
-      </Text>
+      </Box>
     </>
   );
 };
