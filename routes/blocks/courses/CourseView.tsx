@@ -49,7 +49,7 @@ const CourseView = () => {
   const gradeMap = user?.gradeMap;
   const navigate = useNavigate();
 
-  const cb = useClipboard(course_id.toString() || "");
+  const cb = useClipboard(course_id || "");
   const [deleting, isDeleting] = useState(false);
   const captionColor = useColorModeValue("gray.700", "gray.200");
   const disc = useDisclosure();
@@ -60,6 +60,7 @@ const CourseView = () => {
   const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
   const tooltipColor = useColorModeValue("white", "black");
   if (!user) return <div>Loading</div>;
+  if (!block_id || !course_id) return <div>Invalid state</div>;
   return (
     <div>
       <TopBar leftWidget={<CourseSwitcher currentCourse={course} currentStudyBlock={studyBlock} />} />
@@ -233,7 +234,7 @@ const CourseView = () => {
                           <ProgressBarCaption
                             key={gradeNumber}
                             color={adjust(course?.color ?? "", -50)}
-                            atProgressPercentage={gradeNumber * 100}
+                            atProgressPercentage={new Decimal(gradeNumber).mul(100)}
                             position="bottom"
                           >
                             <Text color={captionColor}>

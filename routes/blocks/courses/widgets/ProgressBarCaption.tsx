@@ -1,7 +1,8 @@
 import { Box } from "@chakra-ui/react";
+import Decimal from "decimal.js";
 import { PropsWithChildren } from "react";
 
-const ProgressBarCaption = (props: PropsWithChildren<{ color: string; atProgressPercentage: number; position: "top" | "bottom" }>) => {
+const ProgressBarCaption = (props: PropsWithChildren<{ color: string; atProgressPercentage: Decimal; position: "top" | "bottom" }>) => {
   const topStyling: any = {};
   if (props.position === "top") topStyling.bottom = "120%";
   if (props.position === "bottom") topStyling.top = "110%";
@@ -22,7 +23,7 @@ const ProgressBarCaption = (props: PropsWithChildren<{ color: string; atProgress
       <Box
         style={{
           position: "absolute",
-          left: props.atProgressPercentage - 1 + "%",
+          left: props.atProgressPercentage.minus(1).toString() + "%",
           ...topStyling,
         }}
         className="text-xs md:text-base text-center"

@@ -42,3 +42,5 @@ yarn-error.log*
 **/public/sw.js*
 **/public/worker-*.js*
 .env.prod
+
+dist/
