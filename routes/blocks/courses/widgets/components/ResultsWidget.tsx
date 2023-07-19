@@ -1,12 +1,11 @@
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { useState } from "react";
-import { ProcessedCourse } from "../../../../../src/lib/logic/processing";
-import { SubjectComponent } from "../../../../../src/lib/logic/types";
+import { ProcessedCourse, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
 import ComponentEditModal from "./ComponentEditModal";
 import ComponentRow from "./ComponentRow";
 
 export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor: string }) => {
-  const [targetComponent, setTargetComponent] = useState<SubjectComponent | null>(null);
+  const [targetComponent, setTargetComponent] = useState<ProcessedCourseComponent | null>(null);
   return (
     <>
       {targetComponent && (
@@ -17,6 +16,8 @@ export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor
           }}
           showing={targetComponent !== null}
           component={targetComponent}
+          blockId={props.course.studyBlockId}
+          courseId={props.course.id}
         />
       )}
       <div className="grow m-4 p-6 shadow-md rounded-md overflow-auto" style={{ backgroundColor: props.contrastingColor }}>
@@ -32,19 +33,16 @@ export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor
               </Tr>
             </Thead>
             <Tbody>
-              {props.course.components?.map((e, i) => {
-                return (
-                  <ComponentRow
-                    onRequestModalOpen={() => {
-                      setTargetComponent(e);
-                    }}
-                    subject={props.course}
-                    key={e.id}
-                    component={e}
-                    componentGrade={e.grades.projected}
-                  />
-                );
-              })}
+              {props.course.components?.map((e, i) => (
+                <ComponentRow
+                  onRequestModalOpen={() => {
+                    setTargetComponent(e);
+                  }}
+                  course={props.course}
+                  key={e.id}
+                  component={e}
+                />
+              ))}
             </Tbody>
           </Table>
         </TableContainer>

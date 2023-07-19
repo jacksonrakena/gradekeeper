@@ -3,25 +3,19 @@ import { Box, Flex, SkeletonText, Td, Text, Tooltip, Tr } from "@chakra-ui/react
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { GkEditable } from "../../../../../src/components/generic/GkEditable";
-import { ProcessedCourse, calculateLetterGrade } from "../../../../../src/lib/logic/processing";
-import { SubjectComponent } from "../../../../../src/lib/logic/types";
+import { calculateLetterGrade, ProcessedCourse, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
 import { ProcessedUserState, useInvalidator } from "../../../../../src/lib/state/course";
 
-const ComponentRow = (props: {
-  component: SubjectComponent;
-  subject: ProcessedCourse;
-  componentGrade: { value: number; isUnknown: boolean; isAverage: boolean };
-  onRequestModalOpen: () => void;
-}) => {
+const ComponentRow = (props: { component: ProcessedCourseComponent; course: ProcessedCourse; onRequestModalOpen: () => void }) => {
   const user = useRecoilValue(ProcessedUserState);
-  const { updateCourse, invalidate } = useInvalidator();
+  const { updateCourse, invalidate, updateComponent } = useInvalidator();
   const e = props.component;
-  const subject = props.subject;
-  const grade = props.componentGrade;
+  const subject = props.course;
+  const grade = props.component.grades.projected;
   const [singularValue, setSingularValue] = useState(
-    props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toString() + "%" : "0%"
+    props.component.subcomponents[0]?.isCompleted ? grade.value.mul(100).toString() + "%" : "0%"
   );
-  const [subjectWeighting, setSubjectWeighting] = useState(props.component.subjectWeighting * 100 + "%");
+  const [subjectWeighting, setSubjectWeighting] = useState(props.component.subjectWeighting.mul(100).toString() + "%");
   const [name, setName] = useState(props.component.name);
   const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState<"weight" | "score" | "name" | "none">("none");
   const [touched, setTouched] = useState(false);
@@ -56,14 +50,14 @@ const ComponentRow = (props: {
                       name: name,
                     }),
                   });
-                  const data = await response.json();
-                  updateCourse(props.subject.id, {
-                    ...props.subject,
-                    components: props.subject.components.map((cc) => {
+                  await response.json();
+                  updateCourse(props.course.id, (originalCourse) => ({
+                    ...originalCourse,
+                    components: originalCourse.components.map((cc) => {
                       if (cc.id !== props.component.id) return cc;
                       return { ...cc, name: name };
                     }),
-                  });
+                  }));
                   setSectionLoadingUpdate("none");
                   setTouched(false);
                 }
@@ -95,14 +89,14 @@ const ComponentRow = (props: {
                   subjectWeighting: parseFloat(e?.replaceAll("%", "")) / 100,
                 }),
               });
-              const data = await response.json();
+              await response.json();
               await invalidate();
               setSubjectWeighting(parseFloat(e.replaceAll("%", "")) + "%");
               setSectionLoadingUpdate("none");
             }}
             inputProps={{ size: 2 }}
             onCancelEdit={() => {
-              setSubjectWeighting(props.component.subjectWeighting * 100 + "%");
+              setSubjectWeighting(props.component.subjectWeighting.mul(100) + "%");
             }}
             value={subjectWeighting}
           />
@@ -139,13 +133,7 @@ const ComponentRow = (props: {
                       }
                     );
                     const data = await response.json();
-                    updateCourse(props.subject.id, {
-                      ...props.subject,
-                      components: props.subject.components.map((cc) => {
-                        if (cc.id !== props.component.id) return cc;
-                        return data;
-                      }),
-                    });
+                    updateComponent(props.course.id, props.component.id, () => data);
                     if (!singularValue) setSingularValue("0%");
                     setSectionLoadingUpdate("none");
                     setTouched(false);
@@ -162,7 +150,7 @@ const ComponentRow = (props: {
                 }}
                 icon={<EditIcon mr={2} />}
                 onCancelEdit={() => {
-                  setSingularValue(props.component.subcomponents[0]?.isCompleted ? (grade.value * 100).toFixed(2).toString() + "%" : "0%");
+                  setSingularValue(props.component.subcomponents[0]?.isCompleted ? grade.value.mul(100).toFixed(2).toString() + "%" : "0%");
                 }}
               />
             </Tooltip>
@@ -181,7 +169,7 @@ const ComponentRow = (props: {
                   >
                     <Flex direction={"column"}>
                       <Flex alignItems={"center"}>
-                        <EditIcon mr={2} /> {(grade.value * 100).toFixed(2)}%
+                        <EditIcon mr={2} /> {grade.value.mul(100).toFixed(2)}%
                       </Flex>
                       {grade.isAverage ? <span className="text-xs text-gray-600">Average</span> : ""}
                     </Flex>

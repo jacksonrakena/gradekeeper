@@ -2,27 +2,25 @@ import { Button } from "@chakra-ui/button";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
 import { Box, Input, Text } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
+import Decimal from "decimal.js";
 import { useState } from "react";
-import { calculateLetterGrade, isActiveSubcomponent, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
+import { calculateLetterGrade, GradeMap, isActiveSubcomponent, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
 import { useInvalidator } from "../../../../../src/lib/state/course";
 
 const ComponentEditModal = (props: {
-  gradeMap: any;
+  gradeMap: GradeMap;
   showing: boolean;
   component: ProcessedCourseComponent;
   courseId: string;
   blockId: string;
   onClose: () => void;
 }) => {
-  const { updateCourse } = useInvalidator();
+  const { updateComponent } = useInvalidator();
   const [subcomponents, setSubcomponents] = useState(props.component.subcomponents);
   const [loading, setLoading] = useState(false);
 
   const isSingular = props.component?.subcomponents.length === 1;
-  const valueOfEachSubcomponent = props.component.subjectWeighting
-    .div(props.component.subcomponents.length - props.component?.numberOfSubComponentsToDrop_Lowest)
-    .mul(100)
-    .toPrecision(2);
+
   return (
     <Modal isOpen={props.showing} onClose={props.onClose} size={"xl"}>
       <ModalOverlay />
@@ -79,20 +77,19 @@ const ComponentEditModal = (props: {
                                     if (comp.id === e.id)
                                       return {
                                         ...comp,
-                                        gradeValuePercentage: 0,
+                                        gradeValuePercentage: new Decimal(0),
                                         isCompleted: false,
                                       };
                                     return comp;
                                   })
                                 );
                               } else {
-                                var newgradepct = Number.parseFloat(newGradeResult.target.value) / 100;
                                 setSubcomponents(
                                   subcomponents.map((comp) => {
                                     if (comp.id === e.id)
                                       return {
                                         ...comp,
-                                        gradeValuePercentage: newgradepct,
+                                        gradeValuePercentage: new Decimal(newGradeResult.target.value).div(100),
                                         isCompleted: true,
                                       };
                                     return comp;
@@ -146,14 +143,7 @@ const ComponentEditModal = (props: {
                 })
               ).json();
               props.onClose();
-              updateCourse(props.courseId, {
-                ...course!,
-                components:
-                  course?.components.map((f) => {
-                    if (f.id === updatedComponent.id) return updatedComponent;
-                    return f;
-                  }) ?? [],
-              });
+              updateComponent(props.courseId, props.component.id, () => updatedComponent);
             }}
           >
             Save

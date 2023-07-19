@@ -1,16 +1,16 @@
 import Decimal from "decimal.js";
 import { ParsedCourse, ParsedCourseComponent, ParsedCourseSubcomponent, ParsedStudyBlock, parseStudyBlock } from "../parsing";
-import { StudyBlock, SubjectComponent, SubjectSubcomponent, User } from "../types";
+import { StudyBlock, User } from "../types";
 import {
-  calculateActualGradeForComponent as calculateActualComponentGrade,
   calculateActualCourseProgressGrade as calculateActualCourseGrade,
+  calculateActualGradeForComponent as calculateActualComponentGrade,
 } from "./actual";
-import { NzGpaTable, UsGpaTable, calculateGpaBasedOnTable } from "./gpa";
+import { calculateGpaBasedOnTable, NzGpaTable, UsGpaTable } from "./gpa";
 import {
   calculateMaximumPossibleComponentGrade as calculateMaximumComponentGrade,
   calculateMaximumPossibleCourseGrade as calculateMaximumCourseGrade,
 } from "./maximum";
-import { calculateProjectedGradeForComponent as calculateProjectedComponentGrade, calculateProjectedCourseGrade } from "./projections";
+import { calculateProjectedCourseGrade, calculateProjectedGradeForComponent as calculateProjectedComponentGrade } from "./projections";
 
 export type GradeMap = { [x: string]: string };
 
@@ -135,11 +135,11 @@ export function randomColor(): string {
 }
 
 export function isActiveSubcomponent(
-  component: SubjectComponent,
-  subcomponent: SubjectSubcomponent,
-  overrideSubcomponents?: SubjectSubcomponent[]
+  component: ProcessedCourseComponent,
+  subcomponent: ParsedCourseSubcomponent,
+  overrideSubcomponents?: ParsedCourseSubcomponent[]
 ): boolean {
-  const subcomponents: SubjectSubcomponent[] = overrideSubcomponents ?? (component.subcomponents as SubjectSubcomponent[]) ?? [];
+  const subcomponents: ParsedCourseSubcomponent[] = overrideSubcomponents ?? component.subcomponents ?? [];
   var sorted = subcomponents
     .filter((d) => d.isCompleted)
     .sort((first, second) => {
