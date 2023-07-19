@@ -39,7 +39,11 @@ const AccountButton = () => {
         </Flex>
       </MenuButton>
       <MenuList overflow={"hidden"}>
-        <MenuItem onClick={() => {}}>
+        <MenuItem
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           <Flex alignItems={"center"}>
             <Icon w={4} h={4} as={AiOutlineHome} mr={2} /> Home
           </Flex>
