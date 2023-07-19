@@ -1,6 +1,6 @@
 import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react";
 import { ProcessedCourse } from "../../../../src/lib/logic/processing";
-import themeConstants from "../../../../src/lib/theme/themeConstants";
+import themeConstants from "../../../../src/lib/theme/theme";
 
 const AveragesWidget = (props: { course: ProcessedCourse }) => {
   const actual = props.course.grades.actual;

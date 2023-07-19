@@ -2,26 +2,19 @@ import { atom, selector, useRecoilState } from "recoil";
 import { ProcessedUser } from "../logic/processing";
 import { processUser } from "../logic/processing/index";
 import { StudyBlock, Subject, SubjectComponent, SubjectSubcomponent, User } from "../logic/types";
+import { routes, useFetcher } from "../net/fetch";
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-async function download(): Promise<User> {
-  try {
-    const d = await fetch("/api/users/me");
-    const e = await d.json();
-    if (e.error) throw 'Received error from server: "' + e.error + '"';
-    const prismaResponse: User = e;
-    return prismaResponse;
-  } catch (e) {
-    await wait(1000);
-    console.error("Failed to download user data: ", e);
-    return await download();
-  }
-}
 
 export const useInvalidator = () => {
   const [user, setUser] = useRecoilState(UserState);
+  const fetcher = useFetcher();
   const invalidate = async () => {
-    const data = await download();
+    let data = await fetcher.json<User>(routes.getMe());
+    while (!data) {
+      await wait(1000);
+      data = await fetcher.json<User>(routes.getMe());
+    }
     console.log("[invalidator] " + (!!user ? "New" : "Initial") + " user download: ", data);
     setUser(data);
   };
@@ -92,38 +85,6 @@ export const useInvalidator = () => {
     updateSubcomponent,
   };
 };
-
-// export const SelectedCourseIdState = atom<string | null>({
-//   key: "SelectedCourseIdState",
-//   default: null,
-// });
-
-// export const SelectedCourseState = selector<ProcessedCourseInfo | null>({
-//   key: "SelectedCourseState",
-//   get: ({ get }) => {
-//     const studyBlock = get(SelectedStudyBlockState);
-//     const id = get(SelectedCourseIdState);
-//     if (!studyBlock || !id) return null;
-//     const course = studyBlock?.courses.filter((e) => e.id === id)[0];
-//     return course ?? null;
-//   },
-// });
-
-// export const SelectedStudyBlockIdState = atom<string | null>({
-//   key: "SelectedStudyBlockIdState",
-//   default: null,
-// });
-
-// export const SelectedStudyBlockState = selector<ProcessedStudyBlock | null>({
-//   key: "SelectedStudyBlockState",
-//   get: ({ get }) => {
-//     const userState = get(ProcessedUserState);
-//     const id = get(SelectedStudyBlockIdState);
-//     if (!userState || !id) return null;
-//     const sb = userState.studyBlocks.filter((e) => e.id === id)[0];
-//     return sb ?? null;
-//   },
-// });
 
 export const UserState = atom<User | null>({
   key: "UserState",

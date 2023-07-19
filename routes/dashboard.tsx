@@ -1,5 +1,4 @@
 import { Box, Button, Divider, Spinner, Text, useDisclosure } from "@chakra-ui/react";
-
 import { useRecoilValue } from "recoil";
 import Footer from "../src/components/app/Footer";
 import { TopBar } from "../src/components/app/nav/TopBar";
@@ -60,7 +59,7 @@ const Dashboard = () => {
                       closedStudyBlocks &&
                       closedStudyBlocks
                         .sort((a, b) => {
-                          return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+                          return new Date(b.endDate).getTime() - new Date(a.endDate).getTime();
                         })
                         .map((studyBlock) => <StudyBlockCourseList key={studyBlock.id} studyBlock={studyBlock} />)}
                   </>

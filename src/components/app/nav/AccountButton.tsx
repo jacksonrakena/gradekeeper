@@ -14,19 +14,19 @@ import {
   MenuOptionGroup,
   useColorMode,
 } from "@chakra-ui/react";
-
 import { AiOutlineHome } from "react-icons/ai";
 import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscSettingsGear } from "react-icons/vsc";
 import { useNavigate } from "react-router";
 import { useRecoilState } from "recoil";
-import { useAuth } from "../../../lib/state/auth";
+import { useAuth, useLogout } from "../../../lib/state/auth";
 import { ThemeNameState } from "../../../lib/state/theme";
 import { defaultThemes } from "../../../lib/theme/theme";
 
 const AccountButton = () => {
   const auth = useAuth();
+  const logout = useLogout();
   const colorMode = useColorMode();
   const navigate = useNavigate();
   const [theme, setTheme] = useRecoilState(ThemeNameState);
@@ -83,7 +83,7 @@ const AccountButton = () => {
           {" "}
           <MenuItem
             onClick={() => {
-              auth.logOut();
+              logout();
               navigate("/");
             }}
             textColor={"red.500"}

@@ -27,9 +27,9 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 import { TopBar } from "../src/components/app/nav/TopBar";
-import { useAuth } from "../src/lib/state/auth";
+import { useAuth, useLogout } from "../src/lib/state/auth";
 import { ProcessedUserState, useInvalidator } from "../src/lib/state/course";
-import themeConstants from "../src/lib/theme/themeConstants";
+import themeConstants from "../src/lib/theme/theme";
 
 const predefinedGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-"];
 const presets = {
@@ -106,8 +106,6 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
 };
 
 const GradeMapEditor = (props: { gradeMap: object }) => {
-  const user = useRecoilValue(ProcessedUserState);
-  const auth = useAuth();
   const { invalidate } = useInvalidator();
   const toast = useToast();
   const [gradeMap, setGradeMap] = useState(props.gradeMap);
@@ -141,7 +139,6 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
                 body: JSON.stringify({ gradeMap: gradeMap }),
               });
               if (res.ok) {
-                const data = await res.json();
                 await invalidate();
                 isSaving(false);
                 toast({
@@ -149,9 +146,10 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
                   status: "success",
                 });
               } else {
+                const err = await res.json();
                 toast({
                   title: "An error occurred.",
-                  status: "error",
+                  status: err.description,
                 });
               }
             }}
@@ -177,6 +175,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
 const Account = () => {
   const user = useRecoilValue(ProcessedUserState);
   const auth = useAuth();
+  const logout = useLogout();
   const navigate = useNavigate();
   const deleteModal = useDisclosure();
   const cancelRef = useRef<any>();
@@ -203,7 +202,7 @@ const Account = () => {
                     method: "DELETE",
                   });
                   if (response.ok) {
-                    auth.logOut();
+                    logout();
                     toast({
                       title: "Account deleted.",
                       duration: 4000,

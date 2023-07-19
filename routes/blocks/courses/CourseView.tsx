@@ -22,18 +22,16 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Decimal from "decimal.js";
-
 import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useRecoilValue } from "recoil";
-
 import Footer from "../../../src/components/app/Footer";
 import CourseSwitcher from "../../../src/components/app/nav/CourseSwitcher";
 import { TopBar } from "../../../src/components/app/nav/TopBar";
 import { GkEditable } from "../../../src/components/generic/GkEditable";
 import { adjust } from "../../../src/lib/logic/processing";
 import { ProcessedUserState, useInvalidator } from "../../../src/lib/state/course";
-import themeConstants from "../../../src/lib/theme/themeConstants";
+import themeConstants from "../../../src/lib/theme/theme";
 import AveragesWidget from "./widgets/AveragesWidget";
 import { ResultsWidget } from "./widgets/components/ResultsWidget";
 import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
@@ -43,7 +41,6 @@ const CourseView = () => {
   const user = useRecoilValue(ProcessedUserState);
   const { course_id, block_id } = useParams();
   const { updateCourse } = useInvalidator();
-
   const studyBlock = user?.studyBlocks.find((e) => e.id == block_id)!;
   const course = studyBlock?.courses.find((a) => a.id == course_id)!;
   const gradeMap = user?.gradeMap;

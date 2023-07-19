@@ -2,7 +2,7 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Button, Container, Heading, Img, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAuth } from "../src/lib/state/auth";
-import themeConstants from "../src/lib/theme/themeConstants";
+import themeConstants from "../src/lib/theme/theme";
 
 const MarketingHome = () => {
   const [loadingApp, setLoadingApp] = useState(false);

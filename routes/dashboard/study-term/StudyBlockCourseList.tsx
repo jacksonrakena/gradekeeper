@@ -46,9 +46,9 @@ const StudyBlockCourseList = (props: { studyBlock: ProcessedStudyBlock }) => {
         <Text>
           {dtf.format(sbStart)} &#8212; {dtf.format(sbEnd)}
         </Text>
-        {props.studyBlock.gpaEstimate?.letter !== "Unknown" && (
+        {!props.studyBlock.gpaEstimate?.value.isZero() && (
           <Text color={"GrayText"}>
-            GPA estimate: {props.studyBlock.gpaEstimate?.value.toString()} ({props.studyBlock.gpaEstimate?.letter}) &bull; American{" "}
+            GPA estimate: NZ {props.studyBlock.gpaEstimate?.value.toString()} ({props.studyBlock.gpaEstimate?.letter}) &bull; US{" "}
             {props.studyBlock.usGpaEstimate?.value.toString()} ({props.studyBlock.usGpaEstimate?.letter})
           </Text>
         )}

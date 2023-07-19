@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import jwtDecode from "jwt-decode";
+import { atom, AtomEffect, selector, useRecoilState, useRecoilValue } from "recoil";
 
 export interface UserCookie {
   exp: number;
@@ -7,24 +8,73 @@ export interface UserCookie {
   name: string;
   picture: string;
 }
+
 export interface AuthStateContext {
   cookie: UserCookie | null;
   loggedIn: boolean;
-  logOut: () => void;
   logIn: () => void;
 }
-const AuthContext = React.createContext<AuthStateContext>({
-  cookie: null,
-  loggedIn: false,
-  logOut: () => {},
-  logIn: () => {},
-});
-const AuthContextProvider = AuthContext.Provider;
 
-export default AuthContextProvider;
-
-export const useAuth = () => {
-  const authContext = useContext(AuthContext);
-
-  return authContext;
+const getCookie = (key: string) => {
+  var b = window.document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
+  return b ? b.pop() : "";
 };
+const resetCookie = (key: string) => {
+  window.document.cookie = `${key}=;expires=Thu, 01-Jan-1970 00:00:01 GMT;`;
+};
+export const readCookie: (key: string) => AtomEffect<UserCookie | null> =
+  (key: any) =>
+  ({ setSelf, onSet }) => {
+    const str = getCookie(key);
+    if (!str) {
+      setSelf(null);
+      return;
+    } else {
+      let decodedCookie: UserCookie = jwtDecode(str);
+      if (decodedCookie && decodedCookie.exp && decodedCookie.exp > Date.now() / 1000) {
+        setSelf(decodedCookie);
+      } else {
+        resetCookie(key);
+        setSelf(null);
+      }
+    }
+
+    onSet((newValue, _, isReset) => {
+      resetCookie(key);
+    });
+  };
+
+export const CookieState = atom<UserCookie | null>({
+  key: "CookieState",
+  default: null,
+  effects: [readCookie("GK_COOKIE")],
+});
+
+export const useAuth = () => useRecoilValue(AuthState);
+export const useLogout = () => {
+  const cookie = useRecoilState(CookieState);
+  return () => cookie[1](null);
+};
+export const AuthState = selector<AuthStateContext>({
+  key: "AuthState",
+  get: ({ get }) => {
+    const cookie = get(CookieState);
+    if (!cookie)
+      return {
+        cookie: null,
+        loggedIn: false,
+        logIn: () => {
+          console.log("Logging in...");
+          window.location.href = "/api/auth/login";
+        },
+      };
+    return {
+      cookie: cookie,
+      loggedIn: true,
+      logIn: () => {
+        console.log("Logging in...");
+        window.location.href = "/api/auth/login";
+      },
+    };
+  },
+});
