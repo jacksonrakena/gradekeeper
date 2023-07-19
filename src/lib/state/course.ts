@@ -1,5 +1,6 @@
 import { atom, selector, useRecoilState } from "recoil";
-import { beginProcessing, ProcessedUser } from "../logic/processing";
+import { ProcessedUser } from "../logic/processing";
+import { processUser } from "../logic/processing/index";
 import { StudyBlock, Subject, SubjectComponent, SubjectSubcomponent, User } from "../logic/types";
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -134,7 +135,7 @@ export const ProcessedUserState = selector<ProcessedUser | null>({
   get: ({ get }) => {
     const userState = get(UserState);
     if (!userState) return null;
-    const processedData = beginProcessing(userState);
+    const processedData = processUser(userState);
     console.log("Processed data: ", processedData);
     return processedData;
   },

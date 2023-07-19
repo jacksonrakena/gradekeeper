@@ -3,13 +3,13 @@ import { Box, Flex, SkeletonText, Td, Text, Tooltip, Tr } from "@chakra-ui/react
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { GkEditable } from "../../../../../src/components/generic/GkEditable";
-import { calculateLetterGrade, ProcessedCourseInfo } from "../../../../../src/lib/logic/processing";
+import { ProcessedCourse, calculateLetterGrade } from "../../../../../src/lib/logic/processing";
 import { SubjectComponent } from "../../../../../src/lib/logic/types";
 import { ProcessedUserState, useInvalidator } from "../../../../../src/lib/state/course";
 
 const ComponentRow = (props: {
   component: SubjectComponent;
-  subject: ProcessedCourseInfo;
+  subject: ProcessedCourse;
   componentGrade: { value: number; isUnknown: boolean; isAverage: boolean };
   onRequestModalOpen: () => void;
 }) => {

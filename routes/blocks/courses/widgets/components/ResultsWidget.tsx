@@ -1,11 +1,11 @@
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { useState } from "react";
-import { calculateProjectedGradeForComponent, ProcessedCourseInfo } from "../../../../../src/lib/logic/processing";
+import { ProcessedCourse } from "../../../../../src/lib/logic/processing";
 import { SubjectComponent } from "../../../../../src/lib/logic/types";
 import ComponentEditModal from "./ComponentEditModal";
 import ComponentRow from "./ComponentRow";
 
-export const ResultsWidget = (props: { course: ProcessedCourseInfo; contrastingColor: string }) => {
+export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor: string }) => {
   const [targetComponent, setTargetComponent] = useState<SubjectComponent | null>(null);
   return (
     <>
@@ -33,7 +33,6 @@ export const ResultsWidget = (props: { course: ProcessedCourseInfo; contrastingC
             </Thead>
             <Tbody>
               {props.course.components?.map((e, i) => {
-                const grade = calculateProjectedGradeForComponent(e);
                 return (
                   <ComponentRow
                     onRequestModalOpen={() => {
@@ -42,7 +41,7 @@ export const ResultsWidget = (props: { course: ProcessedCourseInfo; contrastingC
                     subject={props.course}
                     key={e.id}
                     component={e}
-                    componentGrade={grade}
+                    componentGrade={e.grades.projected}
                   />
                 );
               })}

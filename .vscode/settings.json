@@ -1,3 +1,5 @@
 {
-  "discord.enabled": false
+  "discord.enabled": false,
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

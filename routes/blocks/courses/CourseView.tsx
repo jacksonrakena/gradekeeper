@@ -189,7 +189,7 @@ const CourseView = () => {
                   <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
                     <StatLabel fontSize="lg">Projected grade</StatLabel>
                     <StatNumber>{course.grades.projected?.letter}</StatNumber>
-                    <StatHelpText>{(course.grades.projected?.numerical ?? new Decimal(0)).mul(100).toPrecision(4)}%</StatHelpText>
+                    <StatHelpText>{(course.grades.projected?.value ?? new Decimal(0)).mul(100).toPrecision(4)}%</StatHelpText>
                   </Stat>
                   <div className="py-3 flex grow mb-6">
                     <div style={{ position: "relative", backgroundColor: "#D9D9D9", height: "30px" }} className="rounded flex grow">
@@ -201,7 +201,7 @@ const CourseView = () => {
                             course?.color ?? "",
                             -20
                           )} 10px, ${adjust(course?.color ?? "", -40)} 10px, ${adjust(course?.color ?? "", -40)} 20px)`,
-                          width: course.grades.actual?.numerical.mul(100) + "%",
+                          width: course.grades.actual?.value.mul(100) + "%",
                         }}
                         className="rounded"
                       >
@@ -213,7 +213,7 @@ const CourseView = () => {
                           height: "30px",
                           background: `repeating-linear-gradient(45deg,grey, grey 10px, white 10px, white 20px)`,
                           right: "0px",
-                          width: new Decimal(100).minus(course.grades.maximumPossible?.numerical.mul(100)).toString() + "%",
+                          width: new Decimal(100).minus(course.grades.maximum?.value.mul(100)).toString() + "%",
                         }}
                         className="rounded"
                       >
@@ -222,7 +222,7 @@ const CourseView = () => {
                       <div
                         style={{
                           backgroundColor: course?.color ?? "",
-                          width: "" + course.grades.projected?.numerical.mul(100) + "%",
+                          width: "" + course.grades.projected?.value.mul(100) + "%",
                         }}
                         className="rounded"
                       >
@@ -245,7 +245,7 @@ const CourseView = () => {
                         ))}
                       <ProgressBarCaption
                         color={adjust(course?.color ?? "", -40)}
-                        atProgressPercentage={course.grades.actual?.numerical.mul(100)}
+                        atProgressPercentage={course.grades.actual?.value.mul(100)}
                         position="top"
                       >
                         <Tooltip
@@ -254,25 +254,21 @@ const CourseView = () => {
                             "Lowest possible grade: " +
                             course.grades.actual?.letter +
                             " (" +
-                            course.grades.actual?.numerical.mul(100).toPrecision(3) +
+                            course.grades.actual?.value.mul(100).toPrecision(3) +
                             "%)"
                           }
                         >
                           <InfoOutlineIcon w={4} h={4} />
                         </Tooltip>
                       </ProgressBarCaption>
-                      <ProgressBarCaption
-                        color={"grey"}
-                        atProgressPercentage={course.grades.maximumPossible?.numerical.mul(100)}
-                        position="top"
-                      >
+                      <ProgressBarCaption color={"grey"} atProgressPercentage={course.grades.maximum?.value.mul(100)} position="top">
                         <Tooltip
                           color={tooltipColor}
                           label={
                             "Maximum possible grade: " +
-                            course.grades.maximumPossible?.letter +
+                            course.grades.maximum?.letter +
                             " (" +
-                            course.grades.maximumPossible?.numerical.mul(100).toPrecision(3) +
+                            course.grades.maximum?.value.mul(100).toPrecision(3) +
                             "%)"
                           }
                         >

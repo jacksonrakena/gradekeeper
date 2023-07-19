@@ -1,14 +1,14 @@
 import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react";
-import { ProcessedCourseInfo } from "../../../../src/lib/logic/processing";
+import { ProcessedCourse } from "../../../../src/lib/logic/processing";
 import themeConstants from "../../../../src/lib/theme/themeConstants";
 
-const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
+const AveragesWidget = (props: { course: ProcessedCourse }) => {
   const actual = props.course.grades.actual;
   const unachievedGrades: number[] =
     props.course.status.gradeMap &&
     Object.keys(props.course.status.gradeMap)
       .map(Number.parseFloat)
-      .filter((d) => actual?.numerical < d && d <= 100);
+      .filter((d) => actual?.value < d && d <= 100);
 
   const remainingComponents = props.course?.status.componentsRemaining;
   const remainingPieces = remainingComponents
@@ -36,7 +36,7 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
             <Tbody>
               {unachievedGrades
                 ?.sort((a, b) => b - a)
-                .filter((e) => ((e - actual.numerical) / remainingPieces.reduce((a, b) => a + b)) * 100 <= 100)
+                .filter((e) => ((e - actual.value) / remainingPieces.reduce((a, b) => a + b)) * 100 <= 100)
                 .map((e) => (
                   <Tr key={e}>
                     <Td>
@@ -47,7 +47,7 @@ const AveragesWidget = (props: { course: ProcessedCourseInfo }) => {
                     <Td>
                       <Flex direction={"row"}>
                         <Text color={"brand"} fontWeight="semibold">
-                          {(((e - actual.numerical) / remainingPieces.reduce((a, b) => a + b)) * 100).toFixed(1)}
+                          {(((e - actual.value) / remainingPieces.reduce((a, b) => a + b)) * 100).toFixed(1)}
                         </Text>
                         %
                       </Flex>

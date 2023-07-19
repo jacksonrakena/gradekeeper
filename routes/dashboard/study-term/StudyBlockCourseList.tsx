@@ -49,8 +49,8 @@ const StudyBlockCourseList = (props: { studyBlock: ProcessedStudyBlock }) => {
         </Text>
         {props.studyBlock.gpaEstimate?.letter !== "Unknown" && (
           <Text color={"GrayText"}>
-            GPA estimate: {props.studyBlock.gpaEstimate?.numerical.toString()} ({props.studyBlock.gpaEstimate?.letter}) &bull; American{" "}
-            {props.studyBlock.usGpaEstimate?.numerical.toString()} ({props.studyBlock.usGpaEstimate?.letter})
+            GPA estimate: {props.studyBlock.gpaEstimate?.value.toString()} ({props.studyBlock.gpaEstimate?.letter}) &bull; American{" "}
+            {props.studyBlock.usGpaEstimate?.value.toString()} ({props.studyBlock.usGpaEstimate?.letter})
           </Text>
         )}
 
