@@ -33,9 +33,9 @@ import { adjust } from "../../../src/lib/logic/processing";
 import { ProcessedUserState, useInvalidator } from "../../../src/lib/state/course";
 import themeConstants from "../../../src/lib/theme/theme";
 import AveragesWidget from "./widgets/AveragesWidget";
-import { ResultsWidget } from "./widgets/components/ResultsWidget";
 import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
 import ProgressBarCaption from "./widgets/ProgressBarCaption";
+import { ResultsWidget } from "./widgets/components/ResultsWidget";
 
 const CourseView = () => {
   const user = useRecoilValue(ProcessedUserState);
@@ -80,7 +80,7 @@ const CourseView = () => {
                   });
                   if (d.ok) {
                     const newcourse = await d.json();
-                    updateCourse(newcourse.id, newcourse);
+                    updateCourse(newcourse.id, (e) => newcourse);
                     setSectionLoadingUpdate("");
                   } else {
                   }
