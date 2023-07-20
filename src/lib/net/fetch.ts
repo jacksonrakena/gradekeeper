@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 
-export const useFetcher = () => {
+export const useApi = () => {
   const toast = useToast();
   const fetcher = {
     request: async (route: string, info: RequestInit): Promise<Response | null> => {

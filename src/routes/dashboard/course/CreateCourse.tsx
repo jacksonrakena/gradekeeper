@@ -23,15 +23,13 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
-
 import { Decimal } from "decimal.js";
+import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
 import { useState } from "react";
 import { TwitterPicker } from "react-color";
 import { useNavigate } from "react-router";
-import { useRecoilValue } from "recoil";
-import { randomColor } from "../../../src/lib/logic/processing";
-import { ProcessedUserState, useInvalidator } from "../../../src/lib/state/course";
+import { randomColor } from "../../../lib/logic/processing";
+import { useInvalidator } from "../../../lib/state/course";
 import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
@@ -56,7 +54,6 @@ export const CreateCourse = (props: { block_id: string }) => {
     },
   ];
   const [components, setComponents] = useState(emptyComponents);
-  const user = useRecoilValue(ProcessedUserState);
   const tablecolor = useColorModeValue("bg-gray-50", "");
   const [tabIndex, setTabIndex] = useState(0);
   return (

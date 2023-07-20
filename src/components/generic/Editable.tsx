@@ -1,24 +1,13 @@
-import { Box, Spinner, TextProps } from "@chakra-ui/react";
-import React, { InputHTMLAttributes, PropsWithChildren, useState } from "react";
+import { Box, Spinner } from "@chakra-ui/react";
+import React, { useState } from "react";
 
-export interface GkEditableProps extends PropsWithChildren {
-  onSubmit?: (value?: string) => void;
-  value: string;
-  onBeginEdit?: (value: string) => void;
-  onChange?: (value: string) => void;
-  onCancelEdit?: (value: string) => void;
-  inputProps?: InputHTMLAttributes<HTMLInputElement>;
-  displayProps?: TextProps;
-  icon?: React.ReactNode;
-}
-
-export interface GkEditablePropsLoadable {
+export interface EditableProps {
   onSubmit?: (value?: string) => Promise<void>;
   initialValue: string;
   formatter?: (value?: string) => string;
 }
 
-export const GkEditableLoadable = React.forwardRef<HTMLDivElement, GkEditablePropsLoadable>((props, ref) => {
+export const Editable = React.forwardRef<HTMLDivElement, EditableProps>((props, ref) => {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(props.initialValue);
@@ -56,6 +45,7 @@ export const GkEditableLoadable = React.forwardRef<HTMLDivElement, GkEditablePro
       onClick={() => {
         setEditing(true);
       }}
+      ref={ref}
     >
       {(props.formatter ?? ((v) => v))(value)}
     </Box>

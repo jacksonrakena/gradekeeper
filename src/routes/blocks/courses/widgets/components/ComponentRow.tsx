@@ -2,11 +2,11 @@ import { EditIcon } from "@chakra-ui/icons";
 import { Box, Flex, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import Decimal from "decimal.js";
 import { useRecoilValue } from "recoil";
-import { GkEditableLoadable } from "../../../../../src/components/generic/GkEditable";
-import { calculateLetterGrade, ProcessedCourse, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
-import { SubjectComponent } from "../../../../../src/lib/logic/types";
-import { routes, useFetcher } from "../../../../../src/lib/net/fetch";
-import { ProcessedUserState, useInvalidator } from "../../../../../src/lib/state/course";
+import { Editable } from "../../../../../components/generic/Editable";
+import { calculateLetterGrade, ProcessedCourse, ProcessedCourseComponent } from "../../../../../lib/logic/processing";
+import { SubjectComponent } from "../../../../../lib/logic/types";
+import { routes, useApi } from "../../../../../lib/net/fetch";
+import { ProcessedUserState, useInvalidator } from "../../../../../lib/state/course";
 
 const ComponentRow = (props: { component: ProcessedCourseComponent; course: ProcessedCourse; onEditSubcomponents: () => void }) => {
   const user = useRecoilValue(ProcessedUserState);
@@ -14,12 +14,12 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
   const e = props.component;
   const subject = props.course;
   const grade = props.component.grades.projected;
-  const fetcher = useFetcher();
+  const fetcher = useApi();
   return (
     <Tr key={e.name}>
       <Td pl={0}>
         <Flex alignItems="center">
-          <GkEditableLoadable
+          <Editable
             onSubmit={async (newName) => {
               const data = await fetcher.post<SubjectComponent>(
                 routes.block(subject.studyBlockId).course(subject.id).component(e.id).update(),
@@ -37,7 +37,7 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
         </Flex>
       </Td>
       <Td pl={0} className="text-center">
-        <GkEditableLoadable
+        <Editable
           onSubmit={async (newWeighting) => {
             if (!newWeighting) return;
 
@@ -58,7 +58,7 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
       <Td pl={0} color={"brand"} className={grade.isAverage ? "flex flex-col text-center font-semibold" : "text-center font-semibold"}>
         {e.subcomponents?.length === 1 ? (
           <Tooltip label="Click to edit">
-            <GkEditableLoadable
+            <Editable
               onSubmit={async (e) => {
                 const data = await fetcher.post<SubjectComponent>(
                   routes.block(subject.studyBlockId).course(subject.id).component(props.component.id).update(),

@@ -1,17 +1,17 @@
+import { Chakra } from "@/lib/theme";
 import { SlideFade } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import Account from "../routes/account";
-import { App } from "../routes/app";
-import CourseView from "../routes/blocks/courses/CourseView";
-import Donations from "../routes/legal/donate";
-import CompletedDonation from "../routes/legal/donate/completed";
-import PrivacyPolicy from "../routes/legal/privacy";
 import { AuthState } from "./lib/state/auth";
 import { useInvalidator, UserState } from "./lib/state/course";
-import { Chakra } from "./lib/theme/Chakra";
+import Account from "./routes/account";
+import { App } from "./routes/app";
+import CourseView from "./routes/blocks/courses/CourseView";
+import Donations from "./routes/legal/donate";
+import CompletedDonation from "./routes/legal/donate/completed";
+import PrivacyPolicy from "./routes/legal/privacy";
 
 export const AppRoot = () => {
   const auth = useRecoilValue(AuthState);

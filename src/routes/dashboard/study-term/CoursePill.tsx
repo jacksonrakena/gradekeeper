@@ -1,8 +1,8 @@
 import { Box, BoxProps, Flex, Icon, Tag, Text, useColorModeValue } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { ProcessedCourse } from "../../../src/lib/logic/processing";
-import themeConstants from "../../../src/lib/theme/theme";
+import { ProcessedCourse } from "../../../lib/logic/processing";
+import themeConstants from "../../../lib/theme";
 
 export const Pill = (
   props: PropsWithChildren<{

@@ -1,8 +1,8 @@
 import { Box, Button, Divider, Spinner, Text, useDisclosure } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
-import Footer from "../src/components/app/Footer";
-import { TopBar } from "../src/components/app/nav/TopBar";
-import { ProcessedUserState } from "../src/lib/state/course";
+import Footer from "../components/app/Footer";
+import { TopBar } from "../components/app/nav/TopBar";
+import { ProcessedUserState } from "../lib/state/course";
 import CreateBlockModal from "./dashboard/CreateBlockModal";
 import { Introduction } from "./dashboard/new-user-experience/Introduction";
 import { StudyBlockCourseList } from "./dashboard/study-term/StudyBlockCourseList";

@@ -1,6 +1,6 @@
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { useState } from "react";
-import { ProcessedCourse, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
+import { ProcessedCourse, ProcessedCourseComponent } from "../../../../../lib/logic/processing";
 import ComponentRow from "./ComponentRow";
 import SubcomponentEditor from "./SubcomponentEditor";
 

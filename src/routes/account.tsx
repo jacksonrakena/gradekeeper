@@ -26,10 +26,10 @@ import {
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
-import { TopBar } from "../src/components/app/nav/TopBar";
-import { useAuth, useLogout } from "../src/lib/state/auth";
-import { ProcessedUserState, useInvalidator } from "../src/lib/state/course";
-import themeConstants from "../src/lib/theme/theme";
+import { TopBar } from "../components/app/nav/TopBar";
+import { useAuth, useLogout } from "../lib/state/auth";
+import { ProcessedUserState, useInvalidator } from "../lib/state/course";
+import themeConstants from "../lib/theme";
 
 const predefinedGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-"];
 const presets = {

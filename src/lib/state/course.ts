@@ -2,13 +2,13 @@ import { atom, selector, useRecoilState } from "recoil";
 import { ProcessedUser } from "../logic/processing";
 import { processUser } from "../logic/processing/index";
 import { StudyBlock, Subject, SubjectComponent, SubjectSubcomponent, User } from "../logic/types";
-import { routes, useFetcher } from "../net/fetch";
+import { routes, useApi } from "../net/fetch";
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export const useInvalidator = () => {
   const [user, setUser] = useRecoilState(UserState);
-  const fetcher = useFetcher();
+  const fetcher = useApi();
   const invalidate = async () => {
     let data = await fetcher.json<User>(routes.getMe());
     console.log("[invalidator] " + (!!user ? "New" : "Initial") + " user download: ", data);

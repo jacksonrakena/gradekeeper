@@ -1,4 +1,4 @@
-import { useAuth } from "../src/lib/state/auth";
+import { useAuth } from "../lib/state/auth";
 import Dashboard from "./dashboard";
 import MarketingHome from "./MarketingHome";
 

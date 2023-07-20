@@ -11,14 +11,14 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { ProcessedCourse } from "../../../src/lib/logic/processing";
-import { routes, useFetcher } from "../../../src/lib/net/fetch";
-import { useInvalidator } from "../../../src/lib/state/course";
+import { ProcessedCourse } from "../../../lib/logic/processing";
+import { routes, useApi } from "../../../lib/net/fetch";
+import { useInvalidator } from "../../../lib/state/course";
 
 export const DeleteCourseDialog = (props: { disclosure: UseDisclosureReturn; course: ProcessedCourse }) => {
   const cancellationRef = useRef<any>();
   const [deleting, setDeleting] = useState(false);
-  const fetcher = useFetcher();
+  const fetcher = useApi();
   const toast = useToast();
   const navigate = useNavigate();
   const { updateCourse } = useInvalidator();

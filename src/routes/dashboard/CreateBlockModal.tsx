@@ -8,17 +8,19 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Select,
   Spacer,
   Text,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useState } from "react";
-
-import { templates } from "../../src/lib/data/block-templates";
-
-import { Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
-import { useInvalidator } from "../../src/lib/state/course";
+import { templates } from "../../lib/data/block-templates";
+import { useInvalidator } from "../../lib/state/course";
 
 const CreateBlockModal = (props: { isOpen: boolean; onClose: () => void }) => {
   return (

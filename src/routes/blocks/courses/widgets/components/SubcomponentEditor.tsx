@@ -1,13 +1,13 @@
+import { calculateLetterGrade, GradeMap, isActiveSubcomponent, ProcessedCourseComponent } from "@/lib/logic/processing";
+import { SubjectComponent } from "@/lib/logic/types";
+import { routes, useApi } from "@/lib/net/fetch";
+import { useInvalidator } from "@/lib/state/course";
 import { Button } from "@chakra-ui/button";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/modal";
 import { Box, Input, Text } from "@chakra-ui/react";
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import Decimal from "decimal.js";
 import { useState } from "react";
-import { calculateLetterGrade, GradeMap, isActiveSubcomponent, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
-import { SubjectComponent } from "../../../../../src/lib/logic/types";
-import { routes, useFetcher } from "../../../../../src/lib/net/fetch";
-import { useInvalidator } from "../../../../../src/lib/state/course";
 
 const SubcomponentEditor = (props: {
   gradeMap: GradeMap;
@@ -20,7 +20,7 @@ const SubcomponentEditor = (props: {
   const { updateComponent } = useInvalidator();
   const [subcomponents, setSubcomponents] = useState(props.component.subcomponents);
   const [loading, setLoading] = useState(false);
-  const fetcher = useFetcher();
+  const fetcher = useApi();
 
   return (
     <Modal isOpen={props.showing} onClose={props.onClose} size={"xl"}>

@@ -18,16 +18,16 @@ import Decimal from "decimal.js";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useRecoilValue } from "recoil";
-import Footer from "../../../src/components/app/Footer";
-import CourseSwitcher from "../../../src/components/app/nav/CourseSwitcher";
-import { TopBar } from "../../../src/components/app/nav/TopBar";
-import { GkEditableLoadable } from "../../../src/components/generic/GkEditable";
-import { adjust, ProcessedCourse, ProcessedStudyBlock, ProcessedUser } from "../../../src/lib/logic/processing";
-import { Subject } from "../../../src/lib/logic/types";
-import { useFetcher } from "../../../src/lib/net/fetch";
-import { CookieState } from "../../../src/lib/state/auth";
-import { ProcessedUserState, useInvalidator } from "../../../src/lib/state/course";
-import themeConstants from "../../../src/lib/theme/theme";
+import Footer from "../../../components/app/Footer";
+import CourseSwitcher from "../../../components/app/nav/CourseSwitcher";
+import { TopBar } from "../../../components/app/nav/TopBar";
+import { Editable } from "../../../components/generic/Editable";
+import { adjust, ProcessedCourse, ProcessedStudyBlock, ProcessedUser } from "../../../lib/logic/processing";
+import { Subject } from "../../../lib/logic/types";
+import { useApi } from "../../../lib/net/fetch";
+import { CookieState } from "../../../lib/state/auth";
+import { ProcessedUserState, useInvalidator } from "../../../lib/state/course";
+import themeConstants from "../../../lib/theme";
 import { DeleteCourseDialog } from "./DeleteCourseDialog";
 import AveragesWidget from "./widgets/AveragesWidget";
 import { ResultsWidget } from "./widgets/components/ResultsWidget";
@@ -63,7 +63,7 @@ const CourseViewInner = ({
   studyBlock: ProcessedStudyBlock;
 }) => {
   const gradeMap = user?.gradeMap;
-  const fetcher = useFetcher();
+  const fetcher = useApi();
 
   const cb = useClipboard(course.id || "");
   const captionColor = useColorModeValue("gray.700", "gray.200");
@@ -83,7 +83,7 @@ const CourseViewInner = ({
               <Text display="inline">{course?.courseCodeName}</Text> {course?.courseCodeNumber}
             </Box>
 
-            <GkEditableLoadable
+            <Editable
               onSubmit={async (n) => {
                 const data = await fetcher.post<Subject>(`/api/block/${studyBlock.id}/course/${course.id}`, { longName: n });
                 if (data) {

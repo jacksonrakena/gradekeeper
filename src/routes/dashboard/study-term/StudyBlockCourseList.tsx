@@ -3,8 +3,8 @@ import { Box, Flex, Heading, IconButton, Text, useDisclosure } from "@chakra-ui/
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
-import { ProcessedStudyBlock } from "../../../src/lib/logic/processing";
-import { ProcessedUserState } from "../../../src/lib/state/course";
+import { ProcessedStudyBlock } from "../../../lib/logic/processing";
+import { ProcessedUserState } from "../../../lib/state/course";
 import CoursePill, { Pill } from "./CoursePill";
 import CreateCourseModal from "./CreateCourseModal";
 import { DeleteStudyBlockAlert } from "./DeleteStudyBlockAlert";

@@ -9,8 +9,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { ProcessedStudyBlock } from "../../../src/lib/logic/processing";
-import { useInvalidator } from "../../../src/lib/state/course";
+import { ProcessedStudyBlock } from "../../../lib/logic/processing";
+import { useInvalidator } from "../../../lib/state/course";
 
 export const DeleteStudyBlockAlert = (props: {
   isDeleteOpen: boolean;

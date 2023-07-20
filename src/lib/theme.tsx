@@ -1,12 +1,17 @@
-import { extendTheme, ThemeConfig } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
+import { useRecoilValue } from "recoil";
+import { ThemeState } from "./state/theme";
 
 const config: ThemeConfig = {
   initialColorMode: "system",
   useSystemColorMode: true,
 };
-{
-}
+export const Chakra: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const theme = useRecoilValue(ThemeState);
+  return <ChakraProvider theme={theme}>{children}</ChakraProvider>;
+};
+
 const regular = (
   theme: any,
   opts: any = {
@@ -78,33 +83,6 @@ export const defaultThemes = {
     "800": "#674113",
     "900": "#553610",
   }),
-  // IanPad: extendTheme({
-  //   config,
-  //   styles: {
-  //     // @ts-ignore
-  //     global: (props) => ({
-  //       "html, body": {
-  //         //#fafafa
-  //         //old:"#f7f3f7"
-  //         background: "#B9F6CA",
-  //       },
-  //     }),
-  //   },
-  //   colors: {
-  //     brand: {
-  //       "50": "#e9fcee",
-  //       "100": "#b3eec3",
-  //       "200": "#9ed2ac",
-  //       "300": "#84b090",
-  //       "400": "#769d81",
-  //       "500": "#64856d",
-  //       "600": "#54705c",
-  //       "700": "#435a4a",
-  //       "800": "#394c3e",
-  //       "900": "#29372d",
-  //     },
-  //   },
-  // }),
   Red: regular({
     "50": "#fdf6f5",
     "100": "#f8d9d7",

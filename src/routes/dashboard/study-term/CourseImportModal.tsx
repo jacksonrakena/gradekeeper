@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { useInvalidator } from "../../../src/lib/state/course";
+import { useInvalidator } from "../../../lib/state/course";
 
 export const CourseImportModal = (props: { blockId: string; onClose: () => void }) => {
   const [shareCode, setShareCode] = useState("");

@@ -22,7 +22,7 @@ import { useNavigate } from "react-router";
 import { useRecoilState } from "recoil";
 import { useAuth, useLogout } from "../../../lib/state/auth";
 import { ThemeNameState } from "../../../lib/state/theme";
-import { defaultThemes } from "../../../lib/theme/theme";
+import { defaultThemes } from "../../../lib/theme";
 
 const AccountButton = () => {
   const auth = useAuth();
