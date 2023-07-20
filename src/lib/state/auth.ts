@@ -9,6 +9,8 @@ export interface UserCookie {
   picture: string;
 }
 
+export type AuthorizationState = "not_logged_in" | "logged_in";
+
 export interface AuthStateContext {
   cookie: UserCookie | null;
   loggedIn: boolean;

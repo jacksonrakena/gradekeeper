@@ -54,10 +54,20 @@ export const UnknownCourseGrade: CourseGrade = { value: new Decimal(0), letter: 
 export const UnknownGrade: ComponentGrade = { ...UnknownCourseGrade, isAverage: false };
 
 export function processUser(data: User): ProcessedUser {
-  return {
+  const start = Date.now();
+  const u = {
     ...data,
     studyBlocks: data.studyBlocks.map((b) => processStudyBlock(parseStudyBlock(b), data.gradeMap)),
   };
+  const end = Date.now();
+  const courses = u.studyBlocks.map((e) => e.courses).flat();
+  const components = courses.map((e) => e.components).flat();
+  const subcomponents = components.map((e) => e.subcomponents).flat();
+  console.log(
+    `Processed ${courses.length} courses, ${components.length} components, and ${subcomponents.length} subcomponents in ${end - start}ms`,
+    u
+  );
+  return u;
 }
 
 export function processStudyBlock(rawStudyBlock: ParsedStudyBlock, gradeMap: GradeMap): ProcessedStudyBlock {

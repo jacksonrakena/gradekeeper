@@ -11,10 +11,6 @@ export const useInvalidator = () => {
   const fetcher = useFetcher();
   const invalidate = async () => {
     let data = await fetcher.json<User>(routes.getMe());
-    while (!data) {
-      await wait(1000);
-      data = await fetcher.json<User>(routes.getMe());
-    }
     console.log("[invalidator] " + (!!user ? "New" : "Initial") + " user download: ", data);
     setUser(data);
   };
@@ -97,7 +93,6 @@ export const ProcessedUserState = selector<ProcessedUser | null>({
     const userState = get(UserState);
     if (!userState) return null;
     const processedData = processUser(userState);
-    console.log("Processed data: ", processedData);
     return processedData;
   },
 });

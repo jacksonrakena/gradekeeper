@@ -27,25 +27,25 @@ const SubcomponentEditor = (props: {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {props.component?.name} ({props.component.subjectWeighting.mul(100).toString()}%)
+          {props.component.name} ({props.component.subjectWeighting.mul(100).toString()}%)
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Box className="mb-4">
             Each individual piece is worth{" "}
             {props.component.subjectWeighting
-              .div(props.component.subcomponents.length - props.component?.numberOfSubComponentsToDrop_Lowest)
+              .div(props.component.subcomponents.length - props.component.numberOfSubComponentsToDrop_Lowest)
               .mul(100)
               .toPrecision(2)}
             %. <br />
-            {props.component?.numberOfSubComponentsToDrop_Lowest!! > 0 ? (
-              <>The lowest {props.component?.numberOfSubComponentsToDrop_Lowest ?? ""} are being dropped.</>
+            {props.component.numberOfSubComponentsToDrop_Lowest > 0 ? (
+              <>The lowest {props.component.numberOfSubComponentsToDrop_Lowest ?? ""} are being dropped.</>
             ) : (
               <></>
             )}
           </Box>
           <TableContainer>
-            <Table variant="simple" size="sm">
+            <Table variant="simple">
               <Thead>
                 <Tr>
                   <Th>#</Th>
@@ -55,8 +55,8 @@ const SubcomponentEditor = (props: {
               </Thead>
               <Tbody>
                 {subcomponents
-                  ?.map((e) => e)
-                  .sort((d, b) => (d.numberInSequence ?? 0) - (b.numberInSequence ?? 0))
+                  .map((e) => e)
+                  .sort((d, b) => d.numberInSequence - b.numberInSequence)
                   .map((e, i) => {
                     return (
                       <Tr key={e.id}>
@@ -67,7 +67,8 @@ const SubcomponentEditor = (props: {
                           <Input
                             type="number"
                             id="courseCodeName"
-                            size={"sm"}
+                            htmlSize={2}
+                            width={"auto"}
                             defaultValue={e.isCompleted ? e.gradeValuePercentage.mul(100).toString() : ""}
                             onChange={(newGradeResult) => {
                               if (!newGradeResult.target.value) {

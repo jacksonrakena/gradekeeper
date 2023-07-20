@@ -45,7 +45,7 @@ export const GkEditableLoadable = React.forwardRef<HTMLDivElement, GkEditablePro
           setValue(props.initialValue);
         }}
       >
-        <input type={"text"} value={value} onChange={(e) => setValue(e.target.value)} autoFocus />
+        <input size={value.length} type={"text"} value={value} onChange={(e) => setValue(e.target.value)} autoFocus />
       </form>
     );
   }
