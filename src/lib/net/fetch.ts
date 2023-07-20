@@ -47,7 +47,11 @@ export const useFetcher = () => {
       }
     },
     post: async <T>(route: string, body: any): Promise<T | null> => {
-      const response = await fetcher.request(route, { method: "POST", body: JSON.stringify(body) });
+      const response = await fetcher.request(route, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" },
+      });
       if (!response) return null;
       try {
         return await response?.json();

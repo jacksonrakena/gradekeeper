@@ -1,15 +1,9 @@
 import { DeleteIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Box,
   Button,
+  Flex,
   IconButton,
-  Spinner,
   Stat,
   StatHelpText,
   StatLabel,
@@ -19,99 +13,94 @@ import {
   useClipboard,
   useColorModeValue,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import Decimal from "decimal.js";
-import { useRef, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useRecoilValue } from "recoil";
 import Footer from "../../../src/components/app/Footer";
 import CourseSwitcher from "../../../src/components/app/nav/CourseSwitcher";
 import { TopBar } from "../../../src/components/app/nav/TopBar";
-import { GkEditable } from "../../../src/components/generic/GkEditable";
-import { adjust } from "../../../src/lib/logic/processing";
+import { GkEditableLoadable } from "../../../src/components/generic/GkEditable";
+import { adjust, ProcessedCourse, ProcessedStudyBlock, ProcessedUser } from "../../../src/lib/logic/processing";
+import { Subject } from "../../../src/lib/logic/types";
+import { useFetcher } from "../../../src/lib/net/fetch";
+import { CookieState } from "../../../src/lib/state/auth";
 import { ProcessedUserState, useInvalidator } from "../../../src/lib/state/course";
 import themeConstants from "../../../src/lib/theme/theme";
+import { DeleteCourseDialog } from "./DeleteCourseDialog";
 import AveragesWidget from "./widgets/AveragesWidget";
+import { ResultsWidget } from "./widgets/components/ResultsWidget";
 import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
 import ProgressBarCaption from "./widgets/ProgressBarCaption";
-import { ResultsWidget } from "./widgets/components/ResultsWidget";
 
 const CourseView = () => {
+  const cookie = useRecoilValue(CookieState);
+  const navigate = useNavigate();
   const user = useRecoilValue(ProcessedUserState);
   const { course_id, block_id } = useParams();
-  const { updateCourse } = useInvalidator();
-  const studyBlock = user?.studyBlocks.find((e) => e.id == block_id)!;
-  const course = studyBlock?.courses.find((a) => a.id == course_id)!;
-  const gradeMap = user?.gradeMap;
-  const navigate = useNavigate();
+  const studyBlock = user?.studyBlocks.find((e) => e.id === block_id);
+  const course = studyBlock?.courses.find((a) => a.id === course_id);
 
-  const cb = useClipboard(course_id || "");
-  const [deleting, isDeleting] = useState(false);
-  const captionColor = useColorModeValue("gray.700", "gray.200");
-  const disc = useDisclosure();
-  const cancelref = useRef<any>();
-  const toast = useToast();
-  const [name, setName] = useState(course?.longName);
-  const contrastingColor = useColorModeValue("white", themeConstants.darkModeContrastingColor);
-  const [sectionLoadingUpdate, setSectionLoadingUpdate] = useState("");
-  const tooltipColor = useColorModeValue("white", "black");
+  useEffect(() => {
+    if (!cookie) navigate("/");
+    if (user && !studyBlock) navigate("/");
+  }, [cookie, navigate, user, studyBlock]);
+
   if (!user) return <div>Loading</div>;
-  if (!block_id || !course_id) return <div>Invalid state</div>;
+  if (!course || !studyBlock) return <div>Loading</div>;
+
+  return <CourseViewInner user={user} course={course} studyBlock={studyBlock} />;
+};
+
+const CourseViewInner = ({
+  user,
+  course,
+  studyBlock,
+}: {
+  user: ProcessedUser;
+  course: ProcessedCourse;
+  studyBlock: ProcessedStudyBlock;
+}) => {
+  const gradeMap = user?.gradeMap;
+  const fetcher = useFetcher();
+
+  const cb = useClipboard(course.id || "");
+  const captionColor = useColorModeValue("gray.700", "gray.200");
+  const deletionDisclosure = useDisclosure();
+
+  const contrastingColor = useColorModeValue("white", themeConstants.darkModeContrastingColor);
+  const tooltipColor = useColorModeValue("white", "black");
+  const { updateCourse } = useInvalidator();
   return (
     <div>
+      <DeleteCourseDialog course={course} disclosure={deletionDisclosure} />
       <TopBar leftWidget={<CourseSwitcher currentCourse={course} currentStudyBlock={studyBlock} />} />
       <>
         <Box bgColor={course?.color} className="p-8">
-          <Box className="text-3xl">
-            <span className="mr-4">
+          <Flex className="text-3xl">
+            <Box display="inline" className="mr-4">
               <Text display="inline">{course?.courseCodeName}</Text> {course?.courseCodeNumber}
-            </span>
-            {sectionLoadingUpdate !== "longName" ? (
-              <GkEditable
-                onSubmit={async (v) => {
-                  setSectionLoadingUpdate("longName");
-                  const d = await fetch(`/api/block/${block_id.toString()}/course/${course?.id}`, {
-                    body: JSON.stringify({ longName: v }),
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    method: "POST",
-                  });
-                  if (d.ok) {
-                    const newcourse = await d.json();
-                    updateCourse(newcourse.id, (e) => newcourse);
-                    setSectionLoadingUpdate("");
-                  } else {
-                  }
-                }}
-                inputProps={{ size: course?.longName.length, style: { display: "inline", color: "black" } }}
-                displayProps={{ style: { display: "inline", fontWeight: "bold" } }}
-                value={name}
-                onChange={(e) => setName(e)}
-              />
-            ) : (
-              <>
-                <Spinner />
-              </>
-            )}
-          </Box>
+            </Box>
+
+            <GkEditableLoadable
+              onSubmit={async (n) => {
+                const data = await fetcher.post<Subject>(`/api/block/${studyBlock.id}/course/${course.id}`, { longName: n });
+                if (data) {
+                  updateCourse(data.id, (e) => data);
+                }
+              }}
+              initialValue={course.longName}
+            />
+          </Flex>
           <Box className="text-xl" style={{ color: "#DDDDDD" }}>
             <Box className="mr-4">
-              <Box
-                display="inline"
-                color="brand.900"
-                style={
-                  {
-                    /*color: pickTextColorBasedOnBgColorAdvanced(course?.color, "white", "black")*/
-                  }
-                }
-              >
+              <Box display="inline" color="brand.900">
                 <span>{studyBlock?.name}</span>
               </Box>
               <IconButton
                 onClick={() => {
-                  disc.onOpen();
+                  deletionDisclosure.onOpen();
                 }}
                 className="ml-4"
                 icon={<DeleteIcon />}
@@ -123,46 +112,6 @@ const CourseView = () => {
                 {cb.hasCopied ? "Copied" : "Copy share code"}
               </Button>
             </Box>
-            <AlertDialog isOpen={disc.isOpen} leastDestructiveRef={cancelref} onClose={disc.onClose}>
-              <AlertDialogOverlay>
-                <AlertDialogContent>
-                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                    Delete course &lsquo;{course?.longName}&rsquo;
-                  </AlertDialogHeader>
-                  <AlertDialogBody>
-                    Are you <strong>sure</strong> you want to delete {course?.longName}? <br />
-                    This will delete <strong>all</strong> results.
-                  </AlertDialogBody>
-                  <AlertDialogFooter>
-                    <Button ref={cancelref} onClick={disc.onClose}>
-                      Cancel
-                    </Button>
-                    <Button
-                      colorScheme="red"
-                      onClick={() => {
-                        isDeleting(true);
-                        fetch(`/api/block/${course?.studyBlockId}/course/${course?.id}`, { method: "DELETE" }).then(() => {
-                          isDeleting(false);
-                          toast({
-                            title: "Course deleted.",
-                            description: course?.courseCodeName + " " + course?.courseCodeNumber + " deleted.",
-                            duration: 4000,
-                            isClosable: true,
-                            status: "success",
-                          });
-                          navigate("/");
-                          updateCourse(course?.id, null);
-                        });
-                      }}
-                      isLoading={deleting}
-                      ml={3}
-                    >
-                      Delete
-                    </Button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialogOverlay>
-            </AlertDialog>
           </Box>
         </Box>
 

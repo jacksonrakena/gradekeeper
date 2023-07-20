@@ -5,9 +5,11 @@ import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/tabl
 import Decimal from "decimal.js";
 import { useState } from "react";
 import { calculateLetterGrade, GradeMap, isActiveSubcomponent, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
+import { SubjectComponent } from "../../../../../src/lib/logic/types";
+import { routes, useFetcher } from "../../../../../src/lib/net/fetch";
 import { useInvalidator } from "../../../../../src/lib/state/course";
 
-const ComponentEditModal = (props: {
+const SubcomponentEditor = (props: {
   gradeMap: GradeMap;
   showing: boolean;
   component: ProcessedCourseComponent;
@@ -18,33 +20,30 @@ const ComponentEditModal = (props: {
   const { updateComponent } = useInvalidator();
   const [subcomponents, setSubcomponents] = useState(props.component.subcomponents);
   const [loading, setLoading] = useState(false);
-
-  const isSingular = props.component?.subcomponents.length === 1;
+  const fetcher = useFetcher();
 
   return (
     <Modal isOpen={props.showing} onClose={props.onClose} size={"xl"}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Updating results for {props.component?.name}</ModalHeader>
+        <ModalHeader>
+          {props.component?.name} ({props.component.subjectWeighting.mul(100).toString()}%)
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {!isSingular && (
-            <Box className="mb-4">
-              Total weight for {props.component.name} is {props.component.subjectWeighting.mul(100).toString()}%.
-              <br />
-              Each {props.component?.nameOfSubcomponentSingular.toLowerCase()} is worth{" "}
-              {props.component.subjectWeighting
-                .div(props.component.subcomponents.length - props.component?.numberOfSubComponentsToDrop_Lowest)
-                .mul(100)
-                .toPrecision(2)}
-              %. <br />
-              {props.component?.numberOfSubComponentsToDrop_Lowest!! > 0 ? (
-                <>The lowest {props.component?.numberOfSubComponentsToDrop_Lowest ?? ""} are being dropped.</>
-              ) : (
-                <></>
-              )}
-            </Box>
-          )}
+          <Box className="mb-4">
+            Each individual piece is worth{" "}
+            {props.component.subjectWeighting
+              .div(props.component.subcomponents.length - props.component?.numberOfSubComponentsToDrop_Lowest)
+              .mul(100)
+              .toPrecision(2)}
+            %. <br />
+            {props.component?.numberOfSubComponentsToDrop_Lowest!! > 0 ? (
+              <>The lowest {props.component?.numberOfSubComponentsToDrop_Lowest ?? ""} are being dropped.</>
+            ) : (
+              <></>
+            )}
+          </Box>
           <TableContainer>
             <Table variant="simple" size="sm">
               <Thead>
@@ -132,18 +131,17 @@ const ComponentEditModal = (props: {
             colorScheme="brand"
             onClick={async () => {
               setLoading(true);
-              const updatedComponent = await (
-                await fetch(`/api/block/${props.blockId}/course/${props.courseId}/component/${props.component?.id}`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    ...props.component,
-                    subcomponents: subcomponents,
-                  }),
-                })
-              ).json();
-              props.onClose();
-              updateComponent(props.courseId, props.component.id, () => updatedComponent);
+              const updated = await fetcher.post<SubjectComponent>(
+                routes.block(props.blockId).course(props.courseId).component(props.component.id).update(),
+                {
+                  ...props.component,
+                  subcomponents: subcomponents,
+                }
+              );
+              if (updated) {
+                updateComponent(props.courseId, props.component.id, () => updated);
+                props.onClose();
+              }
             }}
           >
             Save
@@ -154,4 +152,4 @@ const ComponentEditModal = (props: {
   );
 };
 
-export default ComponentEditModal;
+export default SubcomponentEditor;

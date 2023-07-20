@@ -1,20 +1,20 @@
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { useState } from "react";
 import { ProcessedCourse, ProcessedCourseComponent } from "../../../../../src/lib/logic/processing";
-import ComponentEditModal from "./ComponentEditModal";
 import ComponentRow from "./ComponentRow";
+import SubcomponentEditor from "./SubcomponentEditor";
 
 export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor: string }) => {
   const [targetComponent, setTargetComponent] = useState<ProcessedCourseComponent | null>(null);
   return (
     <>
       {targetComponent && (
-        <ComponentEditModal
+        <SubcomponentEditor
           gradeMap={props.course.status.gradeMap}
           onClose={() => {
             setTargetComponent(null);
           }}
-          showing={targetComponent !== null}
+          showing={!!targetComponent}
           component={targetComponent}
           blockId={props.course.studyBlockId}
           courseId={props.course.id}
@@ -33,9 +33,9 @@ export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor
               </Tr>
             </Thead>
             <Tbody>
-              {props.course.components?.map((e, i) => (
+              {props.course.components.map((e, i) => (
                 <ComponentRow
-                  onRequestModalOpen={() => {
+                  onEditSubcomponents={() => {
                     setTargetComponent(e);
                   }}
                   course={props.course}

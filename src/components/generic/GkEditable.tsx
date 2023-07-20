@@ -1,4 +1,4 @@
-import { Box, Flex, TextProps } from "@chakra-ui/react";
+import { Box, Spinner, TextProps } from "@chakra-ui/react";
 import React, { InputHTMLAttributes, PropsWithChildren, useState } from "react";
 
 export interface GkEditableProps extends PropsWithChildren {
@@ -12,52 +12,52 @@ export interface GkEditableProps extends PropsWithChildren {
   icon?: React.ReactNode;
 }
 
-export const GkEditable = React.forwardRef<HTMLDivElement, GkEditableProps>((props: GkEditableProps, ref) => {
+export interface GkEditablePropsLoadable {
+  onSubmit?: (value?: string) => Promise<void>;
+  initialValue: string;
+  formatter?: (value?: string) => string;
+}
+
+export const GkEditableLoadable = React.forwardRef<HTMLDivElement, GkEditablePropsLoadable>((props, ref) => {
+  const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(props.initialValue);
+  if (loading) {
+    return <Spinner />;
+  }
   if (editing) {
     return (
-      // @ts-ignore
       <form
-        {...props.inputProps}
+        style={{ display: "inline" }}
         onSubmit={(e) => {
           e.preventDefault();
           setEditing(false);
-          if (props.onSubmit) props.onSubmit(props.value);
+          setLoading(true);
+          (async () => {
+            if (props.onSubmit) {
+              await props.onSubmit(value);
+              setLoading(false);
+            }
+          })();
         }}
-        onBlur={(e) => {
+        onBlur={() => {
           setEditing(false);
-          if (props.onCancelEdit) props.onCancelEdit(props.value);
+          setValue(props.initialValue);
         }}
       >
-        <input
-          {...props.inputProps}
-          onChange={(e) => {
-            if (props.onChange) props.onChange(e.target.value);
-          }}
-          autoFocus
-          style={{ display: "inline", whiteSpace: "nowrap" }}
-          type={"text"}
-          value={props.value}
-        />
+        <input type={"text"} value={value} onChange={(e) => setValue(e.target.value)} autoFocus />
       </form>
     );
   }
   return (
-    <Flex alignItems={"center"} {...props.displayProps}>
-      <Box
-        cursor={"pointer"}
-        onClick={() => {
-          setEditing(true);
-          if (props.onBeginEdit) props.onBeginEdit(props.value);
-        }}
-        {...props.displayProps}
-      >
-        <Flex {...props.displayProps} alignItems={"center"} ref={ref}>
-          {props.icon}
-          {props.value}
-        </Flex>
-      </Box>
-    </Flex>
+    <Box
+      display={"inline"}
+      cursor={"pointer"}
+      onClick={() => {
+        setEditing(true);
+      }}
+    >
+      {(props.formatter ?? ((v) => v))(value)}
+    </Box>
   );
 });
-GkEditable.displayName = "GkEditable";
