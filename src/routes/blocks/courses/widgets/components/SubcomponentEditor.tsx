@@ -1,5 +1,5 @@
 import { calculateLetterGrade, GradeMap, isActiveSubcomponent, ProcessedCourseComponent } from "@/lib/logic/processing";
-import { SubjectComponent } from "@/lib/logic/types";
+import { CourseComponent } from "@/lib/logic/types";
 import { routes, useApi } from "@/lib/net/fetch";
 import { useInvalidator } from "@/lib/state/course";
 import { Button } from "@chakra-ui/button";
@@ -132,7 +132,7 @@ const SubcomponentEditor = (props: {
             colorScheme="brand"
             onClick={async () => {
               setLoading(true);
-              const updated = await fetcher.post<SubjectComponent>(
+              const updated = await fetcher.post<CourseComponent>(
                 routes.block(props.blockId).course(props.courseId).component(props.component.id).update(),
                 {
                   ...props.component,

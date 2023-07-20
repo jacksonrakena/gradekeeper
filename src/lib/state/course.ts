@@ -1,7 +1,7 @@
 import { atom, selector, useRecoilState } from "recoil";
 import { ProcessedUser } from "../logic/processing";
 import { processUser } from "../logic/processing/index";
-import { StudyBlock, Subject, SubjectComponent, SubjectSubcomponent, User } from "../logic/types";
+import { Course, CourseComponent, CourseSubcomponent, StudyBlock, User } from "../logic/types";
 import { routes, useApi } from "../net/fetch";
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -28,17 +28,17 @@ export const useInvalidator = () => {
             }),
     });
   };
-  const updateCourse = (courseId: string, replacementCourse: ((e: Subject) => Subject) | null) => {
+  const updateCourse = (courseId: string, replacementCourse: ((e: Course) => Course) | null) => {
     if (!user) return;
     setUser({
       ...user,
       gradeMap: user?.gradeMap ?? {},
       studyBlocks: user?.studyBlocks.map((sb) => {
-        if (sb.subjects.filter((d) => d.id === courseId).length === 0) return sb;
-        if (!replacementCourse) return { ...sb, subjects: sb.subjects.filter((d) => d.id !== courseId) };
+        if (sb.courses.filter((d) => d.id === courseId).length === 0) return sb;
+        if (!replacementCourse) return { ...sb, courses: sb.courses.filter((d) => d.id !== courseId) };
         return {
           ...sb,
-          subjects: sb.subjects.map((subj) => {
+          courses: sb.courses.map((subj) => {
             if (subj.id === courseId) return replacementCourse(subj);
             return subj;
           }),
@@ -49,7 +49,7 @@ export const useInvalidator = () => {
   const updateComponent = (
     courseId: string,
     componentId: string,
-    replacementComponent: ((e: SubjectComponent) => SubjectComponent) | null
+    replacementComponent: ((e: CourseComponent) => CourseComponent) | null
   ) => {
     if (!user) return;
     updateCourse(courseId, (c) => ({
@@ -63,7 +63,7 @@ export const useInvalidator = () => {
     courseId: string,
     componentId: string,
     subcomponentId: string,
-    replacementSubcomponent: ((e: SubjectSubcomponent) => SubjectSubcomponent) | null
+    replacementSubcomponent: ((e: CourseSubcomponent) => CourseSubcomponent) | null
   ) => {
     if (!user) return;
     updateComponent(courseId, componentId, (component) => ({

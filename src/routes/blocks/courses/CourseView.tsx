@@ -23,7 +23,7 @@ import CourseSwitcher from "../../../components/app/nav/CourseSwitcher";
 import { TopBar } from "../../../components/app/nav/TopBar";
 import { Editable } from "../../../components/generic/Editable";
 import { adjust, ProcessedCourse, ProcessedStudyBlock, ProcessedUser } from "../../../lib/logic/processing";
-import { Subject } from "../../../lib/logic/types";
+import { Course } from "../../../lib/logic/types";
 import { useApi } from "../../../lib/net/fetch";
 import { CookieState } from "../../../lib/state/auth";
 import { ProcessedUserState, useInvalidator } from "../../../lib/state/course";
@@ -85,7 +85,7 @@ const CourseViewInner = ({
 
             <Editable
               onSubmit={async (n) => {
-                const data = await fetcher.post<Subject>(`/api/block/${studyBlock.id}/course/${course.id}`, { longName: n });
+                const data = await fetcher.post<Course>(`/api/block/${studyBlock.id}/course/${course.id}`, { longName: n });
                 if (data) {
                   updateCourse(data.id, (e) => data);
                 }

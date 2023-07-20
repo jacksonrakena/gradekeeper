@@ -17,7 +17,7 @@ export type GradeMap = { [x: string]: string };
 export type ProcessedUser = Omit<User, "studyBlocks"> & {
   studyBlocks: ProcessedStudyBlock[];
 };
-export type ProcessedStudyBlock = Omit<StudyBlock, "subjects"> & {
+export type ProcessedStudyBlock = Omit<StudyBlock, "courses"> & {
   courses: ProcessedCourse[];
   gpaEstimate: CourseGrade;
   usGpaEstimate: CourseGrade;
@@ -71,7 +71,7 @@ export function processUser(data: User): ProcessedUser {
 }
 
 export function processStudyBlock(rawStudyBlock: ParsedStudyBlock, gradeMap: GradeMap): ProcessedStudyBlock {
-  const processedCourses = rawStudyBlock.subjects.map((rawSubject) => processCourse(rawSubject, gradeMap));
+  const processedCourses = rawStudyBlock.courses.map((rawSubject) => processCourse(rawSubject, gradeMap));
 
   const r: ProcessedStudyBlock = {
     id: rawStudyBlock.id,

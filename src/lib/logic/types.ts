@@ -9,29 +9,30 @@ export type StudyBlock = {
   name: string;
   startDate: Date;
   endDate: Date;
-  subjects: Subject[];
+  courses: Course[];
 };
 
-export type Subject = {
+export type Course = {
   id: string;
   longName: string;
   courseCodeName: string;
   courseCodeNumber: string;
   color: string;
   studyBlockId: string;
-  components: SubjectComponent[];
+  components: CourseComponent[];
 };
 
-export type SubjectComponent = {
+export type CourseComponent = {
   id: string;
   name: string;
+  courseId: string;
   nameOfSubcomponentSingular: string;
   subjectWeighting: string;
   numberOfSubComponentsToDrop_Lowest: number;
-  subcomponents: SubjectSubcomponent[];
+  subcomponents: CourseSubcomponent[];
 };
 
-export type SubjectSubcomponent = {
+export type CourseSubcomponent = {
   id: string;
   numberInSequence: number;
   overrideName?: string;

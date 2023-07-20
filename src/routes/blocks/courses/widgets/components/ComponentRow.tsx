@@ -4,7 +4,7 @@ import Decimal from "decimal.js";
 import { useRecoilValue } from "recoil";
 import { Editable } from "../../../../../components/generic/Editable";
 import { calculateLetterGrade, ProcessedCourse, ProcessedCourseComponent } from "../../../../../lib/logic/processing";
-import { SubjectComponent } from "../../../../../lib/logic/types";
+import { CourseComponent } from "../../../../../lib/logic/types";
 import { routes, useApi } from "../../../../../lib/net/fetch";
 import { ProcessedUserState, useInvalidator } from "../../../../../lib/state/course";
 
@@ -21,7 +21,7 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
         <Flex alignItems="center">
           <Editable
             onSubmit={async (newName) => {
-              const data = await fetcher.post<SubjectComponent>(
+              const data = await fetcher.post<CourseComponent>(
                 routes.block(subject.studyBlockId).course(subject.id).component(e.id).update(),
                 {
                   name: newName,
@@ -41,7 +41,7 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
           onSubmit={async (newWeighting) => {
             if (!newWeighting) return;
 
-            const data = await fetcher.post<SubjectComponent>(
+            const data = await fetcher.post<CourseComponent>(
               routes.block(subject.studyBlockId).course(subject.id).component(e.id).update(),
               {
                 subjectWeighting: new Decimal(newWeighting).div(100),
@@ -60,7 +60,7 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
           <Tooltip label="Click to edit">
             <Editable
               onSubmit={async (e) => {
-                const data = await fetcher.post<SubjectComponent>(
+                const data = await fetcher.post<CourseComponent>(
                   routes.block(subject.studyBlockId).course(subject.id).component(props.component.id).update(),
                   {
                     subcomponents: [
