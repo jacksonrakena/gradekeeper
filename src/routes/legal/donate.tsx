@@ -1,6 +1,5 @@
 // @ts-nocheck
-import { Box, Heading, Text } from "@chakra-ui/react";
-
+import { Box, Button, Heading, Text } from "@chakra-ui/react";
 
 const Donations = () => {
   return (
@@ -12,20 +11,16 @@ const Donations = () => {
         <br />
         <br />
         Your contribution means a lot to us.
-        <Box mt={8}>
-          <form action="https://www.paypal.com/donate" method="post" target="_top">
-            <input type="hidden" name="hosted_button_id" value="7GYGVATJW2LYJ" />
-            <input
-              type="image"
-              src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
-              border="0"
-              name="submit"
-              title="PayPal - The safer, easier way to pay online!"
-              alt="Donate with PayPal button"
-            />
-            <img alt="" border="0" src="https://www.paypal.com/en_NZ/i/scr/pixel.gif" width="1" height="1" />
-          </form>
-        </Box>
+        <br />
+        <br />
+        <Button
+          colorScheme={"green"}
+          onClick={() => {
+            window.open("https://ko-fi.com/jacksonrakena59962");
+          }}
+        >
+          Donate with Ko-fi
+        </Button>
       </Text>
     </Box>
   );
