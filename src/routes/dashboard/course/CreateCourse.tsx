@@ -2,10 +2,10 @@ import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   Step,
   StepDescription,
@@ -130,7 +130,7 @@ export const CreateCourse = (props: { block_id: string }) => {
       >
         {({ values, handleSubmit, isSubmitting }) => (
           <Form className="mt-4" onSubmit={handleSubmit}>
-            <Stepper colorScheme={"brand"} index={tabIndex}>
+            <Stepper colorScheme={"brand"} index={tabIndex} orientation={"horizontal"}>
               {[
                 {
                   name: "Course information",
@@ -161,10 +161,10 @@ export const CreateCourse = (props: { block_id: string }) => {
             <Tabs index={tabIndex} onChange={setTabIndex} variant="enclosed" colorScheme="theme">
               <TabPanels>
                 <TabPanel>
-                  <Flex direction={"row"} wrap={"wrap"}>
+                  <HStack justifyItems={""} wrap={"wrap"}>
                     <Field name="codeName">
                       {({ field, form }: { field: any; form: any }) => (
-                        <FormControl isInvalid={form.errors.codeName && form.touched.codeName}>
+                        <FormControl width={"auto"} isInvalid={form.errors.codeName && form.touched.codeName}>
                           <FormLabel htmlFor="name">Faculty code</FormLabel>
                           <Input
                             variant="filled"
@@ -183,7 +183,7 @@ export const CreateCourse = (props: { block_id: string }) => {
 
                     <Field name="codeNo">
                       {({ field, form }: { field: any; form: any }) => (
-                        <FormControl isInvalid={form.errors.codeNo && form.touched.codeNo}>
+                        <FormControl width={"auto"} isInvalid={form.errors.codeNo && form.touched.codeNo}>
                           <FormLabel htmlFor="codeNo">Course number</FormLabel>
                           <Input
                             variant="filled"
@@ -201,7 +201,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                     </Field>
                     <Field name="name">
                       {({ field, form }: { field: any; form: any }) => (
-                        <FormControl isInvalid={form.errors.name && form.touched.name}>
+                        <FormControl width={"auto"} isInvalid={form.errors.name && form.touched.name}>
                           <FormLabel htmlFor="name">Course name</FormLabel>
                           <Input
                             variant="filled"
@@ -217,7 +217,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                         </FormControl>
                       )}
                     </Field>
-                  </Flex>
+                  </HStack>
 
                   <Field name="color">
                     {({
