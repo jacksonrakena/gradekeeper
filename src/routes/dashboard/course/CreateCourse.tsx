@@ -1,16 +1,23 @@
 import { AddIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Input,
-  Stack,
-  Tab,
+  Step,
+  StepDescription,
+  StepIcon,
+  StepIndicator,
+  StepNumber,
+  Stepper,
+  StepSeparator,
+  StepStatus,
+  StepTitle,
   Table,
   TableContainer,
-  TabList,
   TabPanel,
   TabPanels,
   Tabs,
@@ -26,7 +33,7 @@ import {
 import { Decimal } from "decimal.js";
 import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
 import { useState } from "react";
-import { TwitterPicker } from "react-color";
+import { SwatchesPicker } from "react-color";
 import { useNavigate } from "react-router";
 import { randomColor } from "../../../lib/logic/processing";
 import { useInvalidator } from "../../../lib/state/course";
@@ -34,11 +41,19 @@ import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
   id: string;
-  weighting: string;
+  weighting: Decimal;
   dropLowest: string;
   name: string;
   numberOfSubcomponents: string;
 };
+
+interface CreateCourseFormValues {
+  name: string;
+  codeName: string;
+  codeNo: string;
+  color: string;
+  components: ComponentDto;
+}
 
 export const CreateCourse = (props: { block_id: string }) => {
   const { invalidate } = useInvalidator();
@@ -49,7 +64,7 @@ export const CreateCourse = (props: { block_id: string }) => {
     {
       id: randomColor(),
       dropLowest: "0",
-      weighting: "20",
+      weighting: new Decimal(20),
       numberOfSubcomponents: "1",
     },
   ];
@@ -115,55 +130,75 @@ export const CreateCourse = (props: { block_id: string }) => {
       >
         {({ values, handleSubmit, isSubmitting }) => (
           <Form className="mt-4" onSubmit={handleSubmit}>
+            <Stepper colorScheme={"brand"} index={tabIndex}>
+              {[
+                {
+                  name: "Course information",
+                  description: "Name and course code",
+                },
+                {
+                  name: "Syllabus components",
+                  description: "Tests, assignments, labs",
+                },
+                {
+                  name: "Confirm",
+                  description: "",
+                },
+              ].map((step, index) => (
+                <Step onClick={() => setTabIndex(index)} key={index}>
+                  <StepIndicator>
+                    <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
+                  </StepIndicator>
+                  <Box flexShrink="0">
+                    <StepTitle>{step.name}</StepTitle>
+                    <StepDescription>{step.description}</StepDescription>
+                  </Box>
+
+                  <StepSeparator />
+                </Step>
+              ))}
+            </Stepper>
             <Tabs index={tabIndex} onChange={setTabIndex} variant="enclosed" colorScheme="theme">
-              <TabList>
-                <Tab>1. Information</Tab>
-                <Tab>2. Components</Tab>
-                <Tab>3. Create</Tab>
-              </TabList>
               <TabPanels>
                 <TabPanel>
-                  <Stack spacing={4}>
-                    <Flex direction={"row"}>
-                      <Field name="codeName">
-                        {({ field, form }: { field: any; form: any }) => (
-                          <FormControl isInvalid={form.errors.codeName && form.touched.codeName}>
-                            <FormLabel htmlFor="name">Faculty code</FormLabel>
-                            <Input
-                              variant="filled"
-                              htmlSize={8}
-                              width="auto"
-                              size="md"
-                              placeholder="ENGR"
-                              {...field}
-                              id="codeName"
-                              type="text"
-                            />
-                            <FormErrorMessage>{form.errors.codeName}</FormErrorMessage>
-                          </FormControl>
-                        )}
-                      </Field>
+                  <Flex direction={"row"} wrap={"wrap"}>
+                    <Field name="codeName">
+                      {({ field, form }: { field: any; form: any }) => (
+                        <FormControl isInvalid={form.errors.codeName && form.touched.codeName}>
+                          <FormLabel htmlFor="name">Faculty code</FormLabel>
+                          <Input
+                            variant="filled"
+                            htmlSize={8}
+                            width="auto"
+                            size="md"
+                            placeholder="ENGR"
+                            {...field}
+                            id="codeName"
+                            type="text"
+                          />
+                          <FormErrorMessage>{form.errors.codeName}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
 
-                      <Field name="codeNo">
-                        {({ field, form }: { field: any; form: any }) => (
-                          <FormControl isInvalid={form.errors.codeNo && form.touched.codeNo}>
-                            <FormLabel htmlFor="codeNo">Course number</FormLabel>
-                            <Input
-                              variant="filled"
-                              htmlSize={8}
-                              width="auto"
-                              size="md"
-                              placeholder="101"
-                              {...field}
-                              id="codeNo"
-                              type="text"
-                            />
-                            <FormErrorMessage>{form.errors.codeNo}</FormErrorMessage>
-                          </FormControl>
-                        )}
-                      </Field>
-                    </Flex>
-
+                    <Field name="codeNo">
+                      {({ field, form }: { field: any; form: any }) => (
+                        <FormControl isInvalid={form.errors.codeNo && form.touched.codeNo}>
+                          <FormLabel htmlFor="codeNo">Course number</FormLabel>
+                          <Input
+                            variant="filled"
+                            htmlSize={8}
+                            width="auto"
+                            size="md"
+                            placeholder="101"
+                            {...field}
+                            id="codeNo"
+                            type="text"
+                          />
+                          <FormErrorMessage>{form.errors.codeNo}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
                     <Field name="name">
                       {({ field, form }: { field: any; form: any }) => (
                         <FormControl isInvalid={form.errors.name && form.touched.name}>
@@ -182,39 +217,40 @@ export const CreateCourse = (props: { block_id: string }) => {
                         </FormControl>
                       )}
                     </Field>
-                    <Field name="color">
-                      {({
-                        field,
-                        form,
-                        meta,
-                      }: {
-                        field: FieldInputProps<string>;
-                        form: FormikBag<string, any>;
-                        meta: FieldMetaProps<string>;
-                      }) => (
-                        <FormControl>
-                          <FormLabel htmlFor="color">Course color</FormLabel>
-                          <TwitterPicker
-                            triangle="hide"
-                            color={field.value}
-                            onChangeComplete={(e, event) => {
-                              form.setFieldValue("color", e.hex, true);
-                            }}
-                          />
-                        </FormControl>
-                      )}
-                    </Field>
-                  </Stack>
+                  </Flex>
+
+                  <Field name="color">
+                    {({
+                      field,
+                      form,
+                      meta,
+                    }: {
+                      field: FieldInputProps<string>;
+                      form: FormikBag<string, any>;
+                      meta: FieldMetaProps<string>;
+                    }) => (
+                      <FormControl>
+                        <FormLabel htmlFor="color">Course color</FormLabel>
+                        <SwatchesPicker
+                          color={field.value}
+                          onChangeComplete={(e, event) => {
+                            form.setFieldValue("color", e.hex, true);
+                          }}
+                        />
+                      </FormControl>
+                    )}
+                  </Field>
                   <Button mt={4} colorScheme={"brand"} onClick={() => setTabIndex(1)}>
                     Next
                   </Button>
                 </TabPanel>
                 <TabPanel>
                   <div style={{ maxWidth: "95%" }}>
-                    <div className="mb-2 text-xl font-semibold">Components</div>
+                    <div className="mb-2 text-xl font-semibold">Syllabus components</div>
                     <div className="text-sm mb-4">
                       Components are pieces of work that contribute to your grade. <br />
                       For example, assignments and tests are components. <br />
+                      <br />
                       Each component can have subcomponents, for example Test 1. <br />
                     </div>
                     <div>
@@ -222,11 +258,11 @@ export const CreateCourse = (props: { block_id: string }) => {
                         <Table>
                           <Thead>
                             <Tr className={tablecolor}>
-                              <Th className="p-2">Name</Th>
-                              <Th className="p-2">Number of pieces</Th>
-                              <Th className="p-2">Weighting</Th>
-                              <Th className="p-2">Drop lowest</Th>
-                              <Th className="p-2"></Th>
+                              <Th className="">Qty.</Th>
+                              <Th className="">Name</Th>
+                              <Th className="">Total Weighting</Th>
+                              <Th className="">Drop lowest</Th>
+                              <Th className=""></Th>
                             </Tr>
                           </Thead>
                           <Tbody>
@@ -259,7 +295,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                                       {
                                         id: Math.random().toString(),
                                         dropLowest: "0",
-                                        weighting: "20",
+                                        weighting: new Decimal(10),
                                         numberOfSubcomponents: "1",
                                       },
                                     ]);

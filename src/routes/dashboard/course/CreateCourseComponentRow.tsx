@@ -1,5 +1,15 @@
 import { DeleteIcon } from "@chakra-ui/icons";
-import { IconButton, Input, NumberInput, NumberInputField, Td, Tr } from "@chakra-ui/react";
+import {
+  IconButton,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Td,
+  Tr,
+} from "@chakra-ui/react";
 import { useMemo } from "react";
 import { singularMap } from "../../../lib/logic/processing";
 import { ComponentDto } from "./CreateCourse";
@@ -12,6 +22,31 @@ export const CreateCourseComponentRow = (props: {
   const componentNamePlaceholder = useMemo(() => Object.keys(singularMap)[Math.floor(Object.keys(singularMap).length * Math.random())], []);
   return (
     <Tr key={props.original.id}>
+      <Td>
+        <NumberInput
+          variant="outline"
+          onChange={(e, a) => {
+            props.onUpdate({
+              ...props.original,
+              numberOfSubcomponents: e,
+            });
+          }}
+          value={props.original.numberOfSubcomponents ?? 1}
+          id="courseCodeName"
+          placeholder="2"
+          width={"70px"}
+          min={1}
+          max={10}
+          display={"flex"}
+          alignItems={"center"}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+      </Td>
       <Td className="">
         <Input
           type="text"
@@ -26,23 +61,7 @@ export const CreateCourseComponentRow = (props: {
           required={true}
         />
       </Td>
-      <Td className="p-2">
-        <NumberInput
-          variant="filled"
-          onChange={(e, a) => {
-            props.onUpdate({
-              ...props.original,
-              numberOfSubcomponents: e,
-            });
-          }}
-          value={props.original.numberOfSubcomponents ?? 1}
-          id="courseCodeName"
-          placeholder="2"
-          min={1}
-        >
-          <NumberInputField />
-        </NumberInput>
-      </Td>
+
       <Td className="p-2">
         %
         <NumberInput
