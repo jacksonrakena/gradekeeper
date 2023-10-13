@@ -39,7 +39,7 @@ export const readCookie: (key: string) => AtomEffect<UserCookie | null> =
     } else {
       let decodedCookie: UserCookie = jwtDecode(str);
       if (!decodedCookie) {
-        let param = getCookieFromUrl("GK_COOIE");
+        let param = getCookieFromUrl("GK_COOKIE");
         if (param) {
           decodedCookie = jwtDecode(param);
         }
