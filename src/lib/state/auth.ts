@@ -32,19 +32,21 @@ const resetCookie = (key: string) => {
 export const readCookie: (key: string) => AtomEffect<UserCookie | null> =
   (key: any) =>
   ({ setSelf, onSet }) => {
-    const str = getCookie(key);
+    let str = getCookie(key);
+
+    if (!str) {
+      let param = getCookieFromUrl("GK_COOKIE");
+      if (param) {
+        str = param;
+        console.log("Decoded query param cookie: " + str);
+      }
+    }
+
     if (!str) {
       setSelf(null);
       return;
     } else {
       let decodedCookie: UserCookie = jwtDecode(str);
-      if (!decodedCookie) {
-        let param = getCookieFromUrl("GK_COOKIE");
-        if (param) {
-          decodedCookie = jwtDecode(param);
-          console.log("Decoded query param cookie: " + decodedCookie);
-        }
-      }
       if (decodedCookie && decodedCookie.exp && decodedCookie.exp > Date.now() / 1000) {
         setSelf(decodedCookie);
       } else {
