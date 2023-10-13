@@ -1,5 +1,6 @@
 import jwtDecode from "jwt-decode";
 import { atom, AtomEffect, selector, useRecoilState, useRecoilValue } from "recoil";
+import { routes } from "../net/fetch";
 
 export interface UserCookie {
   exp: number;
@@ -67,7 +68,7 @@ export const AuthState = selector<AuthStateContext>({
         loggedIn: false,
         logIn: () => {
           console.log("Logging in...");
-          window.location.href = "/api/auth/login";
+          window.location.href = routes.auth.login();
         },
       };
     return {
@@ -75,7 +76,7 @@ export const AuthState = selector<AuthStateContext>({
       loggedIn: true,
       logIn: () => {
         console.log("Logging in...");
-        window.location.href = "/api/auth/login";
+        window.location.href = routes.auth.login();
       },
     };
   },

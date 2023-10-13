@@ -67,25 +67,26 @@ export const useApi = () => {
   return fetcher;
 };
 
+export const ROUTE_BASE = import.meta.env.VITE_API_BASE_URL;
 export const routes = {
-  getMe: () => "/api/users/me",
-  updateMe: () => "/api/users/me",
-  deleteMe: () => "/api/users/me",
+  getMe: () => ROUTE_BASE + "/api/users/me",
+  updateMe: () => ROUTE_BASE + "/api/users/me",
+  deleteMe: () => ROUTE_BASE + "/api/users/me",
 
-  createBlock: "/api/block/create",
+  createBlock: ROUTE_BASE + "/api/block/create",
   block: (blockId: string) => {
     return {
-      delete: () => `/api/block/${blockId}`,
-      importCourse: () => `/api/block/${blockId}/import`,
-      createCourse: () => `/api/block/${blockId}/course/create`,
+      delete: () => ROUTE_BASE + `/api/block/${blockId}`,
+      importCourse: () => ROUTE_BASE + `/api/block/${blockId}/import`,
+      createCourse: () => ROUTE_BASE + `/api/block/${blockId}/course/create`,
       course: (courseId: string) => {
         return {
-          delete: () => `/api/block/${blockId}/course/${courseId}`,
-          get: () => `/api/block/${blockId}/course/${courseId}`,
-          update: () => `/api/block/${blockId}/course/${courseId}`,
+          delete: () => ROUTE_BASE + `/api/block/${blockId}/course/${courseId}`,
+          get: () => ROUTE_BASE + `/api/block/${blockId}/course/${courseId}`,
+          update: () => ROUTE_BASE + `/api/block/${blockId}/course/${courseId}`,
           component: (componentId: string) => {
             return {
-              update: () => `/api/block/${blockId}/course/${courseId}/component/${componentId}`,
+              update: () => ROUTE_BASE + `/api/block/${blockId}/course/${courseId}/component/${componentId}`,
             };
           },
         };
@@ -93,6 +94,6 @@ export const routes = {
     };
   },
   auth: {
-    login: () => "/api/auth/login",
+    login: () => ROUTE_BASE + "/api/auth/login",
   },
 };
