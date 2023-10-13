@@ -22,6 +22,10 @@ const getCookie = (key: string) => {
   var b = window.document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
   return b ? b.pop() : "";
 };
+const getCookieFromUrl = (key: string) => {
+  var b = new URLSearchParams(window.location.search).get("cookie")?.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
+  return b ? b.pop() : "";
+};
 const resetCookie = (key: string) => {
   window.document.cookie = `${key}=;expires=Thu, 01-Jan-1970 00:00:01 GMT;`;
 };
@@ -35,7 +39,7 @@ export const readCookie: (key: string) => AtomEffect<UserCookie | null> =
     } else {
       let decodedCookie: UserCookie = jwtDecode(str);
       if (!decodedCookie) {
-        let param = new URLSearchParams(window.location.search).get("cookie")?.replace("GK_COOKIE=", "");
+        let param = getCookieFromUrl("GK_COOIE");
         if (param) {
           decodedCookie = jwtDecode(param);
         }
