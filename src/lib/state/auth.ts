@@ -42,6 +42,7 @@ export const readCookie: (key: string) => AtomEffect<UserCookie | null> =
         let param = getCookieFromUrl("GK_COOKIE");
         if (param) {
           decodedCookie = jwtDecode(param);
+          console.log("Decoded query param cookie: " + decodedCookie);
         }
       }
       if (decodedCookie && decodedCookie.exp && decodedCookie.exp > Date.now() / 1000) {
