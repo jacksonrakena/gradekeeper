@@ -18,7 +18,7 @@ export interface AuthStateContext {
   logIn: () => void;
 }
 
-const getCookie = (key: string) => {
+export const getCookie = (key: string) => {
   var b = window.document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
   return b ? b.pop() : "";
 };

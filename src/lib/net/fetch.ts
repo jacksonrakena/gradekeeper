@@ -1,11 +1,12 @@
 import { useToast } from "@chakra-ui/react";
+import { getCookie } from "../state/auth";
 
 export const useApi = () => {
   const toast = useToast();
   const fetcher = {
     request: async (route: string, info: RequestInit): Promise<Response | null> => {
       try {
-        const d = await fetch(route, info);
+        const d = await fetch(route, { ...info, headers: { ...info.headers, Authorization: `Bearer ${getCookie("GK_COOKIE")}` } });
         if (!d.ok) {
           try {
             const data = await d.json();
