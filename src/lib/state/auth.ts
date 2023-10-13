@@ -39,6 +39,8 @@ export const readCookie: (key: string) => AtomEffect<UserCookie | null> =
       if (param) {
         str = param;
         console.log("Decoded query param cookie: " + str);
+        var rawCookie = new URLSearchParams(window.location.search).get("cookie");
+        if (rawCookie) window.document.cookie = rawCookie;
       }
     }
 
