@@ -2,97 +2,88 @@ import jwtDecode from "jwt-decode";
 import { atom, AtomEffect, selector, useRecoilState, useRecoilValue } from "recoil";
 import { routes } from "../net/fetch";
 
-export interface UserCookie {
+export interface UserSessionTicket {
   exp: number;
   iat: number;
   id: string;
   name: string;
   picture: string;
+  token: string;
 }
 
 export type AuthorizationState = "not_logged_in" | "logged_in";
 
 export interface AuthStateContext {
-  cookie: UserCookie | null;
+  session: UserSessionTicket | null;
   loggedIn: boolean;
   logIn: () => void;
 }
-
-export const getCookie = (key: string) => {
-  var b = window.document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
-  return b ? b.pop() : "";
+const getToken = (): string | null => {
+  var b = new URLSearchParams(window.location.search).get("token");
+  return b;
 };
-const getCookieFromUrl = (key: string) => {
-  var b = new URLSearchParams(window.location.search).get("cookie")?.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
-  return b ? b.pop() : "";
-};
-const resetCookie = (key: string) => {
-  window.document.cookie = `${key}=;expires=Thu, 01-Jan-1970 00:00:01 GMT;`;
-};
-export const readCookie: (key: string) => AtomEffect<UserCookie | null> =
-  (key: any) =>
+export const tryReadSession: () => AtomEffect<UserSessionTicket | null> =
+  () =>
   ({ setSelf, onSet }) => {
-    let str = getCookie(key);
-
-    if (!str) {
-      let param = getCookieFromUrl("GK_COOKIE");
-      if (param) {
-        str = param;
-        console.log("Decoded query param cookie: " + str);
-        var rawCookie = new URLSearchParams(window.location.search).get("cookie");
-        if (rawCookie) window.document.cookie = rawCookie;
+    let token = getToken();
+    if (token) {
+      var ust: UserSessionTicket = jwtDecode(token);
+      ust.token = token;
+      if (ust.exp && ust.exp > Date.now() / 1000) {
+        setSelf(ust);
+        window.localStorage.setItem("GK_APP_SESSION", token);
+        console.log("Loaded token from search parameters. Clearing search. Expiry: " + new Date(ust.exp * 1000));
+        window.location.search = "";
       }
-    }
-
-    if (!str) {
-      setSelf(null);
-      return;
+    } else if (window.localStorage.getItem("GK_APP_SESSION")) {
+      token = window.localStorage.getItem("GK_APP_SESSION")!;
+      ust = jwtDecode(token);
+      ust.token = token;
+      if (ust.exp && ust.exp > Date.now() / 1000) {
+        console.log("Loaded token from local storage. Expiry: " + new Date(ust.exp * 1000));
+        setSelf(ust);
+      }
     } else {
-      let decodedCookie: UserCookie = jwtDecode(str);
-      if (decodedCookie && decodedCookie.exp && decodedCookie.exp > Date.now() / 1000) {
-        setSelf(decodedCookie);
-      } else {
-        resetCookie(key);
-        setSelf(null);
-      }
+      setSelf(null);
     }
 
     onSet((newValue, _, isReset) => {
-      resetCookie(key);
+      if (!newValue) {
+        console.log("Logging out. Clearing search and local storage.");
+        window.location.search = "";
+        window.localStorage.removeItem("GK_APP_SESSION");
+      }
     });
   };
 
-export const CookieState = atom<UserCookie | null>({
+export const SessionState = atom<UserSessionTicket | null>({
   key: "CookieState",
   default: null,
-  effects: [readCookie("GK_COOKIE")],
+  effects: [tryReadSession()],
 });
 
 export const useAuth = () => useRecoilValue(AuthState);
 export const useLogout = () => {
-  const cookie = useRecoilState(CookieState);
+  const cookie = useRecoilState(SessionState);
   return () => cookie[1](null);
 };
 export const AuthState = selector<AuthStateContext>({
   key: "AuthState",
   get: ({ get }) => {
-    const cookie = get(CookieState);
+    const cookie = get(SessionState);
     if (!cookie)
       return {
-        cookie: null,
+        session: null,
         loggedIn: false,
         logIn: () => {
           console.log("Logging in...");
-          window.location.href = routes.auth.login();
+          window.location.href = routes.auth.login() + "?redirectUrl=" + window.location.origin;
         },
       };
     return {
-      cookie: cookie,
+      session: cookie,
       loggedIn: true,
-      logIn: () => {
-        console.log("Logging in...");
-        window.location.href = routes.auth.login();
-      },
+      logIn: () => {},
     };
   },
 });

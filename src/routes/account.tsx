@@ -221,11 +221,11 @@ const Account = () => {
           <Stack spacing={12}>
             <Flex direction="column" p={4} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={accCardBg}>
               <Flex alignItems="center">
-                <Avatar src={auth.cookie?.picture} name={auth.cookie?.name ?? ""} size={"md"} mr={4} />
+                <Avatar src={auth.session?.picture} name={auth.session?.name ?? ""} size={"md"} mr={4} />
                 <Box>
-                  <Heading size="md">{auth.cookie?.name}</Heading>
+                  <Heading size="md">{auth.session?.name}</Heading>
                   <Text fontSize="md" color={"GrayText"}>
-                    {auth.cookie?.id}
+                    {auth.session?.id}
                   </Text>
                 </Box>
               </Flex>

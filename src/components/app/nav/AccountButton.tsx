@@ -34,8 +34,8 @@ const AccountButton = () => {
     <Menu colorScheme={"brand"} variant={"unfilled"}>
       <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>
         <Flex alignItems="center">
-          <Avatar size="sm" name={auth.cookie?.name} src={auth.cookie?.picture ?? ""} mr={2}></Avatar>
-          {auth.cookie?.name}
+          <Avatar size="sm" name={auth.session?.name} src={auth.session?.picture ?? ""} mr={2}></Avatar>
+          {auth.session?.name}
         </Flex>
       </MenuButton>
       <MenuList overflow={"hidden"}>

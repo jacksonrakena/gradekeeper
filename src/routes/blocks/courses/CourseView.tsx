@@ -25,7 +25,7 @@ import { Editable } from "../../../components/generic/Editable";
 import { adjust, ProcessedCourse, ProcessedStudyBlock, ProcessedUser } from "../../../lib/logic/processing";
 import { Course } from "../../../lib/logic/types";
 import { useApi } from "../../../lib/net/fetch";
-import { CookieState } from "../../../lib/state/auth";
+import { SessionState } from "../../../lib/state/auth";
 import { ProcessedUserState, useInvalidator } from "../../../lib/state/course";
 import themeConstants from "../../../lib/theme";
 import { DeleteCourseDialog } from "./DeleteCourseDialog";
@@ -35,7 +35,7 @@ import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
 import ProgressBarCaption from "./widgets/ProgressBarCaption";
 
 const CourseView = () => {
-  const cookie = useRecoilValue(CookieState);
+  const cookie = useRecoilValue(SessionState);
   const navigate = useNavigate();
   const user = useRecoilValue(ProcessedUserState);
   const { course_id, block_id } = useParams();
