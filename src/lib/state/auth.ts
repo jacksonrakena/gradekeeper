@@ -34,6 +34,12 @@ export const readCookie: (key: string) => AtomEffect<UserCookie | null> =
       return;
     } else {
       let decodedCookie: UserCookie = jwtDecode(str);
+      if (!decodedCookie) {
+        let param = new URLSearchParams(window.location.search).get("cookie")?.replace("GK_COOKIE=", "");
+        if (param) {
+          decodedCookie = jwtDecode(param);
+        }
+      }
       if (decodedCookie && decodedCookie.exp && decodedCookie.exp > Date.now() / 1000) {
         setSelf(decodedCookie);
       } else {
