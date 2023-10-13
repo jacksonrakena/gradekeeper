@@ -1,3 +1,5 @@
+import { Course } from "@/lib/logic/types";
+import { routes, useApi } from "@/lib/net/fetch";
 import {
   Box,
   Button,
@@ -22,6 +24,7 @@ export const CourseImportModal = (props: { blockId: string; onClose: () => void 
   const [loading, setLoading] = useState(false);
   const targetStudyBlock = props.blockId;
   const { invalidate } = useInvalidator();
+  const api = useApi();
   return (
     <ModalContent>
       <ModalHeader>Import a course</ModalHeader>
@@ -40,15 +43,10 @@ export const CourseImportModal = (props: { blockId: string; onClose: () => void 
           isLoading={loading}
           onClick={async () => {
             setLoading(true);
-            const res = await fetch(`/api/block/${targetStudyBlock}/import`, {
-              headers: {
-                "Content-Type": "application/json",
-              },
-              method: "POST",
-              body: JSON.stringify({ shareCode: shareCode }),
+            const course = await api.post<Course>(routes.block(targetStudyBlock).importCourse(), {
+              shareCode: shareCode,
             });
-            if (res.ok) {
-              const course = await res.json();
+            if (course) {
               await invalidate();
               navigate(`/blocks/${targetStudyBlock}/courses/${course.id}`);
               setLoading(false);
@@ -58,16 +56,6 @@ export const CourseImportModal = (props: { blockId: string; onClose: () => void 
                 status: "success",
                 duration: 4000,
               });
-            } else {
-              setLoading(false);
-              if (res.status === 404) {
-                toast({
-                  title: "Course not found.",
-                  description: "Check the share code.",
-                  duration: 4000,
-                  status: "error",
-                });
-              }
             }
           }}
           colorScheme={"brand"}

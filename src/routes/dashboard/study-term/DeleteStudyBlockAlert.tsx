@@ -1,3 +1,4 @@
+import { routes, useApi } from "@/lib/net/fetch";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -21,6 +22,7 @@ export const DeleteStudyBlockAlert = (props: {
   const { updateStudyBlock } = useInvalidator();
   const [isDeleting, setIsDeleting] = useState(false);
   const toast = useToast();
+  const api = useApi();
   return (
     <AlertDialog
       isOpen={props.isDeleteOpen}
@@ -51,17 +53,20 @@ export const DeleteStudyBlockAlert = (props: {
               colorScheme="red"
               onClick={async () => {
                 setIsDeleting(true);
-                await fetch(`/api/block/${props.studyBlock?.id ?? ""}`, { method: "DELETE" });
-                updateStudyBlock(props.studyBlock?.id, null);
-                toast({
-                  title: "Study block deleted.",
-                  description: props.studyBlock?.name + " deleted.",
-                  duration: 4000,
-                  isClosable: true,
-                  status: "success",
-                });
+                const response = await api.delete(routes.block(props.studyBlock?.id ?? "").delete());
+                if (response) {
+                  updateStudyBlock(props.studyBlock?.id, null);
+                  toast({
+                    title: "Study block deleted.",
+                    description: props.studyBlock?.name + " deleted.",
+                    duration: 4000,
+                    isClosable: true,
+                    status: "success",
+                  });
+
+                  props.setIsDeleteOpen(false);
+                }
                 setIsDeleting(false);
-                props.setIsDeleteOpen(false);
               }}
               isLoading={isDeleting}
               ml={3}

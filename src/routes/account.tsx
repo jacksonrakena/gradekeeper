@@ -1,3 +1,4 @@
+import { routes, useApi } from "@/lib/net/fetch";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   AlertDialog,
@@ -108,6 +109,7 @@ const GradeBoundaryEntry = (props: { userGradeMap: object; gradeString: string; 
 const GradeMapEditor = (props: { gradeMap: object }) => {
   const { invalidate } = useInvalidator();
   const toast = useToast();
+  const api = useApi();
   const [gradeMap, setGradeMap] = useState(props.gradeMap);
   const [saving, isSaving] = useState(false);
   const accCardBg = useColorModeValue("white", themeConstants.darkModeContrastingColor);
@@ -133,23 +135,15 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
             isLoading={saving}
             onClick={async () => {
               isSaving(true);
-              const res = await fetch(`/api/users/me`, {
-                headers: { "Content-Type": "application/json" },
-                method: "POST",
-                body: JSON.stringify({ gradeMap: gradeMap }),
+              const res = await api.post(routes.updateMe(), {
+                gradeMap: gradeMap,
               });
-              if (res.ok) {
+              if (res) {
                 await invalidate();
                 isSaving(false);
                 toast({
                   title: "Updated.",
                   status: "success",
-                });
-              } else {
-                const err = await res.json();
-                toast({
-                  title: "An error occurred.",
-                  status: err.description,
                 });
               }
             }}
@@ -174,6 +168,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
 
 const Account = () => {
   const user = useRecoilValue(ProcessedUserState);
+  const api = useApi();
   const auth = useAuth();
   const logout = useLogout();
   const navigate = useNavigate();
@@ -198,10 +193,8 @@ const Account = () => {
                 isLoading={isDeleting}
                 onClick={async () => {
                   setIsDeleting(true);
-                  const response = await fetch("/api/users/me", {
-                    method: "DELETE",
-                  });
-                  if (response.ok) {
+                  const response = await api.delete(routes.deleteMe());
+                  if (response) {
                     logout();
                     toast({
                       title: "Account deleted.",

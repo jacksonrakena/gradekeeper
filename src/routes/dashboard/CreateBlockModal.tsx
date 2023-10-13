@@ -1,3 +1,4 @@
+import { routes, useApi } from "@/lib/net/fetch";
 import {
   Box,
   Button,
@@ -41,6 +42,7 @@ export default CreateBlockModal;
 
 export const CreateBlock = (props: { onClose: () => void }) => {
   const { invalidate } = useInvalidator();
+  const api = useApi();
   const [institutionTemplates, setTemplates] = useState<{ name: string; startDate: string; endDate: string }[]>();
   const [selectedTemplate, setSelectedTemplate] = useState<{ name: string; startDate: string; endDate: string }>();
   const dtf = new Intl.DateTimeFormat("en-US", {
@@ -63,16 +65,12 @@ export const CreateBlock = (props: { onClose: () => void }) => {
             return errors;
           }}
           onSubmit={(values, { setSubmitting }) => {
-            fetch(`/api/block/create`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
+            api
+              .post(routes.createBlock, {
                 ...values,
                 startDate: typeof values.startDate === "string" ? new Date(values.startDate) : values.startDate,
                 endDate: typeof values.endDate === "string" ? new Date(values.endDate) : values.endDate,
-              }),
-            })
-              .then((e) => e.json())
+              })
               .then((f) => {
                 invalidate().then(() => {
                   setSubmitting(false);

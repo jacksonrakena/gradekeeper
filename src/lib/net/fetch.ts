@@ -47,6 +47,7 @@ export const useApi = () => {
         return null;
       }
     },
+    delete: async (route: string): Promise<Response | null> => fetcher.request(route, { method: "DELETE" }),
     post: async <T>(route: string, body: any): Promise<T | null> => {
       const response = await fetcher.request(route, {
         method: "POST",

@@ -1,3 +1,4 @@
+import { routes, useApi } from "@/lib/net/fetch";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -60,6 +61,7 @@ export const CreateCourse = (props: { block_id: string }) => {
   const block_id = props.block_id;
   const toast = useToast();
   const navigate = useNavigate();
+  const api = useApi();
   const emptyComponents: Partial<ComponentDto>[] = [
     {
       id: randomColor(),
@@ -105,24 +107,11 @@ export const CreateCourse = (props: { block_id: string }) => {
               };
             }),
           };
-          fetch(`/api/block/${block_id}/course/create`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(object),
-          }).then(async (e) => {
-            const f = await e.json();
-            if (e.ok) {
+          api.post<{ id: string }>(routes.block(block_id).createCourse(), object).then(async (f) => {
+            if (f) {
               invalidate().then(() => {
                 setSubmitting(false);
                 navigate(`/blocks/${block_id}/courses/${f.id}`);
-              });
-            } else {
-              setSubmitting(false);
-              toast({
-                title: "An error occurred.",
-                description: f.error,
-                status: "error",
-                duration: 4000,
               });
             }
           });
