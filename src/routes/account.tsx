@@ -135,8 +135,9 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
             isLoading={saving}
             onClick={async () => {
               isSaving(true);
-              const res = await api.post(routes.updateMe(), {
-                gradeMap: gradeMap,
+              const res = await api.request(routes.updateMe(), {
+                method: "DELETE",
+                body: JSON.stringify({ gradeMap: gradeMap }),
               });
               if (res) {
                 await invalidate();
