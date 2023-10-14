@@ -1,11 +1,11 @@
-import { atom, selector, useRecoilState } from "recoil";
+import { atom, useAtom } from "jotai";
 import { ProcessedUser } from "../logic/processing";
 import { processUser } from "../logic/processing/index";
 import { Course, CourseComponent, CourseSubcomponent, StudyBlock, User } from "../logic/types";
 import { routes, useApi } from "../net/fetch";
 
 export const useInvalidator = () => {
-  const [user, setUser] = useRecoilState(UserState);
+  const [user, setUser] = useAtom(UserState);
   const fetcher = useApi();
   const invalidate = async () => {
     let data = await fetcher.json<User>(routes.getMe());
@@ -80,17 +80,11 @@ export const useInvalidator = () => {
   };
 };
 
-export const UserState = atom<User | null>({
-  key: "UserState",
-  default: null,
-});
+export const UserState = atom<User | null>(null);
 
-export const ProcessedUserState = selector<ProcessedUser | null>({
-  key: "ProcessedUserState",
-  get: ({ get }) => {
-    const userState = get(UserState);
-    if (!userState) return null;
-    const processedData = processUser(userState);
-    return processedData;
-  },
+export const ProcessedUserState = atom<ProcessedUser | null>((get) => {
+  const userState = get(UserState);
+  if (!userState) return null;
+  const processedData = processUser(userState);
+  return processedData;
 });

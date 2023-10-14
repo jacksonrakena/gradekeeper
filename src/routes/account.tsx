@@ -24,9 +24,9 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useAtomValue } from "jotai";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { useRecoilValue } from "recoil";
 import { TopBar } from "../components/app/nav/TopBar";
 import { useAuth, useLogout } from "../lib/state/auth";
 import { ProcessedUserState, useInvalidator } from "../lib/state/course";
@@ -168,7 +168,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
 };
 
 const Account = () => {
-  const user = useRecoilValue(ProcessedUserState);
+  const user = useAtomValue(ProcessedUserState);
   const api = useApi();
   const auth = useAuth();
   const logout = useLogout();

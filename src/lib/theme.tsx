@@ -1,6 +1,6 @@
 import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { ThemeState } from "./state/theme";
 
 const config: ThemeConfig = {
@@ -8,7 +8,7 @@ const config: ThemeConfig = {
   useSystemColorMode: true,
 };
 export const Chakra: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const theme = useRecoilValue(ThemeState);
+  const theme = useAtomValue(ThemeState);
   return <ChakraProvider theme={theme}>{children}</ChakraProvider>;
 };
 

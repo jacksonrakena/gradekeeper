@@ -1,7 +1,7 @@
 import { EditIcon } from "@chakra-ui/icons";
 import { Box, Flex, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import Decimal from "decimal.js";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { Editable } from "../../../../../components/generic/Editable";
 import { calculateLetterGrade, ProcessedCourse, ProcessedCourseComponent } from "../../../../../lib/logic/processing";
 import { CourseComponent } from "../../../../../lib/logic/types";
@@ -9,7 +9,7 @@ import { routes, useApi } from "../../../../../lib/net/fetch";
 import { ProcessedUserState, useInvalidator } from "../../../../../lib/state/course";
 
 const ComponentRow = (props: { component: ProcessedCourseComponent; course: ProcessedCourse; onEditSubcomponents: () => void }) => {
-  const user = useRecoilValue(ProcessedUserState);
+  const user = useAtomValue(ProcessedUserState);
   const { updateComponent } = useInvalidator();
   const e = props.component;
   const subject = props.course;

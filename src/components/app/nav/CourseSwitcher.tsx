@@ -1,15 +1,15 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Text } from "@chakra-ui/react";
+import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router";
-import { useRecoilValue } from "recoil";
 import { ProcessedCourseInfo, ProcessedStudyBlock } from "../../../../lib/logic/processing";
 import { ProcessedUserState } from "../../../lib/state/course";
 
 const CourseSwitcher = (props: { currentCourse: ProcessedCourseInfo; currentStudyBlock: ProcessedStudyBlock }) => {
-  const allStudyBlocks = useRecoilValue(ProcessedUserState)?.studyBlocks;
+  const allStudyBlocks = useAtomValue(ProcessedUserState)?.studyBlocks;
   const navigate = useNavigate();
 
-  const user = useRecoilValue(ProcessedUserState);
+  const user = useAtomValue(ProcessedUserState);
   const subjects = user?.studyBlocks?.filter((e) => Date.now() < new Date(e.endDate).getTime()).flatMap((d) => d.courses);
   const blockMap = subjects?.reduce((block: { [x: string]: any }, course) => {
     block[course.studyBlockId] = block[course.studyBlockId] ?? [];

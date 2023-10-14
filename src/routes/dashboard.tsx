@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Spinner, Text, useDisclosure } from "@chakra-ui/react";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import Footer from "../components/app/Footer";
 import { TopBar } from "../components/app/nav/TopBar";
 import { ProcessedUserState } from "../lib/state/course";
@@ -8,7 +8,7 @@ import { Introduction } from "./dashboard/new-user-experience/Introduction";
 import { StudyBlockCourseList } from "./dashboard/study-term/StudyBlockCourseList";
 
 const Dashboard = () => {
-  const user = useRecoilValue(ProcessedUserState);
+  const user = useAtomValue(ProcessedUserState);
   const isLoading = !user;
   const createBlockDisclosure = useDisclosure();
 

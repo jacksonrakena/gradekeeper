@@ -15,9 +15,9 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Decimal from "decimal.js";
+import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { useRecoilValue } from "recoil";
 import Footer from "../../../components/app/Footer";
 import CourseSwitcher from "../../../components/app/nav/CourseSwitcher";
 import { TopBar } from "../../../components/app/nav/TopBar";
@@ -35,9 +35,9 @@ import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
 import ProgressBarCaption from "./widgets/ProgressBarCaption";
 
 const CourseView = () => {
-  const cookie = useRecoilValue(SessionState);
+  const cookie = useAtomValue(SessionState);
   const navigate = useNavigate();
-  const user = useRecoilValue(ProcessedUserState);
+  const user = useAtomValue(ProcessedUserState);
   const { course_id, block_id } = useParams();
   const studyBlock = user?.studyBlocks.find((e) => e.id === block_id);
   const course = studyBlock?.courses.find((a) => a.id === course_id);

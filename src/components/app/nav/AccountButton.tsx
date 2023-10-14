@@ -14,12 +14,12 @@ import {
   MenuOptionGroup,
   useColorMode,
 } from "@chakra-ui/react";
+import { useAtom } from "jotai";
 import { AiOutlineHome } from "react-icons/ai";
 import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscSettingsGear } from "react-icons/vsc";
 import { useNavigate } from "react-router";
-import { useRecoilState } from "recoil";
 import { useAuth, useLogout } from "../../../lib/state/auth";
 import { ThemeNameState } from "../../../lib/state/theme";
 import { defaultThemes } from "../../../lib/theme";
@@ -29,7 +29,7 @@ const AccountButton = () => {
   const logout = useLogout();
   const colorMode = useColorMode();
   const navigate = useNavigate();
-  const [theme, setTheme] = useRecoilState(ThemeNameState);
+  const [theme, setTheme] = useAtom(ThemeNameState);
   return (
     <Menu colorScheme={"brand"} variant={"unfilled"}>
       <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>

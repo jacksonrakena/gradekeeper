@@ -1,5 +1,5 @@
 import Decimal from "decimal.js";
-import { ComponentGrade, CourseGrade, GradeMap, calculateLetterGrade, getActiveSubcomponents } from ".";
+import { calculateLetterGrade, ComponentGrade, CourseGrade, getActiveSubcomponents, GradeMap } from ".";
 import { ParsedCourse, ParsedCourseComponent } from "../parsing";
 
 export function calculateActualCourseProgressGrade(subject: ParsedCourse, gradeMap: GradeMap): CourseGrade {

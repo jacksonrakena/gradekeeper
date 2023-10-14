@@ -1,8 +1,8 @@
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, IconButton, Text, useDisclosure } from "@chakra-ui/react";
+import { useAtomValue } from "jotai";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { useRecoilValue } from "recoil";
 import { ProcessedStudyBlock } from "../../../lib/logic/processing";
 import { ProcessedUserState } from "../../../lib/state/course";
 import CoursePill, { Pill } from "./CoursePill";
@@ -14,7 +14,7 @@ const StudyBlockCourseList = (props: { studyBlock: ProcessedStudyBlock }) => {
   const navigate = useNavigate();
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const courseCreateDisclosure = useDisclosure();
-  const user = useRecoilValue(ProcessedUserState);
+  const user = useAtomValue(ProcessedUserState);
   const sbStart = new Date(studyBlock.startDate);
   const sbEnd = new Date(studyBlock.endDate);
   const dtf = new Intl.DateTimeFormat("en-US", {

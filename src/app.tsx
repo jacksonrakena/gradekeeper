@@ -1,9 +1,9 @@
 import { Chakra } from "@/lib/theme";
 import { SlideFade } from "@chakra-ui/react";
+import { useAtomValue } from "jotai";
 import React, { useEffect } from "react";
 import { RouterProvider } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 import { AuthState } from "./lib/state/auth";
 import { useInvalidator, UserState } from "./lib/state/course";
 import Account from "./routes/account";
@@ -14,8 +14,8 @@ import CompletedDonation from "./routes/legal/donate/completed";
 import PrivacyPolicy from "./routes/legal/privacy";
 
 export const AppRoot = () => {
-  const auth = useRecoilValue(AuthState);
-  const user = useRecoilValue(UserState);
+  const auth = useAtomValue(AuthState);
+  const user = useAtomValue(UserState);
   const invalidator = useInvalidator();
   useEffect(() => {
     if (auth.loggedIn && !user) {
