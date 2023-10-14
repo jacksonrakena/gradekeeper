@@ -4,8 +4,6 @@ import { processUser } from "../logic/processing/index";
 import { Course, CourseComponent, CourseSubcomponent, StudyBlock, User } from "../logic/types";
 import { routes, useApi } from "../net/fetch";
 
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 export const useInvalidator = () => {
   const [user, setUser] = useRecoilState(UserState);
   const fetcher = useApi();

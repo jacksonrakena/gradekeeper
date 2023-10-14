@@ -123,7 +123,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                             if (!f.target.value) {
                               setSelectedTemplate(undefined);
                             } else {
-                              const nt = institutionTemplates.filter((g) => g.name == f.target.value)[0];
+                              const nt = institutionTemplates.filter((g) => g.name === f.target.value)[0];
                               setSelectedTemplate(nt);
                               setValues(nt);
                             }
