@@ -1,41 +1,21 @@
 import Decimal from "decimal.js";
 import { Course, CourseComponent, CourseSubcomponent, StudyBlock } from "./types";
 
-export interface ParsedStudyBlock {
-  id: string;
-  name: string;
-  startDate: Date;
-  endDate: Date;
+export type ParsedStudyBlock = Omit<StudyBlock, "courses"> & {
   courses: ParsedCourse[];
-}
-export interface ParsedCourse {
-  id: string;
-  longName: string;
-  courseCodeName: string;
-  courseCodeNumber: string;
-  studyBlockId: string;
-  color: string;
-
+};
+export type ParsedCourse = Omit<Course, "components"> & {
   components: ParsedCourseComponent[];
-}
+};
 
-export interface ParsedCourseComponent {
-  id: string;
-  name: string;
-  courseId: string;
-  nameOfSubcomponentSingular: string;
+export type ParsedCourseComponent = Omit<Omit<CourseComponent, "subcomponents">, "subjectWeighting"> & {
   subjectWeighting: Decimal;
-  numberOfSubComponentsToDrop_Lowest: number;
   subcomponents: ParsedCourseSubcomponent[];
-}
+};
 
-export interface ParsedCourseSubcomponent {
-  id: string;
-  numberInSequence: number;
-  overrideName?: string;
-  isCompleted: boolean;
+export type ParsedCourseSubcomponent = Omit<CourseSubcomponent, "gradeValuePercentage"> & {
   gradeValuePercentage: Decimal;
-}
+};
 
 export function parseStudyBlock(studyBlock: StudyBlock): ParsedStudyBlock {
   return {
