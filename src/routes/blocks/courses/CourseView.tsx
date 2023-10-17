@@ -24,7 +24,7 @@ import { TopBar } from "../../../components/app/nav/TopBar";
 import { Editable } from "../../../components/generic/Editable";
 import { adjust, ProcessedCourse, ProcessedStudyBlock, ProcessedUser } from "../../../lib/logic/processing";
 import { Course } from "../../../lib/logic/types";
-import { useApi } from "../../../lib/net/fetch";
+import { routes, useApi } from "../../../lib/net/fetch";
 import { SessionState } from "../../../lib/state/auth";
 import { ProcessedUserState, useInvalidator } from "../../../lib/state/course";
 import themeConstants from "../../../lib/theme";
@@ -85,7 +85,7 @@ const CourseViewInner = ({
 
             <Editable
               onSubmit={async (n) => {
-                const data = await fetcher.post<Course>(`/api/block/${studyBlock.id}/course/${course.id}`, { longName: n });
+                const data = await fetcher.post<Course>(routes.block(studyBlock.id).course(course.id).update(), { longName: n });
                 if (data) {
                   updateCourse(data.id, (e) => data);
                 }
