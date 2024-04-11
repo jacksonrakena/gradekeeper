@@ -4,7 +4,7 @@ Try it now: [gradekeeper.xyz](https://app.gradekeeper.xyz)
 
 Gradekeeper is an free, open-source Rust + React web app that simplifies grade tracking and projections for university students across the globe.
 
-This repository holds the TypeScript/React based client.
+This repository holds the TypeScript/React based client. For the Rust/Axum-based API server, see [jacksonrakena/gradekeeper-server](https://github.com/jacksonrakena/gradekeeper-server).
 
 ### Running a developer environment
 
