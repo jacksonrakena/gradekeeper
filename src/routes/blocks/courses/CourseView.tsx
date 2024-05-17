@@ -22,7 +22,7 @@ import Footer from "../../../components/app/Footer";
 import CourseSwitcher from "../../../components/app/nav/CourseSwitcher";
 import { TopBar } from "../../../components/app/nav/TopBar";
 import { Editable } from "../../../components/generic/Editable";
-import { adjust, ProcessedCourse, ProcessedStudyBlock, ProcessedUser } from "../../../lib/logic/processing";
+import { ProcessedCourse, ProcessedStudyBlock, ProcessedUser, adjust } from "../../../lib/logic/processing";
 import { Course } from "../../../lib/logic/types";
 import { routes, useApi } from "../../../lib/net/fetch";
 import { SessionState } from "../../../lib/state/auth";
@@ -30,9 +30,9 @@ import { ProcessedUserState, useInvalidator } from "../../../lib/state/course";
 import themeConstants from "../../../lib/theme";
 import { DeleteCourseDialog } from "./DeleteCourseDialog";
 import AveragesWidget from "./widgets/AveragesWidget";
-import { ResultsWidget } from "./widgets/components/ResultsWidget";
 import CourseCompletedWidget from "./widgets/CourseCompletedWidget";
 import ProgressBarCaption from "./widgets/ProgressBarCaption";
+import { ResultsWidget } from "./widgets/components/ResultsWidget";
 
 const CourseView = () => {
   const cookie = useAtomValue(SessionState);
@@ -72,6 +72,7 @@ const CourseViewInner = ({
   const contrastingColor = useColorModeValue("white", themeConstants.darkModeContrastingColor);
   const tooltipColor = useColorModeValue("white", "black");
   const { updateCourse } = useInvalidator();
+  console.log(course);
   return (
     <div>
       <DeleteCourseDialog course={course} disclosure={deletionDisclosure} />

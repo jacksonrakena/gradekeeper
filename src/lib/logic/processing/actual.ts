@@ -26,7 +26,10 @@ export function calculateActualGradeForComponent(component: ParsedCourseComponen
   return {
     value,
     letter: calculateLetterGrade(value, gradeMap),
-    isUnknown: false,
+    isUnknown: !(
+      component.subcomponents.filter((e) => e.isCompleted).length >=
+      component.subcomponents.length - component.numberOfSubComponentsToDrop_Lowest
+    ),
     isAverage: false,
   };
 }
