@@ -274,8 +274,10 @@ const Account = () => {
             .
           </Text>
           <Text>
-            Version <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_SHA}</Code> by <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_AUTHOR_LOGIN}</Code>:{" "}
-            <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_MESSAGE}</Code> (mode <Code>{import.meta.env.MODE}</Code>)
+            Version <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_REF}</Code>/
+            <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_SHA?.slice(0, 7)}</Code> by{" "}
+            <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_AUTHOR_LOGIN}</Code>: "{import.meta.env.VITE_VERCEL_GIT_COMMIT_MESSAGE}" (mode{" "}
+            <Code>{import.meta.env.MODE}</Code>)
           </Text>
         </Box>
       </Box>
