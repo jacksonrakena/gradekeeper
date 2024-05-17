@@ -264,7 +264,7 @@ const Account = () => {
       <Divider marginTop={12} marginBottom={8} />
       <Box paddingX={[6, 12]} marginBottom={10}>
         <Box fontSize="sm" textColor={"GrayText"}>
-          <Text>Gradekeeper is &copy; 2022 Animals With Cool Hats, Inc.</Text>
+          <Text>Gradekeeper is &copy; Jackson Rakena.</Text>
           <Text>Gradekeeper is powered by open-source software.</Text>
           <Text>
             Gradekeeper is{" "}
@@ -274,8 +274,8 @@ const Account = () => {
             .
           </Text>
           <Text>
-            Version <Code>{import.meta.env.VERCEL_GIT_COMMIT_SHA}</Code> by <Code>{import.meta.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN}</Code>:{" "}
-            <Code>{import.meta.env.VERCEL_GIT_COMMIT_MESSAGE}</Code> (mode <Code>{import.meta.env.MODE}</Code>)
+            Version <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_SHA}</Code> by <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_AUTHOR_LOGIN}</Code>:{" "}
+            <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_MESSAGE}</Code> (mode <Code>{import.meta.env.MODE}</Code>)
           </Text>
         </Box>
       </Box>
