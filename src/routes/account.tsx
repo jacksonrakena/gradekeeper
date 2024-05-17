@@ -10,10 +10,11 @@ import {
   Avatar,
   Box,
   Button,
+  Code,
   Divider,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Link,
   NumberInput,
   NumberInputField,
@@ -271,6 +272,10 @@ const Account = () => {
               open-source <ExternalLinkIcon mx="2px" />
             </Link>
             .
+          </Text>
+          <Text>
+            Version <Code>{import.meta.env.VERCEL_GIT_COMMIT_SHA}</Code> by <Code>{import.meta.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN}</Code>:{" "}
+            <Code>{import.meta.env.VERCEL_GIT_COMMIT_MESSAGE}</Code> (mode <Code>{import.meta.env.MODE}</Code>)
           </Text>
         </Box>
       </Box>
