@@ -274,11 +274,17 @@ const Account = () => {
             .
           </Text>
           <Text>
-            Version <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_REF}</Code>/
+            Client version <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_REF}</Code>/
             <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_SHA?.slice(0, 7)}</Code> by{" "}
             <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_AUTHOR_LOGIN}</Code>: "{import.meta.env.VITE_VERCEL_GIT_COMMIT_MESSAGE}" (mode{" "}
             <Code>{import.meta.env.MODE}</Code>)
           </Text>
+          {user?.meta && (
+            <Text>
+              Server version <Code>{user?.meta?.name}</Code>@<Code>{user?.meta?.version}</Code> (
+              <Code>{import.meta.env.VITE_API_BASE_URL}</Code>)
+            </Text>
+          )}
         </Box>
       </Box>
     </>

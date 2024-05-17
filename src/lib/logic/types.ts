@@ -2,6 +2,12 @@ export type User = {
   id: string;
   gradeMap: any;
   studyBlocks: StudyBlock[];
+  meta:
+    | Partial<{
+        version: string;
+        name: string;
+      }>
+    | undefined;
 };
 
 export type StudyBlock = {
