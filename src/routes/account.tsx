@@ -281,8 +281,8 @@ const Account = () => {
           </Text>
           {user?.meta && (
             <Text>
-              Server version <Code>{user?.meta?.name}</Code>@<Code>{user?.meta?.version}</Code> (
-              <Code>{import.meta.env.VITE_API_BASE_URL}</Code>)
+              Server version <Code>{user?.meta?.commitBranch}</Code>/<Code>{user?.meta?.commitHash}</Code> (<Code>{user?.meta?.name}</Code>@
+              <Code>{user?.meta?.version}</Code>) by <Code>{user?.meta?.commitAuthorName}</Code>: "{user?.meta?.commitMessage}"
             </Text>
           )}
         </Box>

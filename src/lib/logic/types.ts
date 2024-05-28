@@ -6,6 +6,10 @@ export type User = {
     | Partial<{
         version: string;
         name: string;
+        commitAuthorName: string;
+        commitBranch: string;
+        commitHash: string;
+        commitMessage: string;
       }>
     | undefined;
 };
