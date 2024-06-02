@@ -16,10 +16,10 @@ export const Pill = (
       style={{
         padding: "10px",
         paddingLeft: "25px",
-        borderRadius: "0.6rem",
+        borderRadius: "0.7rem",
         maxWidth: "800px",
         display: "block",
-        backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor),
+        backgroundColor: useColorModeValue("#fff", themeConstants.darkModeContrastingColor),
         transition: "0.25s",
         WebkitFilter: "blur(0)",
         msFilter: "blur(0)",
