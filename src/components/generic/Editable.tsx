@@ -21,7 +21,7 @@ export const Editable = React.forwardRef<HTMLDivElement, EditableProps>((props, 
   if (editing) {
     return (
       <form
-        style={{ display: "inline" }}
+        style={{ display: "inline", color: "black" }}
         onSubmit={(e) => {
           e.preventDefault();
           setEditing(false);
