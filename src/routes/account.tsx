@@ -116,7 +116,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
   const accCardBg = useColorModeValue("white", themeConstants.darkModeContrastingColor);
   return (
     <Box p={4} maxW={800} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={accCardBg}>
-      <Stack spacing={6}>
+      <Stack spacing={2}>
         <Heading size="md">My grade boundaries</Heading>
         <Flex wrap={"wrap"}>
           {predefinedGrades.map((predefinedGrade) => (
@@ -153,7 +153,6 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
             Save
           </Button>{" "}
           <Button
-            mt={2}
             onClick={() => {
               setGradeMap(presets["Victoria University of Wellington"]);
             }}
@@ -238,16 +237,7 @@ const Account = () => {
             <HStack mt={2}>
               <Button
                 size="sm"
-                href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                  JSON.stringify({
-                    meta: {
-                      created: new Date().getTime(),
-                      service: "AWCH_GK_PUBLIC_VCL",
-                      server: "SYD02.SECURE.GRADEKEEPER.XYZ",
-                    },
-                    data: user,
-                  })
-                )}`}
+                href={`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(user))}`}
                 as={"a"}
                 colorScheme={"yellow"}
                 download={`GK_EXPORT_${new Date().getTime()}.json`}
