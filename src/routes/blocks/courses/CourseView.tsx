@@ -1,8 +1,10 @@
+import { preferenceColor } from "@/lib/colors";
 import { DeleteIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Flex,
+  HStack,
   Heading,
   IconButton,
   Spinner,
@@ -16,6 +18,7 @@ import {
   useClipboard,
   useColorModeValue,
   useDisclosure,
+  useTheme,
 } from "@chakra-ui/react";
 import Decimal from "decimal.js";
 import { useAtomValue } from "jotai";
@@ -85,12 +88,17 @@ const CourseViewInner = ({
   const tooltipColor = useColorModeValue("white", "black");
   const { updateCourse } = useInvalidator();
   console.log(course);
+  const theme = useTheme();
   return (
     <div>
       <DeleteCourseDialog course={course} disclosure={deletionDisclosure} />
       <TopBar leftWidget={<CourseSwitcher currentCourse={course} currentStudyBlock={studyBlock} />} />
       <>
-        <Box bgColor={course?.color} className="p-8">
+        <Box
+          bgColor={course?.color}
+          color={preferenceColor(course?.color, theme.colors.brand["900"], theme.colors.brand["100"])}
+          className="p-8"
+        >
           <Flex className="text-3xl">
             <Box display="inline" className="mr-4">
               <Editable
@@ -101,7 +109,7 @@ const CourseViewInner = ({
                     updateCourse(data.id, (e) => data);
                   }
                 }}
-                initialValue={course.courseCodeName}
+                backingValue={course.courseCodeName}
               />
               {course.courseCodeName && " "}
               <Editable
@@ -112,7 +120,7 @@ const CourseViewInner = ({
                     updateCourse(data.id, (e) => data);
                   }
                 }}
-                initialValue={course.courseCodeNumber}
+                backingValue={course.courseCodeNumber}
               />
             </Box>
 
@@ -123,28 +131,28 @@ const CourseViewInner = ({
                   updateCourse(data.id, (e) => data);
                 }
               }}
-              initialValue={course.longName}
+              backingValue={course.longName}
             />
           </Flex>
-          <Box className="text-xl" style={{ color: "#DDDDDD" }}>
-            <Box className="mr-4">
-              <Box display="inline" color="brand.900">
-                <span>{studyBlock?.name}</span>
-              </Box>
-              <IconButton
-                onClick={() => {
-                  deletionDisclosure.onOpen();
-                }}
-                className="ml-4"
-                icon={<DeleteIcon />}
-                size="xs"
-                aria-label={"Delete"}
-                colorScheme="brand"
-              />
-              <Button size="xs" ml={2} onClick={cb.onCopy} colorScheme="brand" disabled={cb.hasCopied}>
-                {cb.hasCopied ? "Copied" : "Copy share code"}
-              </Button>
-            </Box>
+          <Box className="text-xl">
+            <HStack spacing={10} className="mr-4">
+              <Text>{studyBlock?.name}</Text>
+
+              <HStack>
+                <IconButton
+                  onClick={() => {
+                    deletionDisclosure.onOpen();
+                  }}
+                  icon={<DeleteIcon />}
+                  size="xs"
+                  aria-label={"Delete"}
+                  colorScheme="brand"
+                />
+                <Button size="xs" onClick={cb.onCopy} colorScheme="brand" disabled={cb.hasCopied}>
+                  {cb.hasCopied ? "Copied" : "Copy share code"}
+                </Button>
+              </HStack>
+            </HStack>
           </Box>
         </Box>
 
@@ -167,8 +175,17 @@ const CourseViewInner = ({
                 <div className="lg:flex">
                   <Stat className="basis-1/4" style={{ WebkitFlex: "0 !important" }}>
                     <StatLabel fontSize="lg">Projected grade</StatLabel>
-                    <StatNumber>{course.grades.projected?.letter}</StatNumber>
-                    <StatHelpText>{(course.grades.projected?.value ?? new Decimal(0)).mul(100).toPrecision(4)}%</StatHelpText>
+                    {course.grades.projected.value.eq(0) && (
+                      <>
+                        <StatNumber>No data</StatNumber>
+                      </>
+                    )}
+                    {!course.grades.projected.value.eq(0) && (
+                      <>
+                        <StatNumber>{course.grades.projected?.letter}</StatNumber>
+                        <StatHelpText>{(course.grades.projected?.value ?? new Decimal(0)).mul(100).toPrecision(4)}%</StatHelpText>
+                      </>
+                    )}
                   </Stat>
                   <div className="py-3 flex grow mb-6">
                     <div style={{ position: "relative", backgroundColor: "#D9D9D9", height: "30px" }} className="rounded flex grow">
