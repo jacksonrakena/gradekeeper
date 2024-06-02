@@ -1,6 +1,6 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { routes } from "../net/fetch";
 
 export interface UserSessionTicket {
