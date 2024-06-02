@@ -35,6 +35,7 @@ import {
   Thead,
   Tr,
   VStack,
+  useBreakpointValue,
   useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
@@ -62,6 +63,7 @@ export const CreateCourse = (props: { block_id: string }) => {
   const blocks = useAtomValue(ProcessedUserState);
   const navigate = useNavigate();
   const api = useApi();
+  const stepperOrientation = useBreakpointValue<"vertical" | "horizontal">({ base: "vertical", md: "horizontal" });
   const emptyComponents: Partial<ComponentDto>[] = [
     {
       id: randomColor(),
@@ -119,7 +121,7 @@ export const CreateCourse = (props: { block_id: string }) => {
       >
         {({ values, handleSubmit, isSubmitting }) => (
           <Form className="mt-4" onSubmit={handleSubmit}>
-            <Stepper colorScheme={"brand"} index={tabIndex} orientation={"horizontal"}>
+            <Stepper colorScheme={"brand"} index={tabIndex} orientation={stepperOrientation}>
               {[
                 {
                   name: "Course information",
