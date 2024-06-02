@@ -1,15 +1,12 @@
 import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
-import { useAtomValue } from "jotai";
-import { ThemeState } from "./state/theme";
 
 const config: ThemeConfig = {
   initialColorMode: "system",
   useSystemColorMode: true,
 };
 export const Chakra: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const theme = useAtomValue(ThemeState);
-  return <ChakraProvider theme={theme}>{children}</ChakraProvider>;
+  return <ChakraProvider theme={defaultThemes.Default}>{children}</ChakraProvider>;
 };
 
 const regular = (

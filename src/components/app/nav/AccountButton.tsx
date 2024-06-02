@@ -1,20 +1,17 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Avatar, Button, Flex, Icon, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, useColorMode } from "@chakra-ui/react";
-import { useAtom } from "jotai";
 import { AiOutlineHome } from "react-icons/ai";
 import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscSettingsGear } from "react-icons/vsc";
 import { useNavigate } from "react-router";
 import { useAuth, useLogout } from "../../../lib/state/auth";
-import { ThemeNameState } from "../../../lib/state/theme";
 
 const AccountButton = () => {
   const auth = useAuth();
   const logout = useLogout();
   const colorMode = useColorMode();
   const navigate = useNavigate();
-  const [theme, setTheme] = useAtom(ThemeNameState);
   return (
     <Menu>
       <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>
