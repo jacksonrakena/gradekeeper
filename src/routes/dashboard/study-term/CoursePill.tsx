@@ -12,7 +12,6 @@ export const Pill = (
   return (
     <Box
       className="my-4 shadow-md hover:cursor-pointer"
-      {...props.boxProps}
       style={{
         padding: "10px",
         paddingLeft: "25px",
@@ -28,6 +27,7 @@ export const Pill = (
       _hover={{
         transform: "scale(1.01)",
       }}
+      {...props.boxProps}
     >
       {props.children}
     </Box>

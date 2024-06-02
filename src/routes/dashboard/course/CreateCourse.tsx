@@ -27,14 +27,8 @@ import {
   Stepper,
   TabPanel,
   TabPanels,
-  Table,
-  TableContainer,
   Tabs,
-  Tbody,
   Text,
-  Th,
-  Thead,
-  Tr,
   VStack,
   useBreakpointValue,
   useColorModeValue,
@@ -264,39 +258,24 @@ export const CreateCourse = (props: { block_id: string }) => {
                       For example &mdash; if you have 3 assignments, worth 10% each, add a component called 'Assignments', set qty to 3, and
                       'total weighting' to 30%.
                     </div>
-                    <div>
-                      <TableContainer>
-                        <Table variant={"unstyled"}>
-                          <Thead>
-                            <Tr className={tablecolor}>
-                              <Th>Qty.</Th>
-                              <Th>Name</Th>
-                              <Th>Total Weighting</Th>
-                              <Th>Drop lowest</Th>
-                              <Th></Th>
-                            </Tr>
-                          </Thead>
-                          <Tbody>
-                            {components.map((comp) => (
-                              <CreateCourseComponentRow
-                                key={comp.id}
-                                onDelete={() => {
-                                  setComponents(components.filter((a) => a.id !== comp.id));
-                                }}
-                                original={comp}
-                                onUpdate={(f) => {
-                                  setComponents(
-                                    components.map((ff) => {
-                                      if (f.id === ff.id) return f;
-                                      return ff;
-                                    })
-                                  );
-                                }}
-                              />
-                            ))}
-                          </Tbody>
-                        </Table>
-                      </TableContainer>
+                    <Box>
+                      {components.map((comp) => (
+                        <CreateCourseComponentRow
+                          key={comp.id}
+                          onDelete={() => {
+                            setComponents(components.filter((a) => a.id !== comp.id));
+                          }}
+                          original={comp}
+                          onUpdate={(f) => {
+                            setComponents(
+                              components.map((ff) => {
+                                if (f.id === ff.id) return f;
+                                return ff;
+                              })
+                            );
+                          }}
+                        />
+                      ))}
                       <Button
                         colorScheme="blue"
                         aria-label="Add row"
@@ -316,7 +295,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                       >
                         Add component
                       </Button>
-                    </div>
+                    </Box>
                     {!componentsValid && (
                       <Box mt={6}>
                         <Alert status="error" flexDir={"column"} alignItems={"start"}>

@@ -1,6 +1,8 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Flex,
+  HStack,
   IconButton,
   Input,
   NumberDecrementStepper,
@@ -8,12 +10,11 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Td,
   Text,
-  Tr,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { singularMap } from "../../../lib/logic/processing";
+import { Pill } from "../study-term/CoursePill";
 import { ComponentDto } from "./CreateCourse";
 
 export const CreateCourseComponentRow = (props: {
@@ -23,8 +24,8 @@ export const CreateCourseComponentRow = (props: {
 }) => {
   const componentNamePlaceholder = useMemo(() => Object.keys(singularMap)[Math.floor(Object.keys(singularMap).length * Math.random())], []);
   return (
-    <Tr key={props.original.id}>
-      <Td>
+    <Pill boxProps={{ _hover: {} }} key={props.original.id}>
+      <HStack>
         <NumberInput
           variant="flushed"
           onChange={(e, a) => {
@@ -48,8 +49,7 @@ export const CreateCourseComponentRow = (props: {
             <NumberDecrementStepper />
           </NumberInputStepper>
         </NumberInput>
-      </Td>
-      <Td>
+        <Text>x</Text>
         <Input
           type="text"
           variant="flushed"
@@ -58,15 +58,14 @@ export const CreateCourseComponentRow = (props: {
           }}
           value={props.original.name ?? ""}
           id="courseCodeName"
-          minW={"150px"}
           placeholder={componentNamePlaceholder}
           required={true}
         />
-      </Td>
+      </HStack>
 
-      <Td className="p-2">
+      <Box>
         <Flex alignItems={"center"}>
-          <Text mr={1}>%</Text>
+          <Text mr={1}>{props.original.numberOfSubcomponents === "1" ? "Weight" : "Total combined weight"}: %</Text>
           <NumberInput
             display={"inline"}
             variant="flushed"
@@ -76,17 +75,24 @@ export const CreateCourseComponentRow = (props: {
                 weighting: e,
               });
             }}
+            maxWidth={"80px"}
             value={props.original.weighting}
             id="courseCodeName"
+            keepWithinRange={false}
+            clampValueOnBlur={false}
             min={1}
+            max={100}
           >
             <NumberInputField />
           </NumberInput>
         </Flex>
-      </Td>
-      <Td className="p-2">
+      </Box>
+
+      <Flex alignItems={"center"}>
+        Drop lowest:{" "}
         <NumberInput
           display={"inline"}
+          ml={2}
           variant="flushed"
           onChange={(e) => {
             props.onUpdate({
@@ -96,13 +102,14 @@ export const CreateCourseComponentRow = (props: {
           }}
           value={props.original.dropLowest}
           id="courseCodeName"
+          maxW={"80px"}
           //placeholder="0"
           min={0}
         >
           <NumberInputField />
         </NumberInput>
-      </Td>
-      <Td className="p-2">
+      </Flex>
+      <Box className="p-2">
         <IconButton
           colorScheme="brand"
           aria-label="Delete row"
@@ -111,7 +118,7 @@ export const CreateCourseComponentRow = (props: {
             props.onDelete();
           }}
         />
-      </Td>
-    </Tr>
+      </Box>
+    </Pill>
   );
 };
