@@ -19,39 +19,42 @@ export interface AuthStateContext {
   loggedIn: boolean;
   logIn: () => void;
 }
-const getToken = (): string | null => {
-  var b = new URLSearchParams(window.location.search).get("token");
-  return b;
-};
+const SESSION_STATE_KEY = "GK_APP_SESSION";
 
-export const SessionState = atomWithStorage<UserSessionTicket | null>("GK_APP_SESSION", null, {
-  getItem: (key, initialValue) => {
-    let token = getToken();
-    if (token) {
-      var ust: UserSessionTicket = jwtDecode(token);
-      ust.token = token;
-      if (ust.exp && ust.exp > Date.now() / 1000) {
-        window.localStorage.setItem(key, token);
+export const getTicket = (authoritative: boolean = false): UserSessionTicket | null => {
+  let token = new URLSearchParams(window.location.search).get("token");
+  if (token) {
+    var ust: UserSessionTicket = jwtDecode(token);
+    ust.token = token;
+    if (ust.exp && ust.exp > Date.now() / 1000) {
+      window.localStorage.setItem(SESSION_STATE_KEY, token);
+      if (authoritative) {
         console.log("Loaded token from search parameters. Clearing search. Expiry: " + new Date(ust.exp * 1000));
         window.location.search = "";
-        return ust;
       }
-    } else if (window.localStorage.getItem(key)) {
-      token = window.localStorage.getItem(key)!;
-      ust = jwtDecode(token);
-      ust.token = token;
-      if (ust.exp && ust.exp > Date.now() / 1000) {
-        console.log("Loaded token from local storage. Expiry: " + new Date(ust.exp * 1000));
-        return ust;
-      }
+      return ust;
     }
-    return null;
+  } else if (window.localStorage.getItem(SESSION_STATE_KEY)) {
+    token = window.localStorage.getItem(SESSION_STATE_KEY)!;
+    ust = jwtDecode(token);
+    ust.token = token;
+    if (ust.exp && ust.exp > Date.now() / 1000) {
+      if (authoritative) console.log("Loaded token from local storage. Expiry: " + new Date(ust.exp * 1000));
+      return ust;
+    }
+  }
+  return null;
+};
+
+export const SessionState = atomWithStorage<UserSessionTicket | null>(SESSION_STATE_KEY, null, {
+  getItem: (key, initialValue) => {
+    return getTicket(true);
   },
   setItem: (key, value) => {
     if (!value) {
       console.log("Logging out. Clearing search and local storage.");
       window.location.search = "";
-      window.localStorage.removeItem("GK_APP_SESSION");
+      window.localStorage.removeItem(key);
     }
   },
   removeItem: (key) => {

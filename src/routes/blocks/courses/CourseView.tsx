@@ -3,13 +3,16 @@ import {
   Box,
   Button,
   Flex,
+  Heading,
   IconButton,
+  Spinner,
   Stat,
   StatHelpText,
   StatLabel,
   StatNumber,
   Text,
   Tooltip,
+  VStack,
   useClipboard,
   useColorModeValue,
   useDisclosure,
@@ -25,7 +28,7 @@ import { Editable } from "../../../components/generic/Editable";
 import { ProcessedCourse, ProcessedStudyBlock, ProcessedUser, adjust } from "../../../lib/logic/processing";
 import { Course } from "../../../lib/logic/types";
 import { routes, useApi } from "../../../lib/net/fetch";
-import { SessionState } from "../../../lib/state/auth";
+import { SessionState, getTicket } from "../../../lib/state/auth";
 import { ProcessedUserState, useInvalidator } from "../../../lib/state/course";
 import themeConstants from "../../../lib/theme";
 import { DeleteCourseDialog } from "./DeleteCourseDialog";
@@ -43,14 +46,23 @@ const CourseView = () => {
   const course = studyBlock?.courses.find((a) => a.id === course_id);
 
   useEffect(() => {
-    if (!cookie) navigate("/");
-    if (user && !studyBlock) navigate("/");
+    if (!getTicket()) navigate("/");
   }, [cookie, navigate, user, studyBlock]);
 
-  if (!user) return <div>Loading</div>;
-  if (!course || !studyBlock) return <div>Loading</div>;
+  if (!user || !course || !studyBlock) return <CourseLoading />;
 
   return <CourseViewInner user={user} course={course} studyBlock={studyBlock} />;
+};
+
+const CourseLoading = () => {
+  return (
+    <Box my={"20"}>
+      <VStack>
+        <Spinner />
+        <Heading size="md">Loading...</Heading>
+      </VStack>
+    </Box>
+  );
 };
 
 const CourseViewInner = ({
@@ -90,7 +102,8 @@ const CourseViewInner = ({
                   }
                 }}
                 initialValue={course.courseCodeName}
-              />{" "}
+              />
+              {course.courseCodeName && " "}
               <Editable
                 displayProps={{ fontWeight: "semibold" }}
                 onSubmit={async (n) => {
