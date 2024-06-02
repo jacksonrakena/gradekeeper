@@ -1,9 +1,9 @@
 import { Box, BoxProps, Spinner } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export interface EditableProps {
   onSubmit?: (value?: string) => Promise<void>;
-  initialValue: string;
+  backingValue: string;
   formatter?: (value?: string) => string;
   displayProps?: Partial<BoxProps>;
 }
@@ -11,7 +11,10 @@ export interface EditableProps {
 export const Editable = React.forwardRef<HTMLDivElement, EditableProps>((props, ref) => {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState(props.initialValue);
+  const [value, setValue] = useState(props.backingValue);
+  useEffect(() => {
+    setValue(props.backingValue);
+  }, [props.backingValue]);
   if (loading) {
     return <Spinner />;
   }
@@ -32,7 +35,7 @@ export const Editable = React.forwardRef<HTMLDivElement, EditableProps>((props, 
         }}
         onBlur={() => {
           setEditing(false);
-          setValue(props.initialValue);
+          setValue(props.backingValue);
         }}
       >
         <input size={value.length} type={"text"} value={value} onChange={(e) => setValue(e.target.value)} autoFocus />
