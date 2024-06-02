@@ -151,7 +151,7 @@ export const CreateCourse = (props: { block_id: string }) => {
               <TabPanels>
                 <TabPanel>
                   <VStack alignItems={"start"}>
-                    <VStack spacing={6} alignItems={"start"}>
+                    <VStack width="100%" spacing={6} alignItems={"start"}>
                       <HStack spacing={4}>
                         <Field name="codeName">
                           {({ field, form }: { field: any; form: any }) => (
@@ -193,18 +193,9 @@ export const CreateCourse = (props: { block_id: string }) => {
                       </HStack>
                       <Field name="name">
                         {({ field, form }: { field: any; form: any }) => (
-                          <FormControl width={"auto"} isInvalid={form.errors.name && form.touched.name}>
+                          <FormControl isInvalid={form.errors.name && form.touched.name}>
                             <FormLabel htmlFor="name">Course name</FormLabel>
-                            <Input
-                              variant="filled"
-                              htmlSize={16}
-                              width="auto"
-                              size="md"
-                              placeholder="Engineering Design"
-                              {...field}
-                              id="name"
-                              type="text"
-                            />
+                            <Input variant="filled" maxW="500px" placeholder="Engineering Design" {...field} id="name" type="text" />
                             <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                           </FormControl>
                         )}
