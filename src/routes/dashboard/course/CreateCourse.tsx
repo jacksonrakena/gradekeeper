@@ -1,12 +1,19 @@
+import { preferenceColor } from "@/lib/colors";
 import { routes, useApi } from "@/lib/net/fetch";
 import { AddIcon } from "@chakra-ui/icons";
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   HStack,
+  Heading,
   Input,
   Step,
   StepDescription,
@@ -23,21 +30,22 @@ import {
   TableContainer,
   Tabs,
   Tbody,
-  Td,
   Text,
   Th,
   Thead,
   Tr,
+  VStack,
   useColorModeValue,
-  useToast,
+  useTheme,
 } from "@chakra-ui/react";
 import { Decimal } from "decimal.js";
 import { Field, FieldInputProps, FieldMetaProps, Form, Formik, FormikBag } from "formik";
+import { useAtomValue } from "jotai";
 import { useState } from "react";
-import { SwatchesPicker } from "react-color";
+import { HexColorPicker } from "react-colorful";
 import { useNavigate } from "react-router";
 import { randomColor } from "../../../lib/logic/processing";
-import { useInvalidator } from "../../../lib/state/course";
+import { ProcessedUserState, useInvalidator } from "../../../lib/state/course";
 import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
@@ -48,18 +56,10 @@ export type ComponentDto = {
   numberOfSubcomponents: string;
 };
 
-interface CreateCourseFormValues {
-  name: string;
-  codeName: string;
-  codeNo: string;
-  color: string;
-  components: ComponentDto;
-}
-
 export const CreateCourse = (props: { block_id: string }) => {
   const { invalidate } = useInvalidator();
   const block_id = props.block_id;
-  const toast = useToast();
+  const blocks = useAtomValue(ProcessedUserState);
   const navigate = useNavigate();
   const api = useApi();
   const emptyComponents: Partial<ComponentDto>[] = [
@@ -70,13 +70,16 @@ export const CreateCourse = (props: { block_id: string }) => {
       numberOfSubcomponents: "1",
     },
   ];
+  const theme = useTheme();
   const [components, setComponents] = useState(emptyComponents);
+  const componentsValid = components
+    .map((e) => e.weighting)
+    .reduce((a, b) => (a && b ? a?.add(b) : new Decimal(0)))
+    ?.eq(100);
   const tablecolor = useColorModeValue("bg-gray-50", "");
   const [tabIndex, setTabIndex] = useState(0);
   return (
     <div>
-      <div>Let&apos;s make a new course.</div>
-
       <Formik
         initialValues={{
           name: "",
@@ -95,17 +98,12 @@ export const CreateCourse = (props: { block_id: string }) => {
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
           const object = {
-            name: values.name,
-            codeName: values.codeName,
-            codeNo: values.codeNo,
-            color: values.color,
-            components: components.map((c) => {
-              return {
-                ...c,
-                weighting: new Decimal(c.weighting ?? 100).div(100),
-                dropLowest: Number.parseInt(c.dropLowest ?? "0"),
-              };
-            }),
+            ...values,
+            components: components.map((c) => ({
+              ...c,
+              weighting: new Decimal(c.weighting ?? 100).div(100),
+              dropLowest: Number.parseInt(c.dropLowest ?? "0"),
+            })),
           };
           api.post<{ id: string }>(routes.block(block_id).createCourse(), object).then(async (f) => {
             if (f) {
@@ -113,6 +111,8 @@ export const CreateCourse = (props: { block_id: string }) => {
                 setSubmitting(false);
                 navigate(`/blocks/${block_id}/courses/${f.id}`);
               });
+            } else {
+              setSubmitting(false);
             }
           });
         }}
@@ -150,108 +150,136 @@ export const CreateCourse = (props: { block_id: string }) => {
             <Tabs index={tabIndex} onChange={setTabIndex} variant="enclosed" colorScheme="theme">
               <TabPanels>
                 <TabPanel>
-                  <HStack justifyItems={""} wrap={"wrap"}>
-                    <Field name="codeName">
-                      {({ field, form }: { field: any; form: any }) => (
-                        <FormControl width={"auto"} isInvalid={form.errors.codeName && form.touched.codeName}>
-                          <FormLabel htmlFor="name">Faculty code</FormLabel>
-                          <Input
-                            variant="filled"
-                            htmlSize={8}
-                            width="auto"
-                            size="md"
-                            placeholder="ENGR"
-                            {...field}
-                            id="codeName"
-                            type="text"
-                          />
-                          <FormErrorMessage>{form.errors.codeName}</FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
+                  <VStack alignItems={"start"}>
+                    <VStack spacing={6} alignItems={"start"}>
+                      <HStack spacing={4}>
+                        <Field name="codeName">
+                          {({ field, form }: { field: any; form: any }) => (
+                            <FormControl width={"auto"} isInvalid={form.errors.codeName && form.touched.codeName}>
+                              <FormLabel htmlFor="name">Faculty code</FormLabel>
+                              <Input
+                                variant="filled"
+                                htmlSize={8}
+                                width="auto"
+                                size="md"
+                                placeholder="ENGR"
+                                {...field}
+                                id="codeName"
+                                type="text"
+                              />
+                              <FormErrorMessage>{form.errors.codeName}</FormErrorMessage>
+                            </FormControl>
+                          )}
+                        </Field>
 
-                    <Field name="codeNo">
-                      {({ field, form }: { field: any; form: any }) => (
-                        <FormControl width={"auto"} isInvalid={form.errors.codeNo && form.touched.codeNo}>
-                          <FormLabel htmlFor="codeNo">Course number</FormLabel>
-                          <Input
-                            variant="filled"
-                            htmlSize={8}
-                            width="auto"
-                            size="md"
-                            placeholder="101"
-                            {...field}
-                            id="codeNo"
-                            type="text"
-                          />
-                          <FormErrorMessage>{form.errors.codeNo}</FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-                    <Field name="name">
-                      {({ field, form }: { field: any; form: any }) => (
-                        <FormControl width={"auto"} isInvalid={form.errors.name && form.touched.name}>
-                          <FormLabel htmlFor="name">Course name</FormLabel>
-                          <Input
-                            variant="filled"
-                            htmlSize={16}
-                            width="auto"
-                            size="md"
-                            placeholder="Engineering Design"
-                            {...field}
-                            id="name"
-                            type="text"
-                          />
-                          <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-                  </HStack>
+                        <Field name="codeNo">
+                          {({ field, form }: { field: any; form: any }) => (
+                            <FormControl width={"auto"} isInvalid={form.errors.codeNo && form.touched.codeNo}>
+                              <FormLabel htmlFor="codeNo">Course number</FormLabel>
+                              <Input
+                                variant="filled"
+                                htmlSize={8}
+                                width="auto"
+                                size="md"
+                                placeholder="101"
+                                {...field}
+                                id="codeNo"
+                                type="text"
+                              />
+                              <FormErrorMessage>{form.errors.codeNo}</FormErrorMessage>
+                            </FormControl>
+                          )}
+                        </Field>
+                      </HStack>
+                      <Field name="name">
+                        {({ field, form }: { field: any; form: any }) => (
+                          <FormControl width={"auto"} isInvalid={form.errors.name && form.touched.name}>
+                            <FormLabel htmlFor="name">Course name</FormLabel>
+                            <Input
+                              variant="filled"
+                              htmlSize={16}
+                              width="auto"
+                              size="md"
+                              placeholder="Engineering Design"
+                              {...field}
+                              id="name"
+                              type="text"
+                            />
+                            <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                      <Field name="color">
+                        {({
+                          field,
+                          form,
+                          meta,
+                        }: {
+                          field: FieldInputProps<string>;
+                          form: FormikBag<string, any>;
+                          meta: FieldMetaProps<string>;
+                        }) => (
+                          <FormControl>
+                            <FormLabel htmlFor="color">Course color</FormLabel>
+                            <HexColorPicker
+                              color={field.value}
+                              onChange={(e) => {
+                                form.setFieldValue("color", e, true);
+                              }}
+                            />
+                            {/*  <SwatchesPicker
+                               color={field.value}
+                               onChangeComplete={(e, event) => {
+                                 form.setFieldValue("color", e.hex, true);
+                               }}
+                             /> */}
+                          </FormControl>
+                        )}
+                      </Field>
+                      <Heading size="md">Preview</Heading>
+                      <Box
+                        bgColor={values.color}
+                        color={preferenceColor(values.color, theme.colors.brand["900"], theme.colors.brand["100"])}
+                        p={4}
+                        w="100%"
+                      >
+                        <VStack alignItems={"start"}>
+                          <HStack>
+                            <Text fontWeight={"semibold"} display={"inline"} mr={2}>
+                              {values.codeName} {values.codeNo}
+                            </Text>
+                            <Text display={"inline"}> {values.name}</Text>
+                          </HStack>
+                          <Text>{blocks?.studyBlocks.filter((e) => e.id === block_id)[0].name}</Text>
+                        </VStack>
+                      </Box>
+                    </VStack>
+                  </VStack>
 
-                  <Field name="color">
-                    {({
-                      field,
-                      form,
-                      meta,
-                    }: {
-                      field: FieldInputProps<string>;
-                      form: FormikBag<string, any>;
-                      meta: FieldMetaProps<string>;
-                    }) => (
-                      <FormControl>
-                        <FormLabel htmlFor="color">Course color</FormLabel>
-                        <SwatchesPicker
-                          color={field.value}
-                          onChangeComplete={(e, event) => {
-                            form.setFieldValue("color", e.hex, true);
-                          }}
-                        />
-                      </FormControl>
-                    )}
-                  </Field>
                   <Button mt={4} colorScheme={"brand"} onClick={() => setTabIndex(1)}>
                     Next
                   </Button>
                 </TabPanel>
                 <TabPanel>
-                  <div style={{ maxWidth: "95%" }}>
-                    <div className="mb-2 text-xl font-semibold">Syllabus components</div>
+                  <div>
+                    <Box className="mb-2 text-xl font-semibold">Syllabus components</Box>
                     <div className="text-sm mb-4">
                       Components are pieces of work that contribute to your grade. <br />
                       For example, assignments and tests are components. <br />
                       <br />
-                      Each component can have subcomponents, for example Test 1. <br />
+                      For example &mdash; if you have 3 assignments, worth 10% each, add a component called 'Assignments', set qty to 3, and
+                      'total weighting' to 30%.
                     </div>
                     <div>
                       <TableContainer>
-                        <Table>
+                        <Table variant={"unstyled"}>
                           <Thead>
                             <Tr className={tablecolor}>
-                              <Th className="">Qty.</Th>
-                              <Th className="">Name</Th>
-                              <Th className="">Total Weighting</Th>
-                              <Th className="">Drop lowest</Th>
-                              <Th className=""></Th>
+                              <Th>Qty.</Th>
+                              <Th>Name</Th>
+                              <Th>Total Weighting</Th>
+                              <Th>Drop lowest</Th>
+                              <Th></Th>
                             </Tr>
                           </Thead>
                           <Tbody>
@@ -272,35 +300,50 @@ export const CreateCourse = (props: { block_id: string }) => {
                                 }}
                               />
                             ))}
-                            <Tr key="add">
-                              <Td>
-                                <Button
-                                  colorScheme="blue"
-                                  aria-label="Add row"
-                                  size="sm"
-                                  onClick={() => {
-                                    setComponents([
-                                      ...components,
-                                      {
-                                        id: Math.random().toString(),
-                                        dropLowest: "0",
-                                        weighting: new Decimal(10),
-                                        numberOfSubcomponents: "1",
-                                      },
-                                    ]);
-                                  }}
-                                  leftIcon={<AddIcon />}
-                                >
-                                  Add component
-                                </Button>
-                              </Td>
-                            </Tr>
                           </Tbody>
                         </Table>
                       </TableContainer>
+                      <Button
+                        colorScheme="blue"
+                        aria-label="Add row"
+                        size="sm"
+                        onClick={() => {
+                          setComponents([
+                            ...components,
+                            {
+                              id: Math.random().toString(),
+                              dropLowest: "0",
+                              weighting: new Decimal(10),
+                              numberOfSubcomponents: "1",
+                            },
+                          ]);
+                        }}
+                        leftIcon={<AddIcon />}
+                      >
+                        Add component
+                      </Button>
                     </div>
+                    {!componentsValid && (
+                      <Box mt={6}>
+                        <Alert status="error" flexDir={"column"} alignItems={"start"}>
+                          <Flex>
+                            <AlertIcon />
+                            <AlertTitle>Syllabus must add up to 100%</AlertTitle>
+                          </Flex>
+                          <AlertDescription mt={4}>
+                            The components you have added only account for{" "}
+                            {components
+                              .map((e) => e.weighting)
+                              .reduce((a, b) => (a && b ? a?.add(b) : new Decimal(0)))
+                              ?.toDecimalPlaces(2)
+                              .toString()}
+                            % of your course grade.
+                          </AlertDescription>
+                        </Alert>
+                      </Box>
+                    )}
                   </div>
-                  <Button mt={4} colorScheme={"brand"} onClick={() => setTabIndex(2)}>
+                  <Button mt={4} colorScheme={"brand"} onClick={() => setTabIndex(2)} isDisabled={!componentsValid}>
                     Next
                   </Button>
                 </TabPanel>

@@ -24,7 +24,7 @@ export const CreateCourseComponentRow = (props: {
     <Tr key={props.original.id}>
       <Td>
         <NumberInput
-          variant="outline"
+          variant="flushed"
           onChange={(e, a) => {
             props.onUpdate({
               ...props.original,
@@ -34,9 +34,9 @@ export const CreateCourseComponentRow = (props: {
           value={props.original.numberOfSubcomponents ?? 1}
           id="courseCodeName"
           placeholder="2"
-          width={"70px"}
           min={1}
           max={10}
+          w="50px"
           display={"flex"}
           alignItems={"center"}
         >
@@ -47,10 +47,10 @@ export const CreateCourseComponentRow = (props: {
           </NumberInputStepper>
         </NumberInput>
       </Td>
-      <Td className="">
+      <Td>
         <Input
           type="text"
-          variant="filled"
+          variant="flushed"
           onChange={(e) => {
             props.onUpdate({ ...props.original, name: e.target.value });
           }}
@@ -66,7 +66,7 @@ export const CreateCourseComponentRow = (props: {
         %
         <NumberInput
           display={"inline"}
-          variant="filled"
+          variant="flushed"
           onChange={(e) => {
             props.onUpdate({
               ...props.original,
