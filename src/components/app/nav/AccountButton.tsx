@@ -1,19 +1,5 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Avatar,
-  Button,
-  Flex,
-  Icon,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuGroup,
-  MenuItem,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Avatar, Button, Flex, Icon, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, useColorMode } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { AiOutlineHome } from "react-icons/ai";
 import { IoIosLogOut } from "react-icons/io";
@@ -22,7 +8,6 @@ import { VscSettingsGear } from "react-icons/vsc";
 import { useNavigate } from "react-router";
 import { useAuth, useLogout } from "../../../lib/state/auth";
 import { ThemeNameState } from "../../../lib/state/theme";
-import { defaultThemes } from "../../../lib/theme";
 
 const AccountButton = () => {
   const auth = useAuth();
@@ -31,7 +16,7 @@ const AccountButton = () => {
   const navigate = useNavigate();
   const [theme, setTheme] = useAtom(ThemeNameState);
   return (
-    <Menu colorScheme={"brand"} variant={"unfilled"}>
+    <Menu>
       <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>
         <Flex alignItems="center">
           <Avatar size="sm" name={auth.session?.name} src={auth.session?.picture ?? ""} mr={2}></Avatar>
@@ -52,34 +37,16 @@ const AccountButton = () => {
         <MenuItem onClick={colorMode.toggleColorMode} closeOnSelect={false}>
           <Flex alignItems={"center"}>
             <Icon as={colorMode.colorMode === "dark" ? MdDarkMode : MdLightMode} w={4} h={4} mr={2} />{" "}
-            {colorMode.colorMode === "dark" ? "Dark" : "Light"}
+            {colorMode.colorMode === "dark" ? <>Dark mode</> : <>Light mode</>}
           </Flex>
         </MenuItem>
-        <MenuDivider />
-        <MenuOptionGroup
-          title="Theme"
-          value={theme}
-          type="radio"
-          onChange={(v) => {
-            if (!v) return;
-            console.log(typeof v === "string" ? v : v[0]);
-            setTheme((typeof v === "string" ? v : v[0]) as keyof typeof defaultThemes);
-          }}
-        >
-          {Object.entries(defaultThemes).map(([key, value]) => (
-            <MenuItemOption closeOnSelect={false} key={key} value={key}>
-              {key}
-            </MenuItemOption>
-          ))}
-        </MenuOptionGroup>
-        <MenuDivider />
         <MenuItem
           onClick={() => {
             navigate("/account");
           }}
         >
           <Flex alignItems={"center"}>
-            <Icon w={4} h={4} as={VscSettingsGear} mr={2} /> My account
+            <Icon w={4} h={4} as={VscSettingsGear} mr={2} /> Settings
           </Flex>
         </MenuItem>
         <MenuDivider />
