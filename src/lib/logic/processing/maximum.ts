@@ -23,7 +23,7 @@ export function calculateMaximumPossibleComponentGrade(component: ParsedCourseCo
     .div(component.subcomponents.length - component.numberOfSubComponentsToDrop_Lowest);
   return {
     value: value,
-    isAverage: component.subcomponents.filter((e) => !e.isCompleted).length != 0,
+    isAverage: component.subcomponents.filter((e) => !e.isCompleted).length !== 0,
     isUnknown: false,
     letter: calculateLetterGrade(value, gradeMap),
   };

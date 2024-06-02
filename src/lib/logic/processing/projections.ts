@@ -33,7 +33,7 @@ export function calculateProjectedGradeForComponent(component: ParsedCourseCompo
   return {
     value: value,
     letter: calculateLetterGrade(value, gradeMap),
-    isAverage: component.subcomponents.filter((e) => !e.isCompleted).length != 0,
+    isAverage: component.subcomponents.filter((e) => !e.isCompleted).length !== 0,
     isUnknown: false,
   };
 }

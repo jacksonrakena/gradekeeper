@@ -33,7 +33,7 @@ export const CreateCourseComponentRow = (props: {
           }}
           value={props.original.numberOfSubcomponents ?? 1}
           id="courseCodeName"
-          placeholder="2"
+          //placeholder="2"
           min={1}
           max={10}
           w="50px"
@@ -93,7 +93,7 @@ export const CreateCourseComponentRow = (props: {
           }}
           value={props.original.dropLowest}
           id="courseCodeName"
-          placeholder="0"
+          //placeholder="0"
           min={0}
         >
           <NumberInputField />
