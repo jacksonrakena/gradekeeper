@@ -1,5 +1,6 @@
 import { preferenceColor } from "@/lib/colors";
 import { routes, useApi } from "@/lib/net/fetch";
+import { isPossibleDecimal } from "@/lib/util";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Alert,
@@ -51,7 +52,7 @@ import { CreateCourseComponentRow } from "./CreateCourseComponentRow";
 
 export type ComponentDto = {
   id: string;
-  weighting: Decimal;
+  weighting: string;
   dropLowest: string;
   name: string;
   numberOfSubcomponents: string;
@@ -68,14 +69,14 @@ export const CreateCourse = (props: { block_id: string }) => {
     {
       id: randomColor(),
       dropLowest: "0",
-      weighting: new Decimal(20),
+      weighting: "20",
       numberOfSubcomponents: "1",
     },
   ];
   const theme = useTheme();
   const [components, setComponents] = useState(emptyComponents);
   const componentsValid = components
-    .map((e) => e.weighting)
+    .map((e) => (isPossibleDecimal(e.weighting) ? new Decimal(e.weighting!) : new Decimal(0)))
     .reduce((a, b) => (a && b ? a?.add(b) : new Decimal(0)))
     ?.eq(100);
   const tablecolor = useColorModeValue("bg-gray-50", "");
@@ -306,7 +307,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                             {
                               id: Math.random().toString(),
                               dropLowest: "0",
-                              weighting: new Decimal(10),
+                              weighting: "10",
                               numberOfSubcomponents: "1",
                             },
                           ]);
@@ -326,7 +327,7 @@ export const CreateCourse = (props: { block_id: string }) => {
                           <AlertDescription mt={4}>
                             The components you have added only account for{" "}
                             {components
-                              .map((e) => e.weighting)
+                              .map((e) => (isPossibleDecimal(e.weighting) ? new Decimal(e.weighting!) : new Decimal(0)))
                               .reduce((a, b) => (a && b ? a?.add(b) : new Decimal(0)))
                               ?.toDecimalPlaces(2)
                               .toString()}

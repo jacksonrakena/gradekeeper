@@ -1,5 +1,6 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
+  Flex,
   IconButton,
   Input,
   NumberDecrementStepper,
@@ -8,6 +9,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   Td,
+  Text,
   Tr,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
@@ -63,28 +65,29 @@ export const CreateCourseComponentRow = (props: {
       </Td>
 
       <Td className="p-2">
-        %
-        <NumberInput
-          display={"inline"}
-          variant="flushed"
-          onChange={(e) => {
-            props.onUpdate({
-              ...props.original,
-              weighting: e,
-            });
-          }}
-          value={props.original.weighting}
-          id="courseCodeName"
-          placeholder="2"
-          min={1}
-        >
-          <NumberInputField />
-        </NumberInput>
+        <Flex alignItems={"center"}>
+          <Text mr={1}>%</Text>
+          <NumberInput
+            display={"inline"}
+            variant="flushed"
+            onChange={(e) => {
+              props.onUpdate({
+                ...props.original,
+                weighting: e,
+              });
+            }}
+            value={props.original.weighting}
+            id="courseCodeName"
+            min={1}
+          >
+            <NumberInputField />
+          </NumberInput>
+        </Flex>
       </Td>
       <Td className="p-2">
         <NumberInput
           display={"inline"}
-          variant="filled"
+          variant="flushed"
           onChange={(e) => {
             props.onUpdate({
               ...props.original,
