@@ -2,16 +2,14 @@ export type User = {
   id: string;
   gradeMap: any;
   studyBlocks: StudyBlock[];
-  meta:
-    | Partial<{
-        version: string;
-        name: string;
-        commitAuthorName: string;
-        commitBranch: string;
-        commitHash: string;
-        commitMessage: string;
-      }>
-    | undefined;
+  meta: {
+    version: string;
+    name: string;
+    commitAuthorName: string;
+    commitBranch: string;
+    commitHash: string;
+    commitMessage: string;
+  };
 };
 
 export type StudyBlock = {
