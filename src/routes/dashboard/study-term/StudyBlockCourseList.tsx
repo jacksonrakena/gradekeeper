@@ -48,8 +48,8 @@ const StudyBlockCourseList = (props: { studyBlock: ProcessedStudyBlock }) => {
         </Text>
         {!props.studyBlock.gpaEstimate?.value.isZero() && (
           <Text color={"GrayText"}>
-            GPA estimate: NZ {props.studyBlock.gpaEstimate?.value.toString()} ({props.studyBlock.gpaEstimate?.letter}) &bull; US{" "}
-            {props.studyBlock.usGpaEstimate?.value.toString()} ({props.studyBlock.usGpaEstimate?.letter})
+            GPA estimate: NZ {props.studyBlock.gpaEstimate?.value.toDecimalPlaces(2).toString()} ({props.studyBlock.gpaEstimate?.letter})
+            &bull; US {props.studyBlock.usGpaEstimate?.value.toDecimalPlaces(2).toString()} ({props.studyBlock.usGpaEstimate?.letter})
           </Text>
         )}
 
