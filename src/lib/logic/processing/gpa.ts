@@ -30,6 +30,13 @@ function reversed(object: any) {
   return Object.fromEntries(Object.entries(object).map(([key, value]) => [value, key]));
 }
 export function calculateGpaBasedOnTable(processedCourses: ProcessedCourse[], gpaMap: GpaTable): CourseGrade {
+  if (processedCourses.length === 0) {
+    return {
+      isUnknown: true,
+      letter: "Z",
+      value: new Decimal(0),
+    };
+  }
   let markTotal = new Decimal(0);
   for (let c of processedCourses) {
     if (gpaMap[c.grades.projected.letter]) markTotal = markTotal.plus(new Decimal(gpaMap[c.grades.projected.letter]));
