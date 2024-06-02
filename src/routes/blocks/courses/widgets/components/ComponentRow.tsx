@@ -3,7 +3,7 @@ import { Box, Flex, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import Decimal from "decimal.js";
 import { useAtomValue } from "jotai";
 import { Editable } from "../../../../../components/generic/Editable";
-import { calculateLetterGrade, ProcessedCourse, ProcessedCourseComponent } from "../../../../../lib/logic/processing";
+import { ProcessedCourse, ProcessedCourseComponent, calculateLetterGrade } from "../../../../../lib/logic/processing";
 import { CourseComponent } from "../../../../../lib/logic/types";
 import { routes, useApi } from "../../../../../lib/net/fetch";
 import { ProcessedUserState, useInvalidator } from "../../../../../lib/state/course";
@@ -31,7 +31,7 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
                 updateComponent(subject.id, e.id, (d) => data);
               }
             }}
-            initialValue={e.name}
+            backingValue={e.name}
           />
           <Text ml={1}>{e.subcomponents?.length > 1 ? <span>({e.subcomponents.length})</span> : ""}</Text>
         </Flex>
@@ -51,7 +51,7 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
               updateComponent(subject.id, e.id, (d) => data);
             }
           }}
-          initialValue={e.subjectWeighting.mul(100).toString()}
+          backingValue={e.subjectWeighting.mul(100).toString()}
           formatter={(v) => `${v}%`}
         />
       </Td>
@@ -74,7 +74,7 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
                 );
                 if (data) updateComponent(props.course.id, props.component.id, () => data);
               }}
-              initialValue={props.component.subcomponents[0]?.isCompleted ? grade.value.mul(100).toString() : "0"}
+              backingValue={props.component.subcomponents[0]?.isCompleted ? grade.value.mul(100).toString() : "0"}
               formatter={(v) => `${v}%`}
             />
           </Tooltip>

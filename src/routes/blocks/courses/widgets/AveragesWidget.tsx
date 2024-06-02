@@ -1,4 +1,5 @@
 import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react";
+import Decimal from "decimal.js";
 import { ProcessedCourse } from "../../../../lib/logic/processing";
 import themeConstants from "../../../../lib/theme";
 
@@ -15,7 +16,7 @@ const AveragesWidget = (props: { course: ProcessedCourse }) => {
     ?.map((d) =>
       d.subcomponents
         .filter((e) => !e.isCompleted)
-        .map((e) => d.subjectWeighting / (d.subcomponents.length - d.numberOfSubComponentsToDrop_Lowest))
+        .map((e) => d.subjectWeighting.div(d.subcomponents.length - d.numberOfSubComponentsToDrop_Lowest))
     )
     .flat();
   return (
@@ -36,7 +37,13 @@ const AveragesWidget = (props: { course: ProcessedCourse }) => {
             <Tbody>
               {unachievedGrades
                 ?.sort((a, b) => b - a)
-                .filter((e) => ((e - actual.value) / remainingPieces.reduce((a, b) => a + b)) * 100 <= 100)
+                .filter((e) =>
+                  new Decimal(e)
+                    .sub(actual.value)
+                    .div(remainingPieces.reduce((a, b) => a.plus(b)))
+                    .mul(100)
+                    .lte(100)
+                )
                 .map((e) => (
                   <Tr key={e}>
                     <Td>
@@ -47,7 +54,12 @@ const AveragesWidget = (props: { course: ProcessedCourse }) => {
                     <Td>
                       <Flex direction={"row"}>
                         <Text color={"brand"} fontWeight="semibold">
-                          {(((e - actual.value) / remainingPieces.reduce((a, b) => a + b)) * 100).toFixed(1)}
+                          {new Decimal(e)
+                            .sub(actual.value)
+                            .div(remainingPieces.reduce((a, b) => a.plus(b)))
+                            .mul(100)
+                            .toFixed(1)
+                            .toString()}
                         </Text>
                         %
                       </Flex>
