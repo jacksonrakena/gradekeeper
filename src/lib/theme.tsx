@@ -36,6 +36,18 @@ const regular = (
 
 export const defaultThemes = {
   Default: regular({
+    "50": "#f9fafa",
+    "100": "#f1f1f1",
+    "200": "#e7e7e8",
+    "300": "#d3d4d4",
+    "400": "#acadad",
+    "500": "#7e7f80",
+    "600": "#535556",
+    "700": "#353738",
+    "800": "#1e2022",
+    "900": "#181a1c",
+  }),
+  Legacy: regular({
     "50": "#e9fcee",
     "100": "#b3eec3",
     "200": "#9ed2ac",
