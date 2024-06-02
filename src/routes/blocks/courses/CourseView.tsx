@@ -81,7 +81,26 @@ const CourseViewInner = ({
         <Box bgColor={course?.color} className="p-8">
           <Flex className="text-3xl">
             <Box display="inline" className="mr-4">
-              <Text display="inline">{course?.courseCodeName}</Text> {course?.courseCodeNumber}
+              <Editable
+                displayProps={{ fontWeight: "semibold" }}
+                onSubmit={async (n) => {
+                  const data = await fetcher.post<Course>(routes.block(studyBlock.id).course(course.id).update(), { courseCodeName: n });
+                  if (data) {
+                    updateCourse(data.id, (e) => data);
+                  }
+                }}
+                initialValue={course.courseCodeName}
+              />{" "}
+              <Editable
+                displayProps={{ fontWeight: "semibold" }}
+                onSubmit={async (n) => {
+                  const data = await fetcher.post<Course>(routes.block(studyBlock.id).course(course.id).update(), { courseCodeNumber: n });
+                  if (data) {
+                    updateCourse(data.id, (e) => data);
+                  }
+                }}
+                initialValue={course.courseCodeNumber}
+              />
             </Box>
 
             <Editable

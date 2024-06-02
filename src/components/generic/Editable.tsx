@@ -1,10 +1,11 @@
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box, BoxProps, Spinner } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 export interface EditableProps {
   onSubmit?: (value?: string) => Promise<void>;
   initialValue: string;
   formatter?: (value?: string) => string;
+  displayProps?: Partial<BoxProps>;
 }
 
 export const Editable = React.forwardRef<HTMLDivElement, EditableProps>((props, ref) => {
@@ -46,6 +47,7 @@ export const Editable = React.forwardRef<HTMLDivElement, EditableProps>((props, 
         setEditing(true);
       }}
       ref={ref}
+      {...props.displayProps}
     >
       {(props.formatter ?? ((v) => v))(value)}
     </Box>
