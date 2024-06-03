@@ -4,6 +4,19 @@ import { useState } from "react";
 import { useAuth } from "../lib/state/auth";
 import themeConstants from "../lib/theme";
 
+const MarketingBox = (props: { heading: string; img: string }) => {
+  return (
+    <Box p={8} style={{ borderRadius: 25 }} bgColor={useColorModeValue("white", themeConstants.darkModeContrastingColor)}>
+      <Stack align="center">
+        <Heading size="md" mb={4}>
+          {props.heading}
+        </Heading>
+        <Img src={props.img} />
+      </Stack>
+    </Box>
+  );
+};
+
 const MarketingHome = () => {
   const [loadingApp, setLoadingApp] = useState(false);
   const auth = useAuth();
@@ -24,24 +37,17 @@ const MarketingHome = () => {
             onClick={() => {
               setLoadingApp(true);
               auth.logIn();
-              //signIn("google");
             }}
             colorScheme={"brand"}
           >
             Get started <ArrowForwardIcon ml={2} />
           </Button>
-          <Box p={8} style={{ borderRadius: 25 }} bgColor={useColorModeValue("white", themeConstants.darkModeContrastingColor)}>
-            <Stack align="center">
-              <Heading size="md" mb={4}>
-                View all your classes
-              </Heading>
-              <Img src="https://i.imgur.com/PUxo2sF.jpg" />
-            </Stack>
-          </Box>
+          <MarketingBox heading="View all your classes" img="https://i.imgur.com/PUxo2sF.jpg" />
+          <MarketingBox heading="See your 🇺🇸 and 🇳🇿 GPA" img="https://i.imgur.com/feaGmRS.png" />
+          <MarketingBox heading="See what you need to get the grades you deserve" img="https://i.imgur.com/iq8JuKs.png" />
         </Stack>
         <Text color="#555555" textAlign={"center"} fontSize="sm">
-          Copyright &copy; 2022 Jackson Rakena <br />
-          This is beta software. <br />
+          &copy; 2022&mdash;2024 Jackson Rakena <br />
         </Text>
       </Container>
     </div>
