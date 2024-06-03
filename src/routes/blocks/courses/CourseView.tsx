@@ -5,16 +5,13 @@ import {
   Button,
   Flex,
   HStack,
-  Heading,
   IconButton,
-  Spinner,
   Stat,
   StatHelpText,
   StatLabel,
   StatNumber,
   Text,
   Tooltip,
-  VStack,
   useClipboard,
   useColorModeValue,
   useDisclosure,
@@ -27,6 +24,7 @@ import { useNavigate, useParams } from "react-router";
 import Footer from "../../../components/app/Footer";
 import CourseSwitcher from "../../../components/app/nav/CourseSwitcher";
 import { TopBar } from "../../../components/app/nav/TopBar";
+import { GenericLoading } from "../../../components/generic/GenericLoading";
 import { Editable } from "../../../components/generic/Editable";
 import { ProcessedCourse, ProcessedStudyBlock, ProcessedUser, adjust } from "../../../lib/logic/processing";
 import { Course } from "../../../lib/logic/types";
@@ -52,20 +50,9 @@ const CourseView = () => {
     if (!getTicket()) navigate("/");
   }, [cookie, navigate, user, studyBlock]);
 
-  if (!user || !course || !studyBlock) return <CourseLoading />;
+  if (!user || !course || !studyBlock) return <GenericLoading />;
 
   return <CourseViewInner user={user} course={course} studyBlock={studyBlock} />;
-};
-
-const CourseLoading = () => {
-  return (
-    <Box my={"20"}>
-      <VStack>
-        <Spinner />
-        <Heading size="md">Loading...</Heading>
-      </VStack>
-    </Box>
-  );
 };
 
 const CourseViewInner = ({

@@ -8,8 +8,10 @@ export const useInvalidator = () => {
   const [user, setUser] = useAtom(UserState);
   const fetcher = useApi();
   const invalidate = async () => {
+    let t0 = Date.now();
     let data = await fetcher.json<User>(routes.getMe());
-    console.log("[invalidator] " + (!!user ? "New" : "Initial") + " user download: ", data);
+    let t1 = Date.now();
+    console.log("[invalidator] " + (!!user ? "New" : "Initial") + ` user download in ${t1 - t0}ms`, data);
     setUser(data);
   };
   const updateStudyBlock = (studyBlockId: string, replacementStudyBlock: StudyBlock | null) => {

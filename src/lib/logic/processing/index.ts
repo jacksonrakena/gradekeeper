@@ -2,15 +2,15 @@ import Decimal from "decimal.js";
 import { ParsedCourse, ParsedCourseComponent, ParsedCourseSubcomponent, ParsedStudyBlock, parseStudyBlock } from "../parsing";
 import { StudyBlock, User } from "../types";
 import {
-  calculateActualCourseProgressGrade as calculateActualCourseGrade,
   calculateActualGradeForComponent as calculateActualComponentGrade,
+  calculateActualCourseProgressGrade as calculateActualCourseGrade,
 } from "./actual";
-import { calculateGpaBasedOnTable, NzGpaTable, UsGpaTable } from "./gpa";
+import { NzGpaTable, UsGpaTable, calculateGpaBasedOnTable } from "./gpa";
 import {
   calculateMaximumPossibleComponentGrade as calculateMaximumComponentGrade,
   calculateMaximumPossibleCourseGrade as calculateMaximumCourseGrade,
 } from "./maximum";
-import { calculateProjectedCourseGrade, calculateProjectedGradeForComponent as calculateProjectedComponentGrade } from "./projections";
+import { calculateProjectedGradeForComponent as calculateProjectedComponentGrade, calculateProjectedCourseGrade } from "./projections";
 
 export type GradeMap = { [x: string]: string };
 
@@ -64,7 +64,9 @@ export function processUser(data: User): ProcessedUser {
   const components = courses.map((e) => e.components).flat();
   const subcomponents = components.map((e) => e.subcomponents).flat();
   console.log(
-    `Processed ${courses.length} courses, ${components.length} components, and ${subcomponents.length} subcomponents in ${end - start}ms`,
+    `[processor] Processed ${courses.length} courses, ${components.length} components, and ${subcomponents.length} subcomponents in ${
+      end - start
+    }ms`,
     u
   );
   return u;

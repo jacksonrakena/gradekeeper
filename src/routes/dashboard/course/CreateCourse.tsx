@@ -31,7 +31,6 @@ import {
   Text,
   VStack,
   useBreakpointValue,
-  useColorModeValue,
   useTheme,
 } from "@chakra-ui/react";
 import { Decimal } from "decimal.js";
@@ -73,7 +72,6 @@ export const CreateCourse = (props: { block_id: string }) => {
     .map((e) => (isPossibleDecimal(e.weighting) ? new Decimal(e.weighting!) : new Decimal(0)))
     .reduce((a, b) => (a && b ? a?.add(b) : new Decimal(0)))
     ?.eq(100);
-  const tablecolor = useColorModeValue("bg-gray-50", "");
   const [tabIndex, setTabIndex] = useState(0);
   return (
     <div>

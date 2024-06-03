@@ -16,7 +16,7 @@ const ComponentRow = (props: { component: ProcessedCourseComponent; course: Proc
   const grade = props.component.grades.projected;
   const fetcher = useApi();
   return (
-    <Tr key={e.name}>
+    <Tr key={e.id}>
       <Td pl={0}>
         <Flex alignItems="center">
           <Editable

@@ -29,7 +29,7 @@ import { useAtomValue } from "jotai";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { TopBar } from "../components/app/nav/TopBar";
-import { useAuth, useLogout } from "../lib/state/auth";
+import { useLogout, useSession } from "../lib/state/auth";
 import { ProcessedUserState, useInvalidator } from "../lib/state/course";
 import themeConstants from "../lib/theme";
 
@@ -170,7 +170,7 @@ const GradeMapEditor = (props: { gradeMap: object }) => {
 const Account = () => {
   const user = useAtomValue(ProcessedUserState);
   const api = useApi();
-  const auth = useAuth();
+  const session = useSession();
   const logout = useLogout();
   const navigate = useNavigate();
   const deleteModal = useDisclosure();
@@ -221,11 +221,11 @@ const Account = () => {
           <Stack spacing={12}>
             <Flex direction="column" p={4} overflowX="auto" boxShadow={"md"} rounded="md" bgColor={accCardBg}>
               <Flex alignItems="center">
-                <Avatar src={auth.session?.picture} name={auth.session?.name ?? ""} size={"md"} mr={4} />
+                <Avatar src={session?.picture} name={session?.name ?? ""} size={"md"} mr={4} />
                 <Box>
-                  <Heading size="md">{auth.session?.name}</Heading>
+                  <Heading size="md">{session?.name}</Heading>
                   <Text fontSize="md" color={"GrayText"}>
-                    {auth.session?.id}
+                    {session?.id}
                   </Text>
                 </Box>
               </Flex>

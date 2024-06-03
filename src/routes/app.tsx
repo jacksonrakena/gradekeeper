@@ -1,13 +1,13 @@
-import { useAuth } from "../lib/state/auth";
+import { useSession } from "../lib/state/auth";
 import Dashboard from "./dashboard";
 import MarketingHome from "./MarketingHome";
 
 export const App = () => {
-  const auth = useAuth();
+  const session = useSession();
   return (
     <>
-      {auth.loggedIn && <Dashboard />}
-      {!auth.loggedIn && <MarketingHome />}
+      {session && <Dashboard />}
+      {!session && <MarketingHome />}
     </>
   );
 };

@@ -1,20 +1,15 @@
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Box, Flex, Heading, IconButton, Text, useDisclosure } from "@chakra-ui/react";
-import { useAtomValue } from "jotai";
+import { Box, Flex, HStack, Heading, IconButton, Text, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Pill } from "../../../components/generic/Pill";
 import { ProcessedStudyBlock } from "../../../lib/logic/processing";
-import { ProcessedUserState } from "../../../lib/state/course";
-import CoursePill, { Pill } from "./CoursePill";
+import CoursePill from "./CoursePill";
 import CreateCourseModal from "./CreateCourseModal";
 import { DeleteStudyBlockAlert } from "./DeleteStudyBlockAlert";
 
-const StudyBlockCourseList = (props: { studyBlock: ProcessedStudyBlock }) => {
-  const studyBlock = props.studyBlock;
-  const navigate = useNavigate();
+const StudyBlockCourseList = ({ studyBlock }: { studyBlock: ProcessedStudyBlock }) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const courseCreateDisclosure = useDisclosure();
-  const user = useAtomValue(ProcessedUserState);
   const sbStart = new Date(studyBlock.startDate);
   const sbEnd = new Date(studyBlock.endDate);
   const dtf = new Intl.DateTimeFormat("en-US", {
@@ -22,45 +17,38 @@ const StudyBlockCourseList = (props: { studyBlock: ProcessedStudyBlock }) => {
     day: "numeric",
     year: "numeric",
   });
-  if (!user) return <></>;
   return (
     <>
       <CreateCourseModal blockId={studyBlock.id} {...courseCreateDisclosure} />
       <DeleteStudyBlockAlert isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} studyBlock={studyBlock} />
       <Box mb={12} key={studyBlock.id}>
-        <Heading size="lg">
-          {studyBlock.name}
+        <HStack alignItems={"center"} spacing={4}>
+          <Heading size="lg">{studyBlock.name}</Heading>
 
           <IconButton
             onClick={() => {
               setIsDeleteOpen(true);
             }}
-            className="ml-4"
             icon={<DeleteIcon />}
             size="xs"
             aria-label={"Delete"}
             colorScheme="brand"
           />
-        </Heading>
+        </HStack>
 
         <Text>
-          {dtf.format(sbStart)} &#8212; {dtf.format(sbEnd)}
+          {dtf.format(sbStart)} &mdash; {dtf.format(sbEnd)}
         </Text>
-        {!props.studyBlock.gpaEstimate?.value.isZero() && (
+
+        {!studyBlock.gpaEstimate?.value.isZero() && (
           <Text color={"GrayText"}>
-            GPA estimate: NZ {props.studyBlock.gpaEstimate?.value.toDecimalPlaces(2).toString()} ({props.studyBlock.gpaEstimate?.letter})
-            &bull; US {props.studyBlock.usGpaEstimate?.value.toDecimalPlaces(2).toString()} ({props.studyBlock.usGpaEstimate?.letter})
+            GPA estimate: NZ {studyBlock.gpaEstimate?.value.toDecimalPlaces(2).toString()} ({studyBlock.gpaEstimate?.letter}) &bull; US{" "}
+            {studyBlock.usGpaEstimate?.value.toDecimalPlaces(2).toString()} ({studyBlock.usGpaEstimate?.letter})
           </Text>
         )}
 
-        {studyBlock.courses.map((subject) => (
-          <CoursePill
-            key={subject.id}
-            onClick={() => {
-              navigate(`/blocks/${studyBlock.id}/courses/${subject.id}`);
-            }}
-            subject={subject}
-          />
+        {studyBlock.courses.map((course) => (
+          <CoursePill key={course.id} course={course} studyBlock={studyBlock} />
         ))}
         <Pill
           boxProps={{

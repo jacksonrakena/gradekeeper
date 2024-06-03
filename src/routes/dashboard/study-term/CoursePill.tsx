@@ -1,91 +1,53 @@
-import { Box, BoxProps, Flex, Icon, Tag, Text, useColorModeValue } from "@chakra-ui/react";
-import { PropsWithChildren } from "react";
+import { Box, Flex, HStack, Icon, Tag, Text } from "@chakra-ui/react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { ProcessedCourse } from "../../../lib/logic/processing";
-import themeConstants from "../../../lib/theme";
+import { useNavigate } from "react-router";
+import { Pill } from "../../../components/generic/Pill";
+import { ProcessedCourse, ProcessedStudyBlock } from "../../../lib/logic/processing";
 
-export const Pill = (
-  props: PropsWithChildren<{
-    boxProps?: Partial<BoxProps>;
-  }>
-) => {
-  return (
-    <Box
-      className="my-4 shadow-md hover:cursor-pointer"
-      style={{
-        padding: "10px",
-        paddingLeft: "25px",
-        borderRadius: "0.7rem",
-        maxWidth: "800px",
-        display: "block",
-        backgroundColor: useColorModeValue("#fff", themeConstants.darkModeContrastingColor),
-        transition: "0.25s",
-        WebkitFilter: "blur(0)",
-        msFilter: "blur(0)",
-        filter: "none",
-      }}
-      _hover={{
-        transform: "scale(1.01)",
-      }}
-      {...props.boxProps}
-    >
-      {props.children}
-    </Box>
-  );
-};
-
-const CoursePill = (props: { subject: ProcessedCourse; onClick: () => any }) => {
-  const subject = props.subject;
+const CoursePill = ({ studyBlock, course }: { studyBlock: ProcessedStudyBlock; course: ProcessedCourse }) => {
+  const navigate = useNavigate();
   return (
     <Pill
       boxProps={{
-        onClick: props.onClick,
+        onClick: () => {
+          navigate(`/blocks/${studyBlock.id}/courses/${course.id}`);
+        },
       }}
     >
-      <Text size="md" fontWeight={"semibold"}>
-        <span style={{ color: subject.color }} className="pr-4">
-          {subject.courseCodeName} {subject.courseCodeNumber}
-        </span>
-        <span style={{ fontWeight: "bold" }}>{subject.longName} </span>
-      </Text>
-      {!subject.status.isCompleted ? (
-        <>
-          <div className="flex">
-            <Box style={{ textAlign: "center" }} className=" flex flex-col">
-              {subject.grades.projected.value.eq(0) ? (
-                <Tag px={3} my={3} colorScheme={"brand"}>
-                  No data
-                </Tag>
-              ) : (
-                <Flex flexDir={"column"} mx={2}>
-                  <span style={{ fontWeight: "bold" }}>{subject.grades.projected.letter}</span>
-                  <span>{subject.grades.projected.value.mul(100).toFixed(2)}%</span>
-                </Flex>
-              )}
-            </Box>
+      <Box fontWeight={"semibold"}>
+        <Text display={"inline"} color={course.color} pr={4}>
+          {course.courseCodeName} {course.courseCodeNumber}
+        </Text>
+        <Text display={"inline"} fontWeight={"bold"}>
+          {course.longName}
+        </Text>
+      </Box>
 
-            <div className="py-3 px-4 flex grow">
-              <div style={{ backgroundColor: "#D9D9D9" }} className="rounded flex grow">
-                <div
-                  style={{ backgroundColor: subject.color, width: "" + subject.grades.projected.value.mul(100) + "%" }}
-                  className="rounded"
-                ></div>
-              </div>
-            </div>
-          </div>
-        </>
+      {!course.status.isCompleted ? (
+        <Flex>
+          <Flex direction={"column"} textAlign={"center"}>
+            {course.grades.projected.value.eq(0) ? (
+              <Tag px={3} my={3} colorScheme={"brand"}>
+                No data
+              </Tag>
+            ) : (
+              <Flex flexDir={"column"} mx={2}>
+                <span style={{ fontWeight: "bold" }}>{course.grades.projected.letter}</span>
+                <span>{course.grades.projected.value.mul(100).toFixed(2)}%</span>
+              </Flex>
+            )}
+          </Flex>
+
+          <Flex grow={1} bgColor="#D9D9D9" className="rounded" mx={4} my={3}>
+            <Box bgColor={course.color} width={course.grades.projected.value.mul(100) + "%"} className="rounded"></Box>
+          </Flex>
+        </Flex>
       ) : (
-        <>
-          <div className="flex items-center justify-center">
-            <div className="flex items-center">
-              <Icon color={subject.color} as={BsCheckCircleFill} w={4} h={4} mr={2} />
-              <Text style={{ fontWeight: "bold" }} mr={2}>
-                {subject.grades.actual.letter}
-              </Text>
-              <Text>{subject.grades.actual.value.mul(100).toFixed(2)}%</Text>
-            </div>
-          </div>
-        </>
+        <HStack justifyContent={"center"}>
+          <Icon color={course.color} as={BsCheckCircleFill} w={4} h={4} />
+          <Text fontWeight="bold">{course.grades.actual.letter}</Text>
+          <Text>{course.grades.actual.value.mul(100).toDecimalPlaces(2).toString()}%</Text>
+        </HStack>
       )}
     </Pill>
   );

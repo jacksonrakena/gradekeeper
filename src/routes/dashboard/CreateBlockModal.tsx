@@ -62,6 +62,8 @@ export const CreateBlock = (props: { onClose: () => void }) => {
           validate={(values) => {
             const errors: any = {};
             if (!values.name) errors["name"] = "Required";
+            if (!values.startDate) errors["startDate"] = "Required";
+            if (!values.endDate) errors["endDate"] = "Required";
             return errors;
           }}
           onSubmit={(values, { setSubmitting }) => {
@@ -79,17 +81,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
               });
           }}
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            setValues,
-            /* and other goodies */
-          }) => (
+          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setValues, isValid }) => (
             <Form onSubmit={handleSubmit}>
               <Box className="my-4">
                 <FormLabel>Select a template:</FormLabel>
@@ -190,7 +182,7 @@ export const CreateBlock = (props: { onClose: () => void }) => {
                         )}
                       </Field>
                     </Flex>
-                    <Button type="submit" isLoading={isSubmitting} colorScheme="brand">
+                    <Button type="submit" isLoading={isSubmitting} isDisabled={!isValid} colorScheme="brand">
                       Create
                     </Button>
                   </Box>

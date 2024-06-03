@@ -13,8 +13,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
+import { Pill } from "../../../components/generic/Pill";
 import { singularMap } from "../../../lib/logic/processing";
-import { Pill } from "../study-term/CoursePill";
 import { ComponentDto } from "./CreateCourse";
 
 export const CreateCourseComponentRow = (props: {
