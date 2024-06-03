@@ -1,14 +1,16 @@
 import { Chakra } from "@/lib/theme";
-import { Box, Link as CLink, Heading, SlideFade, Text, VStack } from "@chakra-ui/react";
+import { SlideFade } from "@chakra-ui/react";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { RouterProvider } from "react-router";
-import { Link, createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { useSession } from "./lib/state/auth";
 import { UserState, useInvalidator } from "./lib/state/course";
 import { Index } from "./routes";
 import Account from "./routes/account";
 import CourseView from "./routes/blocks/courses/CourseView";
+import { Error404 } from "./routes/errors.404";
+import { ErrorGeneral } from "./routes/errors.general";
 import Donations from "./routes/legal/donate";
 import CompletedDonation from "./routes/legal/donate/completed";
 import PrivacyPolicy from "./routes/legal/privacy";
@@ -35,41 +37,36 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
+    errorElement: <ErrorGeneral />,
   },
   {
     path: "/blocks/:block_id/courses/:course_id",
     element: <CourseView />,
+    errorElement: <ErrorGeneral />,
   },
   {
     path: "/legal/donate",
     element: <Donations />,
+    errorElement: <ErrorGeneral />,
   },
   {
     path: "/legal/donate/completed",
     element: <CompletedDonation />,
+    errorElement: <ErrorGeneral />,
   },
   {
     path: "/legal/privacy",
     element: <PrivacyPolicy />,
+    errorElement: <ErrorGeneral />,
   },
   {
     path: "/account",
     element: <Account />,
+    errorElement: <ErrorGeneral />,
   },
   {
     path: "*",
-    element: (
-      <Box my={"20"}>
-        <VStack>
-          <Heading size="md">Page not found.</Heading>
-          <Text>
-            Would you like to{" "}
-            <CLink color="teal.700">
-              <Link to="/">go back home?</Link>
-            </CLink>
-          </Text>
-        </VStack>
-      </Box>
-    ),
+    element: <Error404 />,
+    errorElement: <ErrorGeneral />,
   },
 ]);
