@@ -3,8 +3,10 @@ import { DeleteIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Link as CLink,
   Flex,
   HStack,
+  Heading,
   IconButton,
   Stat,
   StatHelpText,
@@ -12,6 +14,7 @@ import {
   StatNumber,
   Text,
   Tooltip,
+  VStack,
   useClipboard,
   useColorModeValue,
   useDisclosure,
@@ -21,11 +24,12 @@ import Decimal from "decimal.js";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
+import { Link } from "react-router-dom";
 import Footer from "../../../components/app/Footer";
 import CourseSwitcher from "../../../components/app/nav/CourseSwitcher";
 import { TopBar } from "../../../components/app/nav/TopBar";
-import { GenericLoading } from "../../../components/generic/GenericLoading";
 import { Editable } from "../../../components/generic/Editable";
+import { GenericLoading } from "../../../components/generic/GenericLoading";
 import { ProcessedCourse, ProcessedStudyBlock, ProcessedUser, adjust } from "../../../lib/logic/processing";
 import { Course } from "../../../lib/logic/types";
 import { routes, useApi } from "../../../lib/net/fetch";
@@ -50,7 +54,21 @@ const CourseView = () => {
     if (!getTicket()) navigate("/");
   }, [cookie, navigate, user, studyBlock]);
 
-  if (!user || !course || !studyBlock) return <GenericLoading />;
+  if (!user) return <GenericLoading />;
+  if (!course || !studyBlock)
+    return (
+      <Box my={"20"}>
+        <VStack>
+          <Heading size="md">Course not found.</Heading>
+          <Text>
+            Would you like to{" "}
+            <CLink color="teal.700">
+              <Link to="/">go back to all courses?</Link>
+            </CLink>
+          </Text>
+        </VStack>
+      </Box>
+    );
 
   return <CourseViewInner user={user} course={course} studyBlock={studyBlock} />;
 };

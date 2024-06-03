@@ -1,13 +1,13 @@
 import { Chakra } from "@/lib/theme";
-import { SlideFade } from "@chakra-ui/react";
+import { Box, Link as CLink, Heading, SlideFade, Text, VStack } from "@chakra-ui/react";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { RouterProvider } from "react-router";
-import { createBrowserRouter } from "react-router-dom";
+import { Link, createBrowserRouter } from "react-router-dom";
 import { useSession } from "./lib/state/auth";
-import { useInvalidator, UserState } from "./lib/state/course";
+import { UserState, useInvalidator } from "./lib/state/course";
+import { Index } from "./routes";
 import Account from "./routes/account";
-import { App } from "./routes/app";
 import CourseView from "./routes/blocks/courses/CourseView";
 import Donations from "./routes/legal/donate";
 import CompletedDonation from "./routes/legal/donate/completed";
@@ -34,7 +34,7 @@ export const AppRoot = () => {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Index />,
   },
   {
     path: "/blocks/:block_id/courses/:course_id",
@@ -55,5 +55,21 @@ const router = createBrowserRouter([
   {
     path: "/account",
     element: <Account />,
+  },
+  {
+    path: "*",
+    element: (
+      <Box my={"20"}>
+        <VStack>
+          <Heading size="md">Page not found.</Heading>
+          <Text>
+            Would you like to{" "}
+            <CLink color="teal.700">
+              <Link to="/">go back home?</Link>
+            </CLink>
+          </Text>
+        </VStack>
+      </Box>
+    ),
   },
 ]);
