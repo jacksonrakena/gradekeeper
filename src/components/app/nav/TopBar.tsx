@@ -1,25 +1,26 @@
 import { Button, SkeletonText } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import { useAuth } from "../../../lib/state/auth";
+import { useLogin, useSession } from "../../../lib/state/auth";
 import AccountButton from "./AccountButton";
 
 export const TopBar = (props: { leftWidget?: ReactElement }) => {
-  const auth = useAuth();
+  const login = useLogin();
+  const session = useSession();
 
   return (
     <div>
       <div className="w-full p-2 flex flex-row">
         <div className="grow">{props.leftWidget}</div>
         <div>
-          <SkeletonText isLoaded={auth.loggedIn}>
-            {auth.loggedIn ? (
+          <SkeletonText isLoaded={!!session}>
+            {session ? (
               <AccountButton />
             ) : (
               <>
                 <Button
                   colorScheme={"brand"}
                   onClick={() => {
-                    auth.logIn();
+                    login();
                   }}
                 >
                   Sign in

@@ -1,9 +1,9 @@
-import { atom, useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { jwtDecode } from "jwt-decode";
 import { routes } from "../net/fetch";
 
-export interface UserSessionTicket {
+export interface Session {
   exp: number;
   iat: number;
   id: string;
@@ -12,24 +12,17 @@ export interface UserSessionTicket {
   token: string;
 }
 
-export type AuthorizationState = "not_logged_in" | "logged_in";
-
-export interface AuthStateContext {
-  session: UserSessionTicket | null;
-  loggedIn: boolean;
-  logIn: () => void;
-}
 const SESSION_STATE_KEY = "GK_APP_SESSION";
 
-export const getTicket = (authoritative: boolean = false): UserSessionTicket | null => {
+export const getTicket = (authoritative: boolean = false): Session | null => {
   let token = new URLSearchParams(window.location.search).get("token");
   if (token) {
-    var ust: UserSessionTicket = jwtDecode(token);
+    var ust: Session = jwtDecode(token);
     ust.token = token;
     if (ust.exp && ust.exp > Date.now() / 1000) {
       window.localStorage.setItem(SESSION_STATE_KEY, token);
       if (authoritative) {
-        console.log("Loaded token from search parameters. Clearing search. Expiry: " + new Date(ust.exp * 1000));
+        console.log("Loaded session from search parameters. Expiry: " + new Date(ust.exp * 1000));
         window.location.search = "";
       }
       return ust;
@@ -39,14 +32,14 @@ export const getTicket = (authoritative: boolean = false): UserSessionTicket | n
     ust = jwtDecode(token);
     ust.token = token;
     if (ust.exp && ust.exp > Date.now() / 1000) {
-      if (authoritative) console.log("Loaded token from local storage. Expiry: " + new Date(ust.exp * 1000));
+      if (authoritative) console.log("Loaded session from local storage. Expiry: " + new Date(ust.exp * 1000));
       return ust;
     }
   }
   return null;
 };
 
-export const SessionState = atomWithStorage<UserSessionTicket | null>(SESSION_STATE_KEY, null, {
+export const SessionState = atomWithStorage<Session | null>(SESSION_STATE_KEY, null, {
   getItem: (key, initialValue) => {
     return getTicket(true);
   },
@@ -62,25 +55,21 @@ export const SessionState = atomWithStorage<UserSessionTicket | null>(SESSION_ST
   },
 });
 
-export const useAuth = () => useAtomValue(AuthState);
+export const useSession = () => {
+  return useAtomValue(SessionState);
+};
 export const useLogout = () => {
   const cookie = useSetAtom(SessionState);
   return () => cookie(null);
 };
-export const AuthState = atom<AuthStateContext>((get) => {
-  const cookie = get(SessionState);
+export const useLogin = () => {
+  const cookie = useSession();
   if (!cookie)
-    return {
-      session: null,
-      loggedIn: false,
-      logIn: () => {
-        console.log("Logging in...");
-        window.location.href = routes.auth.login() + "?redirectUrl=" + window.location.origin;
-      },
+    return () => {
+      console.log("Logging in...");
+      window.location.href = routes.auth.login() + "?redirectUrl=" + window.location.origin;
     };
-  return {
-    session: cookie,
-    loggedIn: true,
-    logIn: () => {},
+  return () => {
+    console.error("useLogin invoked while session state is valid.");
   };
-});
+};

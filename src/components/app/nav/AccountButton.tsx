@@ -5,10 +5,10 @@ import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscSettingsGear } from "react-icons/vsc";
 import { useNavigate } from "react-router";
-import { useAuth, useLogout } from "../../../lib/state/auth";
+import { useLogout, useSession } from "../../../lib/state/auth";
 
 const AccountButton = () => {
-  const auth = useAuth();
+  const session = useSession();
   const logout = useLogout();
   const colorMode = useColorMode();
   const navigate = useNavigate();
@@ -16,8 +16,8 @@ const AccountButton = () => {
     <Menu>
       <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>
         <Flex alignItems="center">
-          <Avatar size="sm" name={auth.session?.name} src={auth.session?.picture ?? ""} mr={2}></Avatar>
-          {auth.session?.name}
+          <Avatar size="sm" name={session?.name} src={session?.picture ?? ""} mr={2}></Avatar>
+          {session?.name}
         </Flex>
       </MenuButton>
       <MenuList overflow={"hidden"}>

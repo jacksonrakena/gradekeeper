@@ -1,13 +1,13 @@
 import { useToast } from "@chakra-ui/react";
-import { useAuth } from "../state/auth";
+import { useSession } from "../state/auth";
 
 export const useApi = () => {
   const toast = useToast();
-  const auth = useAuth();
+  const session = useSession();
   const fetcher = {
     request: async (route: string, info: RequestInit): Promise<Response | null> => {
       try {
-        const d = await fetch(route, { ...info, headers: { ...info.headers, Authorization: `Bearer ${auth.session?.token}` } });
+        const d = await fetch(route, { ...info, headers: { ...info.headers, Authorization: `Bearer ${session?.token}` } });
         if (!d.ok) {
           try {
             const data = await d.json();
