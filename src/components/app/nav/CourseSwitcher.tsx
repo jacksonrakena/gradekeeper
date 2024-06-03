@@ -6,16 +6,13 @@ import { ProcessedCourseInfo, ProcessedStudyBlock } from "../../../../lib/logic/
 import { ProcessedUserState } from "../../../lib/state/course";
 
 const CourseSwitcher = (props: { currentCourse: ProcessedCourseInfo; currentStudyBlock: ProcessedStudyBlock }) => {
-  const allStudyBlocks = useAtomValue(ProcessedUserState)?.studyBlocks;
   const navigate = useNavigate();
 
   const user = useAtomValue(ProcessedUserState);
-  const subjects = user?.studyBlocks?.filter((e) => Date.now() < new Date(e.endDate).getTime()).flatMap((d) => d.courses);
-  const blockMap = subjects?.reduce((block: { [x: string]: any }, course) => {
-    block[course.studyBlockId] = block[course.studyBlockId] ?? [];
-    block[course.studyBlockId].push(course);
-    return block;
-  }, {});
+  const blocks =
+    user?.studyBlocks?.filter(
+      (e) => Date.now() < new Date(e.endDate).getTime() && e.courses.filter((d) => d.id !== props.currentCourse?.id).length !== 0
+    ) ?? [];
 
   return (
     <Menu isLazy={true}>
@@ -31,26 +28,24 @@ const CourseSwitcher = (props: { currentCourse: ProcessedCourseInfo; currentStud
           <Text fontWeight="semibold">Dashboard</Text>
         </MenuItem>
         <MenuDivider />
-        {Object.keys(blockMap as any)
-          .filter((blockName) => blockMap[blockName].filter((gg: any) => gg.id !== props.currentCourse?.id).length !== 0)
-          .map((block) => (
-            <MenuGroup key={block} title={allStudyBlocks?.filter((d) => d.id === block)[0].name}>
-              {props.currentStudyBlock?.courses
-                ?.filter((e) => e.id !== props.currentCourse?.id && e.studyBlockId === block)
-                .map((d) => (
-                  <MenuItem
-                    onClick={() => {
-                      navigate(`/blocks/${d.studyBlockId}/courses/${d.id}`);
-                    }}
-                    key={d.id}
-                  >
-                    <Text fontWeight={"semibold"} color={d.color}>
-                      {d.courseCodeName} {d.courseCodeNumber}: {d.longName}
-                    </Text>
-                  </MenuItem>
-                ))}
-            </MenuGroup>
-          ))}
+        {blocks.map((block) => (
+          <MenuGroup key={block.id} title={block.name}>
+            {block.courses
+              ?.filter((e) => e.id !== props.currentCourse?.id)
+              .map((course) => (
+                <MenuItem
+                  onClick={() => {
+                    navigate(`/blocks/${block.id}/courses/${course.id}`);
+                  }}
+                  key={course.id}
+                >
+                  <Text fontWeight={"semibold"} color={course.color}>
+                    {course.courseCodeName} {course.courseCodeNumber}: {course.longName}
+                  </Text>
+                </MenuItem>
+              ))}
+          </MenuGroup>
+        ))}
       </MenuList>
     </Menu>
   );
