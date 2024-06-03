@@ -15,8 +15,8 @@ export const ErrorGeneral = () => {
         </Text>
         <Text>
           Please report to{" "}
-          <a href="mailto:support@gradekeeper.xyz">
-            <CLink color="teal.700">support@gradekeeper.xyz</CLink>
+          <a href="mailto:jackson@rakena.co.nz">
+            <CLink color="teal.700">jackson@rakena.co.nz</CLink>
           </a>
           .
         </Text>
