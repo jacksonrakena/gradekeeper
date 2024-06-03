@@ -1,7 +1,7 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Button, Container, Heading, Img, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { useState } from "react";
-import { useAuth } from "../lib/state/auth";
+import { useLogin } from "../lib/state/auth";
 import themeConstants from "../lib/theme";
 
 const MarketingBox = (props: { heading: string; img: string }) => {
@@ -19,7 +19,7 @@ const MarketingBox = (props: { heading: string; img: string }) => {
 
 const MarketingHome = () => {
   const [loadingApp, setLoadingApp] = useState(false);
-  const auth = useAuth();
+  const login = useLogin();
   return (
     <div className="m-12">
       <Container>
@@ -36,7 +36,7 @@ const MarketingHome = () => {
             isLoading={loadingApp}
             onClick={() => {
               setLoadingApp(true);
-              auth.logIn();
+              login();
             }}
             colorScheme={"brand"}
           >
