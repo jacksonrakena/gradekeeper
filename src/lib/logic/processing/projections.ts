@@ -5,11 +5,9 @@ import { ParsedCourse, ParsedCourseComponent } from "../parsing";
 export function calculateProjectedCourseGrade(subject: ParsedCourse, gradeMap: GradeMap): CourseGrade {
   if (!subject.components || subject.components.length === 0) return { value: new Decimal(0), letter: "Z", isUnknown: false };
   const numericalvalue = subject.components
-    ?.map((g) => {
-      const grade = calculateProjectedGradeForComponent(g, gradeMap);
-      return grade.value.mul(g.subjectWeighting);
-    })
+    .map((g) => calculateProjectedGradeForComponent(g, gradeMap).value.mul(g.subjectWeighting))
     .reduce((a, b) => a.add(b));
+
   var completedWeighting;
   var completedWeightingArr = subject.components.filter((d) => getActiveSubcomponents(d).length !== 0).map((g) => g.subjectWeighting);
   if (completedWeightingArr.length === 0) {
