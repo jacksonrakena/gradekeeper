@@ -82,7 +82,7 @@ const CourseViewInner = ({
   course: ProcessedCourse;
   studyBlock: ProcessedStudyBlock;
 }) => {
-  const gradeMap = user?.gradeMap;
+  const gradeMap = user.gradeMap;
   const fetcher = useApi();
 
   const cb = useClipboard(course.id || "");
@@ -92,7 +92,6 @@ const CourseViewInner = ({
   const contrastingColor = useColorModeValue("white", themeConstants.darkModeContrastingColor);
   const tooltipColor = useColorModeValue("white", "black");
   const { updateCourse } = useInvalidator();
-  console.log(course);
   const theme = useTheme();
   return (
     <div>

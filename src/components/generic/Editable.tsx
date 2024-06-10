@@ -1,4 +1,4 @@
-import { Box, BoxProps, Spinner } from "@chakra-ui/react";
+import { Box, BoxProps, Spinner, useColorModeValue } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 export interface EditableProps {
@@ -15,13 +15,14 @@ export const Editable = React.forwardRef<HTMLDivElement, EditableProps>((props, 
   useEffect(() => {
     setValue(props.backingValue);
   }, [props.backingValue]);
+  const textForeground = useColorModeValue("black", "white");
   if (loading) {
     return <Spinner />;
   }
   if (editing) {
     return (
       <form
-        style={{ display: "inline", color: "black" }}
+        style={{ display: "inline", color: textForeground }}
         onSubmit={(e) => {
           e.preventDefault();
           setEditing(false);
