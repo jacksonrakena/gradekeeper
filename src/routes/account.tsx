@@ -264,6 +264,7 @@ const Account = () => {
             .
           </Text>
           <Text>
+            <br />
             Client version <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_REF}</Code>/
             <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_SHA?.slice(0, 7)}</Code> by{" "}
             <Code>{import.meta.env.VITE_VERCEL_GIT_COMMIT_AUTHOR_LOGIN}</Code>: "{import.meta.env.VITE_VERCEL_GIT_COMMIT_MESSAGE}" (mode{" "}
@@ -271,8 +272,10 @@ const Account = () => {
           </Text>
           {user?.meta && (
             <Text>
+              <br />
               Server version <Code>{user?.meta?.commitBranch}</Code>/<Code>{user?.meta?.commitHash}</Code> (<Code>{user?.meta?.name}</Code>@
               <Code>{user?.meta?.version}</Code>) by <Code>{user?.meta?.commitAuthorName}</Code>: "{user?.meta?.commitMessage}"
+              {!Number.isNaN(user?.meta.compiledAt) && <>, compiled {new Date(Number.parseInt(user?.meta.compiledAt) * 1000).toString()}</>}
             </Text>
           )}
         </Box>

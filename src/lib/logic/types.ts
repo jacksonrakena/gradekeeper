@@ -9,6 +9,7 @@ export type User = {
     commitBranch: string;
     commitHash: string;
     commitMessage: string;
+    compiledAt: string;
   };
 };
 
