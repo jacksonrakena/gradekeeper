@@ -68,10 +68,10 @@ export const CreateCourse = (props: { block_id: string }) => {
   ];
   const theme = useTheme();
   const [components, setComponents] = useState(emptyComponents);
-  const componentsValid = components
+  const totalComponentWeight = components
     .map((e) => (isPossibleDecimal(e.weighting) ? new Decimal(e.weighting!) : new Decimal(0)))
-    .reduce((a, b) => (a && b ? a?.add(b) : new Decimal(0)))
-    ?.eq(100);
+    .reduce((a, b) => (a && b ? a?.add(b) : new Decimal(0)), new Decimal(0));
+  const componentsValid = totalComponentWeight.eq(100);
   const [tabIndex, setTabIndex] = useState(0);
   return (
     <div>
@@ -302,13 +302,8 @@ export const CreateCourse = (props: { block_id: string }) => {
                             <AlertTitle>Syllabus must add up to 100%</AlertTitle>
                           </Flex>
                           <AlertDescription mt={4}>
-                            The components you have added only account for{" "}
-                            {components
-                              .map((e) => (isPossibleDecimal(e.weighting) ? new Decimal(e.weighting!) : new Decimal(0)))
-                              .reduce((a, b) => (a && b ? a?.add(b) : new Decimal(0)))
-                              ?.toDecimalPlaces(2)
-                              .toString()}
-                            % of your course grade.
+                            The components you have added only account for {totalComponentWeight.toDecimalPlaces(2).toString()}% of your
+                            course grade.
                           </AlertDescription>
                         </Alert>
                       </Box>
