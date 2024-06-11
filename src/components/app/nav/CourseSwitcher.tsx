@@ -1,11 +1,11 @@
+import { ProcessedCourse, ProcessedStudyBlock } from "@/lib/logic/processing";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router";
-import { ProcessedCourseInfo, ProcessedStudyBlock } from "../../../../lib/logic/processing";
 import { ProcessedUserState } from "../../../lib/state/course";
 
-const CourseSwitcher = (props: { currentCourse: ProcessedCourseInfo; currentStudyBlock: ProcessedStudyBlock }) => {
+const CourseSwitcher = (props: { currentCourse: ProcessedCourse; currentStudyBlock: ProcessedStudyBlock }) => {
   const navigate = useNavigate();
 
   const user = useAtomValue(ProcessedUserState);
