@@ -33,16 +33,18 @@ export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor
               </Tr>
             </Thead>
             <Tbody>
-              {props.course.components.map((e, i) => (
-                <ComponentRow
-                  onEditSubcomponents={() => {
-                    setTargetComponent(e);
-                  }}
-                  course={props.course}
-                  key={e.id}
-                  component={e}
-                />
-              ))}
+              {props.course.components
+                .toSorted((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0))
+                .map((e, i) => (
+                  <ComponentRow
+                    onEditSubcomponents={() => {
+                      setTargetComponent(e);
+                    }}
+                    course={props.course}
+                    key={e.id}
+                    component={e}
+                  />
+                ))}
             </Tbody>
           </Table>
         </TableContainer>

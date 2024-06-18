@@ -39,6 +39,7 @@ export type CourseComponent = {
   subjectWeighting: string;
   numberOfSubComponentsToDrop_Lowest: number;
   subcomponents: CourseSubcomponent[];
+  sequenceNumber?: number;
 };
 
 export type CourseSubcomponent = {
