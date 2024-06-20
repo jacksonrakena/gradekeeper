@@ -28,12 +28,11 @@ export const ResultsWidget = (props: { course: ProcessedCourse }) => {
     if (!over) return;
     if (active.id !== over.id) {
       (async () => {
-        const first = props.course.components.filter((e) => e.id === active.id)[0];
-        const second = props.course.components.filter((e) => e.id === over.id)[0];
-
-        const fi = comp.indexOf(first);
-        const si = comp.indexOf(second);
-        const resultant = arrayMove(comp, fi, si);
+        const resultant = arrayMove(
+          comp,
+          comp.findIndex((e) => e.id === active.id),
+          comp.findIndex((e) => e.id === over.id)
+        );
         setComp(resultant);
         const reset = () => {
           setComp(props.course.components.toSorted((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
