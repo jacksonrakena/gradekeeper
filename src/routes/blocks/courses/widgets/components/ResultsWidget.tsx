@@ -3,7 +3,7 @@ import { routes, useApi } from "@/lib/net/fetch";
 import { useInvalidator } from "@/lib/state/course";
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 import { DndContext, DragEndEvent, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { restrictToParentElement, restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { SortableContext, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import { ProcessedCourse, ProcessedCourseComponent } from "../../../../../lib/logic/processing";
@@ -99,7 +99,7 @@ export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
-                modifiers={[restrictToVerticalAxis]}
+                modifiers={[restrictToVerticalAxis, restrictToParentElement]}
               >
                 <SortableContext items={comp.map((e) => e.id)} strategy={verticalListSortingStrategy}>
                   {comp.map((e, i) => (
