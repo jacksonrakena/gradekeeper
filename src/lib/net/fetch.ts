@@ -87,6 +87,9 @@ export const routes = {
           delete: () => ROUTE_BASE + `/api/block/${blockId}/course/${courseId}`,
           get: () => ROUTE_BASE + `/api/block/${blockId}/course/${courseId}`,
           update: () => ROUTE_BASE + `/api/block/${blockId}/course/${courseId}`,
+          order: () => ({
+            update: () => ROUTE_BASE + `/api/block/${blockId}/course/${courseId}/order`,
+          }),
           component: (componentId: string) => {
             return {
               update: () => ROUTE_BASE + `/api/block/${blockId}/course/${courseId}/component/${componentId}`,

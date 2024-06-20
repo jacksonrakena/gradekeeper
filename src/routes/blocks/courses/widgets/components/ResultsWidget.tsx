@@ -1,4 +1,4 @@
-import { CourseComponent } from "@/lib/logic/types";
+import { Course } from "@/lib/logic/types";
 import { routes, useApi } from "@/lib/net/fetch";
 import { useInvalidator } from "@/lib/state/course";
 import { Box, Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
@@ -16,7 +16,7 @@ export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor
   const fetcher = useApi();
   const [comp, setComp] = useState(props.course.components.toSorted((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
 
-  const { updateComponent } = useInvalidator();
+  const { updateCourse } = useInvalidator();
   const sensors = useSensors(useSensor(VMouseSensor), useSensor(VTouchSensor));
   useEffect(() => {
     setComp(props.course.components.toSorted((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
@@ -39,31 +39,21 @@ export const ResultsWidget = (props: { course: ProcessedCourse; contrastingColor
 
         const fi = comp.indexOf(first);
         const si = comp.indexOf(second);
-        setComp(arrayMove(comp, fi, si));
-
+        const resultant = arrayMove(comp, fi, si);
+        setComp(resultant);
         const reset = () => {
           setComp(props.course.components.toSorted((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
         };
         console.log(`setting ${first.id} to ${newSeqNo}, ${second.id} to ${oldSeqNo}`);
-        const data0 = await fetcher.post<CourseComponent>(
-          routes.block(props.course.studyBlockId).course(props.course.id).component(first.id).update(),
-          {
-            sequenceNumber: newSeqNo,
-          }
+        const courseResult = await fetcher.post<Course>(
+          routes.block(props.course.studyBlockId).course(props.course.id).order().update(),
+          resultant.reduce((acc: any, cur, i) => {
+            acc[cur.id] = i + 1;
+            return acc;
+          }, {})
         );
-        if (data0) {
-          updateComponent(data0.courseId, data0.id, (d) => data0);
-        } else reset();
-
-        const data1 = await fetcher.post<CourseComponent>(
-          routes.block(props.course.studyBlockId).course(props.course.id).component(second.id).update(),
-          {
-            sequenceNumber: oldSeqNo,
-          }
-        );
-        if (data1) {
-          updateComponent(data1.courseId, data1.id, (d) => data1);
-        } else reset();
+        if (courseResult) updateCourse(props.course.id, (e) => courseResult);
+        else reset();
       })();
     }
   };
