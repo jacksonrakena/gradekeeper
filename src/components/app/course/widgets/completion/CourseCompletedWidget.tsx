@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { ProcessedCourse } from "../../../../lib/logic/processing";
+import { ProcessedCourse } from "../../../../../lib/logic/processing";
 
 const CourseCompletedWidget = (props: { course: ProcessedCourse }) => {
   return (

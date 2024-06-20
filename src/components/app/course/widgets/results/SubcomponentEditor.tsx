@@ -9,9 +9,8 @@ import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/tabl
 import Decimal from "decimal.js";
 import { useState } from "react";
 
-const SubcomponentEditor = (props: {
+export const SubcomponentEditor = (props: {
   gradeMap: GradeMap;
-  showing: boolean;
   component: ProcessedCourseComponent;
   courseId: string;
   blockId: string;
@@ -23,7 +22,7 @@ const SubcomponentEditor = (props: {
   const fetcher = useApi();
 
   return (
-    <Modal isOpen={props.showing} onClose={props.onClose} size={"xl"}>
+    <Modal isOpen={true} onClose={props.onClose} size={"xl"}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -152,5 +151,3 @@ const SubcomponentEditor = (props: {
     </Modal>
   );
 };
-
-export default SubcomponentEditor;

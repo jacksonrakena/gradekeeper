@@ -1,11 +1,11 @@
-import { ProcessedCourse, ProcessedStudyBlock } from "@/lib/logic/processing";
+import { ProcessedCourse } from "@/lib/logic/processing";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router";
 import { ProcessedUserState } from "../../../lib/state/course";
 
-const CourseSwitcher = (props: { currentCourse: ProcessedCourse; currentStudyBlock: ProcessedStudyBlock }) => {
+const CourseSwitcher = (props: { currentCourse?: ProcessedCourse }) => {
   const navigate = useNavigate();
 
   const user = useAtomValue(ProcessedUserState);
@@ -17,7 +17,12 @@ const CourseSwitcher = (props: { currentCourse: ProcessedCourse; currentStudyBlo
   return (
     <Menu isLazy={true}>
       <MenuButton colorScheme={"brand"} as={Button} rightIcon={<ChevronDownIcon />}>
-        {props.currentCourse?.courseCodeName} {props.currentCourse?.courseCodeNumber}
+        {props.currentCourse && (
+          <>
+            {props.currentCourse?.courseCodeName} {props.currentCourse?.courseCodeNumber}
+          </>
+        )}
+        {!props.currentCourse && <>Select course</>}
       </MenuButton>
       <MenuList>
         <MenuItem

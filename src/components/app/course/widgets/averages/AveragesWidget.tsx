@@ -1,7 +1,6 @@
-import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import Decimal from "decimal.js";
-import { ProcessedCourse } from "../../../../lib/logic/processing";
-import themeConstants from "../../../../lib/theme";
+import { ProcessedCourse } from "../../../../../lib/logic/processing";
 
 const AveragesWidget = (props: { course: ProcessedCourse }) => {
   const actual = props.course.grades.actual;
@@ -20,10 +19,7 @@ const AveragesWidget = (props: { course: ProcessedCourse }) => {
     )
     .flat();
   return (
-    <Box
-      className="grow m-4 p-6 shadow-md rounded-md"
-      style={{ backgroundColor: useColorModeValue("white", themeConstants.darkModeContrastingColor) }}
-    >
+    <>
       <Box className="text-2xl mb-2 font-bold">Averages</Box>
       <div>
         <TableContainer>
@@ -70,7 +66,7 @@ const AveragesWidget = (props: { course: ProcessedCourse }) => {
           </Table>
         </TableContainer>
       </div>
-    </Box>
+    </>
   );
 };
 
