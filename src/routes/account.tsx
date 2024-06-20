@@ -258,7 +258,7 @@ const Account = () => {
           <Text>Gradekeeper is powered by open-source software.</Text>
           <Text>
             Gradekeeper is{" "}
-            <Link color="brand.500" href="https://github.com/gradekeeper/gradekeeper" isExternal>
+            <Link color="brand.500" href="https://github.com/jacksonrakena/gradekeeper" isExternal>
               open-source <ExternalLinkIcon mx="2px" />
             </Link>
             .

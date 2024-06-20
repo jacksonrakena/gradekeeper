@@ -37,10 +37,8 @@ export const SubcomponentEditor = (props: {
               .mul(100)
               .toPrecision(2)}
             %. <br />
-            {props.component.numberOfSubComponentsToDrop_Lowest > 0 ? (
+            {props.component.numberOfSubComponentsToDrop_Lowest > 0 && (
               <>The lowest {props.component.numberOfSubComponentsToDrop_Lowest ?? ""} are being dropped.</>
-            ) : (
-              <></>
             )}
           </Box>
           <TableContainer>

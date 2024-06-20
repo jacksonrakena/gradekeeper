@@ -62,4 +62,4 @@ Home page:
 
 ### Copyright
 
-Gradekeeper is copyright &copy; 2023 Jackson Rakena.
+Gradekeeper is copyright &copy; 2022&mdash;2024 Jackson Rakena.
