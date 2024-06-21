@@ -1,6 +1,6 @@
 import Decimal from "decimal.js";
-import { ComponentGrade, CourseGrade, GradeMap, calculateLetterGrade, getUncompletedAndCompletedActiveSubcomponents } from ".";
-import { ParsedCourse, ParsedCourseComponent } from "../parsing";
+import { ComponentGrade, CourseGrade, GradeMap, calculateLetterGrade } from ".";
+import { ParsedCourse, ParsedCourseComponent, ParsedCourseSubcomponent } from "../parsing";
 
 export function calculateMaximumPossibleCourseGrade(subject: ParsedCourse, gradeMap: GradeMap): CourseGrade {
   if (!subject || !subject.components || subject.components.length === 0) return { value: new Decimal(0), letter: "Z", isUnknown: true };
@@ -27,4 +27,19 @@ export function calculateMaximumPossibleComponentGrade(component: ParsedCourseCo
     isUnknown: false,
     letter: calculateLetterGrade(value, gradeMap),
   };
+}
+
+export function getUncompletedAndCompletedActiveSubcomponents(component: ParsedCourseComponent): ParsedCourseSubcomponent[] {
+  var sorted = component.subcomponents
+    .map((e) => e)
+    .sort((first, second) => {
+      if (first.gradeValuePercentage.lt(second.gradeValuePercentage)) return -1;
+      if (first.gradeValuePercentage.eq(second.gradeValuePercentage)) return 0;
+      return 1;
+    });
+
+  for (var i = 0; i < component.numberOfSubComponentsToDrop_Lowest; i++) {
+    sorted.pop();
+  }
+  return sorted;
 }

@@ -70,7 +70,7 @@ export const useApi = () => {
   return fetcher;
 };
 
-export const ROUTE_BASE = import.meta.env.VITE_API_BASE_URL;
+export const ROUTE_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 export const routes = {
   getMe: () => ROUTE_BASE + "/api/users/me",
   updateMe: () => ROUTE_BASE + "/api/users/me",

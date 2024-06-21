@@ -54,7 +54,7 @@ export const DeleteCourseDialog = (props: { disclosure: UseDisclosureReturn; cou
                   });
                   navigate("/");
                   updateCourse(props.course.id, null);
-                }
+                } else setDeleting(false);
               }}
               isLoading={deleting}
               ml={3}

@@ -2,11 +2,10 @@ import { EditIcon } from "@chakra-ui/icons";
 import { Box, Flex, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import { useSortable } from "@dnd-kit/sortable";
 import Decimal from "decimal.js";
-import { useAtomValue } from "jotai";
-import { ProcessedCourse, ProcessedCourseComponent, calculateLetterGrade } from "../../../../../lib/logic/processing";
+import { ProcessedCourse, ProcessedCourseComponent } from "../../../../../lib/logic/processing";
 import { CourseComponent } from "../../../../../lib/logic/types";
 import { routes, useApi } from "../../../../../lib/net/fetch";
-import { ProcessedUserState, useInvalidator } from "../../../../../lib/state/course";
+import { useInvalidator } from "../../../../../lib/state/course";
 import { Editable } from "../../../../generic/Editable";
 
 export const ComponentRow = ({
@@ -18,7 +17,6 @@ export const ComponentRow = ({
   course: ProcessedCourse;
   onEditSubcomponents: () => void;
 }) => {
-  const user = useAtomValue(ProcessedUserState);
   const { updateComponent } = useInvalidator();
   const fetcher = useApi();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: component.id });
@@ -51,6 +49,7 @@ export const ComponentRow = ({
               if (data) {
                 updateComponent(course.id, component.id, (d) => data);
               }
+              return !!data;
             }}
             backingValue={component.name}
           />
@@ -60,7 +59,7 @@ export const ComponentRow = ({
       <Td pl={0} className="text-center" data-no-dnd={true}>
         <Editable
           onSubmit={async (newWeighting) => {
-            if (!newWeighting) return;
+            if (!newWeighting) return false;
 
             const data = await fetcher.post<CourseComponent>(
               routes.block(course.studyBlockId).course(course.id).component(component.id).update(),
@@ -71,6 +70,7 @@ export const ComponentRow = ({
             if (data) {
               updateComponent(course.id, component.id, (d) => data);
             }
+            return !!data;
           }}
           backingValue={component.subjectWeighting.mul(100).toString()}
           formatter={(v) => `${v}%`}
@@ -99,6 +99,7 @@ export const ComponentRow = ({
                   }
                 );
                 if (data) updateComponent(course.id, component.id, () => data);
+                return !!data;
               }}
               backingValue={component.subcomponents[0]?.isCompleted ? component.grades.projected.value.mul(100).toString() : "0"}
               formatter={(v) => `${v}%`}
@@ -147,7 +148,7 @@ export const ComponentRow = ({
         )}
       </Td>
       <Td pl={0} fontWeight={"semibold"} className="text-center">
-        {!component.grades.projected.isUnknown && calculateLetterGrade(component.grades.projected.value, user?.gradeMap)}
+        {!component.grades.projected.isUnknown && component.grades.projected.letter}
       </Td>
     </Tr>
   );

@@ -135,6 +135,8 @@ export const singularMap = {
   Quizzes: "Quiz",
   Tests: "Test",
   Exams: "Exam",
+  Workshops: "Workshop",
+  
 };
 
 export function randomColor(): string {
@@ -188,21 +190,6 @@ export function calculateLetterGrade(val: Decimal, gradeMap: GradeMap): string {
   var result = grades[0];
   if (!result) return "F";
   return result[1];
-}
-
-export function getUncompletedAndCompletedActiveSubcomponents(component: ParsedCourseComponent): ParsedCourseSubcomponent[] {
-  var sorted = component.subcomponents
-    .map((e) => e)
-    .sort((first, second) => {
-      if (first.gradeValuePercentage.lt(second.gradeValuePercentage)) return -1;
-      if (first.gradeValuePercentage.eq(second.gradeValuePercentage)) return 0;
-      return 1;
-    });
-
-  for (var i = 0; i < component.numberOfSubComponentsToDrop_Lowest; i++) {
-    sorted.pop();
-  }
-  return sorted;
 }
 
 export function adjust(color: string, amount: number) {

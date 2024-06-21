@@ -30,6 +30,7 @@ export const CourseBanner = ({ course, studyBlock }: { course: ProcessedCourse; 
               if (data) {
                 updateCourse(data.id, (e) => data);
               }
+              return !!data;
             }}
             backingValue={course.courseCodeName}
           />
@@ -41,6 +42,7 @@ export const CourseBanner = ({ course, studyBlock }: { course: ProcessedCourse; 
               if (data) {
                 updateCourse(data.id, (e) => data);
               }
+              return !!data;
             }}
             backingValue={course.courseCodeNumber}
           />
@@ -52,6 +54,7 @@ export const CourseBanner = ({ course, studyBlock }: { course: ProcessedCourse; 
             if (data) {
               updateCourse(data.id, (e) => data);
             }
+            return !!data;
           }}
           backingValue={course.longName}
         />

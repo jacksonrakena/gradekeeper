@@ -2,7 +2,7 @@ import { Box, BoxProps, Spinner, useColorModeValue } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 export interface EditableProps {
-  onSubmit?: (value?: string) => Promise<void>;
+  onSubmit: (value?: string) => Promise<boolean>;
   backingValue: string;
   formatter?: (value?: string) => string;
   displayProps?: Partial<BoxProps>;
@@ -28,10 +28,10 @@ export const Editable = React.forwardRef<HTMLDivElement, EditableProps>((props, 
           setEditing(false);
           setLoading(true);
           (async () => {
-            if (props.onSubmit) {
-              await props.onSubmit(value);
-              setLoading(false);
+            if (!(await props.onSubmit(value))) {
+              setValue(props.backingValue);
             }
+            setLoading(false);
           })();
         }}
         onBlur={() => {
