@@ -139,6 +139,8 @@ export const SubcomponentEditor = (props: {
               if (updated) {
                 updateComponent(props.courseId, props.component.id, () => updated);
                 props.onClose();
+              } else {
+                setLoading(false);
               }
             }}
           >
