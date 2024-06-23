@@ -12,7 +12,7 @@ const PrivacyPolicy = () => {
       <Stack spacing={8}>
         <Stack spacing={2}>
           <Heading>Privacy policy</Heading>
-          <Text size={"sm"}>Last updated: June 20th, 2022</Text>
+          <Text size={"sm"}>Last updated: June 23rd, 2024</Text>
         </Stack>
         <Box>
           <Stack spacing={8}>
@@ -21,20 +21,20 @@ const PrivacyPolicy = () => {
               Gradekeeper believes in the user's fundamental right to privacy.
               <br />
               <br />
-              For the purposes of this document, 'we' or 'us', refers to Animals With Cool Hats, Inc. (<Code>NZBN 9429048922678</Code>), a
-              registered business in New Zealand. <br />
+              For the purposes of this document, 'we' or 'us', refers to Rakena Investment Corporation (<Code>NZBN 9429048922678</Code>), a
+              registered business in Australia and New Zealand. <br />
               'Gradekeeper' refers to Gradekeeper, an Internet service provided by us. <br />
+              'You' refers to any person who elects to use the Gradekeeper service by authorising their login with Google or any other
+              third-party identity provider.
             </Box>
             <Box>
               <PrivacySubheading>Jurisdiction of operation and data</PrivacySubheading>
-              Gradekeeper is a product of Animals With Cool Hats, Inc. (<Code>NZBN 9429048922678</Code>), a registered sole trader business
-              in New Zealand.
+              Gradekeeper is a product offered by Rakena Investment Corporation (<Code>NZBN 9429048922678</Code>), a registered business in
+              Australia and New Zealand.
               <br />
               <br />
-              User data can be processed in either Washington, D.C., United States, or Sydney, Australia by Gradekeeper's third-party
-              infrastructure provider, <Link href="https://vercel.com">Vercel</Link>.<br />
-              User data is persisted and stored in Sydney, Australia, by third-party data provider{" "}
-              <Link href="https://planetscale.com/">PlanetScale</Link>.
+              User data is processed, persisted, and stored in Melbourne, Australia by Gradekeeper's third party infrastructure partner{" "}
+              <Link href="https://www.oracle.com/au/">Oracle Australia</Link>.
             </Box>
             <Box>
               <PrivacySubheading>Usage of user data</PrivacySubheading>A user's login provider identifier (i.e. a Google email, GitHub
@@ -58,13 +58,16 @@ const PrivacyPolicy = () => {
             </Box>
             <Box>
               <PrivacySubheading>Access to data by third-parties</PrivacySubheading>
-              As of June 20th, 2022, Gradekeeper does not share user data with third-parties.
+              As of June 23rd, 2024, Gradekeeper does not share user data with third-parties.
             </Box>
             <Box>
               <PrivacySubheading>The right to be forgotten</PrivacySubheading>
-              Gradekeeper does not currently have an automated service to delete user information. Users can delete all account data stored
-              by Gradekeeper by emailing <Code>support@animalswithcoolhats.com</Code> with <Code>DATA: Delete my Gradekeeper data</Code> in
-              the subject.
+              You can delete all account data stored by Gradekeeper (including, but not limited to: <strong>(a)</strong> information
+              relating to courses, <strong>(b)</strong> analytics regarding your usage of Gradekeeper, <strong>(c)</strong> information
+              regarding your selected grade boundaries) by selecting the 'Delete my data' option on the Settings page.
+              <br />
+              <br />
+              Account deletions are immediate, final, and irreversible.
             </Box>
           </Stack>
         </Box>
