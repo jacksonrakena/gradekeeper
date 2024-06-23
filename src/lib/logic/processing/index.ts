@@ -5,7 +5,7 @@ import {
   calculateActualGradeForComponent as calculateActualComponentGrade,
   calculateActualCourseProgressGrade as calculateActualCourseGrade,
 } from "./actual";
-import { NzGpaTable, UsGpaTable, calculateGpaBasedOnTable } from "./gpa";
+import { NzGpaTable, UsGpaTable, calculateAusWam, calculateGpaBasedOnTable } from "./gpa";
 import {
   calculateMaximumPossibleComponentGrade as calculateMaximumComponentGrade,
   calculateMaximumPossibleCourseGrade as calculateMaximumCourseGrade,
@@ -19,8 +19,11 @@ export type ProcessedUser = Omit<User, "studyBlocks"> & {
 };
 export type ProcessedStudyBlock = Omit<StudyBlock, "courses"> & {
   courses: ProcessedCourse[];
-  gpaEstimate: CourseGrade;
-  usGpaEstimate: CourseGrade;
+  gpaEstimates: {
+    nz: CourseGrade;
+    us: CourseGrade;
+    au: CourseGrade;
+  };
 };
 export type ProcessedCourse = Omit<ParsedCourse, "components"> & {
   grades: CourseTriplet;
@@ -81,8 +84,11 @@ export function processStudyBlock(rawStudyBlock: ParsedStudyBlock, gradeMap: Gra
     startDate: rawStudyBlock.startDate,
     endDate: rawStudyBlock.endDate,
     courses: processedCourses,
-    gpaEstimate: calculateGpaBasedOnTable(processedCourses, NzGpaTable),
-    usGpaEstimate: calculateGpaBasedOnTable(processedCourses, UsGpaTable),
+    gpaEstimates: {
+      nz: calculateGpaBasedOnTable(processedCourses, NzGpaTable),
+      us: calculateGpaBasedOnTable(processedCourses, UsGpaTable),
+      au: calculateAusWam(processedCourses, gradeMap),
+    },
   };
   return r;
 }
@@ -136,7 +142,6 @@ export const singularMap = {
   Tests: "Test",
   Exams: "Exam",
   Workshops: "Workshop",
-  
 };
 
 export function randomColor(): string {

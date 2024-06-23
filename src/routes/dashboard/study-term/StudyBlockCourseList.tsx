@@ -1,5 +1,5 @@
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Box, Flex, HStack, Heading, IconButton, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, HStack, Heading, IconButton, Text, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import { Pill } from "../../../components/generic/Pill";
 import { ProcessedStudyBlock } from "../../../lib/logic/processing";
@@ -40,10 +40,15 @@ const StudyBlockCourseList = ({ studyBlock }: { studyBlock: ProcessedStudyBlock 
           {dtf.format(sbStart)} &mdash; {dtf.format(sbEnd)}
         </Text>
 
-        {!studyBlock.gpaEstimate?.value.isZero() && (
+        {!studyBlock.gpaEstimates.nz.value.isZero() && (
           <Text color={"GrayText"}>
-            GPA estimate: NZ {studyBlock.gpaEstimate?.value.toDecimalPlaces(2).toString()} ({studyBlock.gpaEstimate?.letter}) &bull; US{" "}
-            {studyBlock.usGpaEstimate?.value.toDecimalPlaces(2).toString()} ({studyBlock.usGpaEstimate?.letter})
+            GPA estimate: NZ {studyBlock.gpaEstimates.nz.value.toDecimalPlaces(2).toString()} ({studyBlock.gpaEstimates.nz.letter}) &bull;
+            US {studyBlock.gpaEstimates.us.value.toDecimalPlaces(2).toString()} ({studyBlock.gpaEstimates.us.letter}) &bull;{" "}
+            <Tooltip label="Weighted Average Mark, used by some Australian universities">
+              <span>
+                WAM {studyBlock.gpaEstimates.au.value.mul(100).toDecimalPlaces(0).toString()} ({studyBlock.gpaEstimates.au.letter})
+              </span>
+            </Tooltip>
           </Text>
         )}
 

@@ -1,5 +1,5 @@
 import Decimal from "decimal.js";
-import { calculateLetterGrade, CourseGrade, ProcessedCourse } from ".";
+import { calculateLetterGrade, CourseGrade, GradeMap, ProcessedCourse } from ".";
 
 export type GpaTable = { [x: string]: string };
 
@@ -47,5 +47,22 @@ export function calculateGpaBasedOnTable(processedCourses: ProcessedCourse[], gp
     isUnknown: false,
     letter: calculateLetterGrade(markTotal, reversed(gpaMap)),
     value: markTotal,
+  };
+}
+
+export function calculateAusWam(processedCourses: ProcessedCourse[], userGradeMap: GradeMap): CourseGrade {
+  if (processedCourses.length === 0) {
+    return {
+      isUnknown: true,
+      letter: "Z",
+      value: new Decimal(0),
+    };
+  }
+
+  let wam = processedCourses.reduce((a, v) => a.add(v.grades.projected.value), new Decimal(0)).div(processedCourses.length);
+  return {
+    isUnknown: false,
+    letter: calculateLetterGrade(wam, userGradeMap),
+    value: wam,
   };
 }
