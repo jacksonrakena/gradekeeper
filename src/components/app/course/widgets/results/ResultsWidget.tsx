@@ -11,16 +11,22 @@ import { useEffect, useState } from "react";
 import { ComponentRow } from "./ComponentRow";
 import { SubcomponentEditor } from "./SubcomponentEditor";
 
+function toSorted<T>(array: T[], sort: (a: T, B: T) => number) {
+  const a = [...array];
+  a.sort(sort);
+  return a;
+}
+
 export const ResultsWidget = (props: { course: ProcessedCourse }) => {
   const [targetComponent, setTargetComponent] = useState<ProcessedCourseComponent | null>(null);
 
   const fetcher = useApi();
-  const [comp, setComp] = useState(props.course.components.toSorted((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
+  const [comp, setComp] = useState(toSorted(props.course.components, (a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
 
   const { updateCourse } = useInvalidator();
   const sensors = useSensors(useSensor(RespectfulTouchSensor), useSensor(RespectfulMouseSensor));
   useEffect(() => {
-    setComp(props.course.components.toSorted((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
+    setComp(toSorted(props.course.components, (a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
   }, [props.course.components]);
 
   const tryUpdateSequenceOrder = (event: DragEndEvent) => {
@@ -35,7 +41,7 @@ export const ResultsWidget = (props: { course: ProcessedCourse }) => {
         );
         setComp(resultant);
         const reset = () => {
-          setComp(props.course.components.toSorted((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
+          setComp(toSorted(props.course.components, (a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0)));
         };
         const courseResult = await fetcher.post<Course>(
           routes.block(props.course.studyBlockId).course(props.course.id).order().update(),
