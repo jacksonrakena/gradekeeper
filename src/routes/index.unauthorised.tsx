@@ -42,8 +42,8 @@ const MarketingHome = () => {
           >
             Get started <ArrowForwardIcon ml={2} />
           </Button>
-          <MarketingBox heading="View all your classes" img="https://i.imgur.com/PUxo2sF.jpg" />
-          <MarketingBox heading="See your 🇺🇸 and 🇳🇿 GPA" img="https://i.imgur.com/feaGmRS.png" />
+          <MarketingBox heading="Track all your classes" img="https://i.imgur.com/PUxo2sF.jpg" />
+          <MarketingBox heading="See your 🇺🇸 and 🇳🇿 GPA" img="https://i.imgur.com/V5ZQ8Fw.png" />
           <MarketingBox heading="See what you need to get the grades you deserve" img="https://i.imgur.com/iq8JuKs.png" />
         </Stack>
         <Text color="#555555" textAlign={"center"} fontSize="sm">
