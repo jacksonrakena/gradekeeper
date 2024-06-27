@@ -1,19 +1,36 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Avatar, Button, Flex, Icon, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, useColorMode } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Flex,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  useColorMode,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { AiOutlineHome } from "react-icons/ai";
+import { FaRegChartBar } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { VscSettingsGear } from "react-icons/vsc";
 import { useNavigate } from "react-router";
 import { useLogout, useSession } from "../../../lib/state/auth";
+import { LifetimeGpaModel } from "../dashboard/LifetimeGpaModal";
 
 const AccountButton = () => {
   const session = useSession();
   const logout = useLogout();
   const colorMode = useColorMode();
   const navigate = useNavigate();
+  const lifetimeGpaDisclosure = useDisclosure();
   return (
     <Menu>
+      <LifetimeGpaModel disclosure={lifetimeGpaDisclosure} />
       <MenuButton as={Button} colorScheme={"brand"} rightIcon={<ChevronDownIcon />}>
         <Flex alignItems="center">
           <Avatar size="sm" name={session?.name} src={session?.picture ?? ""} mr={2}></Avatar>
@@ -28,6 +45,16 @@ const AccountButton = () => {
         >
           <Flex alignItems={"center"}>
             <Icon w={4} h={4} as={AiOutlineHome} mr={2} /> Home
+          </Flex>
+        </MenuItem>
+        <MenuDivider />
+        <MenuItem
+          onClick={() => {
+            lifetimeGpaDisclosure.onOpen();
+          }}
+        >
+          <Flex alignItems={"center"}>
+            <Icon as={FaRegChartBar} w={4} h={4} mr={2} /> My GPAs
           </Flex>
         </MenuItem>
         <MenuDivider />

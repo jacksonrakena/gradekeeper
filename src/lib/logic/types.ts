@@ -1,5 +1,4 @@
 export type User = {
-  id: string;
   gradeMap: any;
   studyBlocks: StudyBlock[];
   meta: {

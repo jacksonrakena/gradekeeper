@@ -3,7 +3,7 @@ import Decimal from "decimal.js";
 import { PropsWithChildren } from "react";
 
 export const ProgressBarCaption = (
-  props: PropsWithChildren<{ color: string; atProgressPercentage: Decimal; position: "top" | "bottom" }>
+  props: PropsWithChildren<{ color: string; atProgressPercentage: Decimal; position: "top" | "bottom"; additionalClasses?: string }>
 ) => {
   const topStyling: any = {};
   if (props.position === "top") topStyling.bottom = "120%";
@@ -28,7 +28,7 @@ export const ProgressBarCaption = (
           left: props.atProgressPercentage.minus(1).toString() + "%",
           ...topStyling,
         }}
-        className="text-xs md:text-base text-center"
+        className={`${!props.additionalClasses && "text-xs md:text-base"} ${props.additionalClasses} text-center`}
         fontWeight={"semibold"}
       >
         {props.children}
