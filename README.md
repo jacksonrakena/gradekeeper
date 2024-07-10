@@ -1,6 +1,9 @@
 # Gradekeeper
 
 Try it now: [gradekeeper.xyz](https://app.gradekeeper.xyz)
+|API|Client|
+|--|--|
+|[![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/1fqvl.svg)](https://uptime.betterstack.com/?utm_source=status_badge)|[![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/faze.svg)](https://uptime.betterstack.com/?utm_source=status_badge)|
 
 Gradekeeper is an free, open-source Rust + React web app that simplifies grade tracking and projections for university students across the globe.
 
