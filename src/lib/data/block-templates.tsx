@@ -11,7 +11,7 @@ export const templates: { [key: string]: { name: string; startDate: string; endD
       endDate: "2024-11-09",
     },
     {
-      name: "Trimester 3, 2023",
+      name: "Trimester 3, 2024",
       startDate: "2024-11-11",
       endDate: "2025-02-16",
     },
