@@ -1,7 +1,9 @@
+import { isPossibleDecimal } from "@/lib/util";
 import { EditIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { Box, Flex, HStack, IconButton, Td, Text, Tooltip, Tr, useDisclosure } from "@chakra-ui/react";
 import { useSortable } from "@dnd-kit/sortable";
 import Decimal from "decimal.js";
+import { evaluate } from "mathjs";
 import { ProcessedCourse, ProcessedCourseComponent } from "../../../../../lib/logic/processing";
 import { CourseComponent } from "../../../../../lib/logic/types";
 import { routes, useApi } from "../../../../../lib/net/fetch";
@@ -89,13 +91,22 @@ export const ComponentRow = ({
             <Tooltip label="Click to edit">
               <Editable
                 onSubmit={async (e) => {
+                  let value = new Decimal(0);
+                  if (!!e) {
+                    if (isPossibleDecimal(e)) {
+                      value = new Decimal(e).div(100);
+                    } else {
+                      value = new Decimal(evaluate(e));
+                      console.log(value.toString());
+                    }
+                  }
                   const data = await fetcher.post<CourseComponent>(
                     routes.block(course.studyBlockId).course(course.id).component(component.id).update(),
                     {
                       subcomponents: [
                         {
                           ...component.subcomponents[0],
-                          gradeValuePercentage: !!e ? new Decimal(e).div(100) : 0,
+                          gradeValuePercentage: value,
                           isCompleted: !!e,
                         },
                       ],
