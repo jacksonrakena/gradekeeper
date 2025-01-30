@@ -47,7 +47,7 @@ const MarketingHome = () => {
           <MarketingBox heading="See what you need to get the grades you deserve" img="https://i.imgur.com/iq8JuKs.png" />
         </Stack>
         <Text color="#555555" textAlign={"center"} fontSize="sm">
-          &copy; 2022&mdash;2024 Jackson Rakena <br />
+          &copy; 2022&mdash;2025 Jackson Rakena <br />
         </Text>
       </Container>
     </div>
