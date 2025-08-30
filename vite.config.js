@@ -1,10 +1,15 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 import eslint from "vite-plugin-eslint";
 
 export default defineConfig({
-  plugins: [react(), eslint()],
+  plugins: [react(), eslint(), sentryVitePlugin({
+    org: "jacksonrakena",
+    project: "gk-client"
+  })],
+
   resolve: {
     alias: [
       {
@@ -17,4 +22,8 @@ export default defineConfig({
       },
     ],
   },
+
+  build: {
+    sourcemap: true
+  }
 });

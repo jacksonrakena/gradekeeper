@@ -11,8 +11,6 @@ import Account from "./routes/account";
 import CourseView from "./routes/blocks/courses/CourseView";
 import { Error404 } from "./routes/errors.404";
 import { ErrorGeneral } from "./routes/errors.general";
-import Donations from "./routes/legal/donate";
-import CompletedDonation from "./routes/legal/donate/completed";
 import PrivacyPolicy from "./routes/legal/privacy";
 
 export const AppRoot = () => {
@@ -42,16 +40,6 @@ const router = createBrowserRouter([
   {
     path: "/blocks/:block_id/courses/:course_id",
     element: <CourseView />,
-    errorElement: <ErrorGeneral />,
-  },
-  {
-    path: "/legal/donate",
-    element: <Donations />,
-    errorElement: <ErrorGeneral />,
-  },
-  {
-    path: "/legal/donate/completed",
-    element: <CompletedDonation />,
     errorElement: <ErrorGeneral />,
   },
   {

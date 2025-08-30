@@ -46,3 +46,5 @@ yarn-error.log*
 dist/
 
 .env
+# Sentry Config File
+.env.sentry-build-plugin
