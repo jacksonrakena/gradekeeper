@@ -32,5 +32,21 @@ export const templates: { [key: string]: { name: string; startDate: string; endD
       startDate: "2025-11-17",
       endDate: "2026-02-08",
     },
+    /* 2026 dates */
+    {
+      name: "Trimester 1, 2026",
+      startDate: "2026-02-23",
+      endDate: "2026-06-21",
+    },
+    {
+      name: "Trimester 2, 2026",
+      startDate: "2026-07-06",
+      endDate: "2026-11-08",
+    },
+    {
+      name: "Trimester 3, 2026",
+      startDate: "2026-11-16",
+      endDate: "2027-02-07",
+    },
   ],
 };
