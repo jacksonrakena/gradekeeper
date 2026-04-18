@@ -2,6 +2,11 @@ export const templates: { [key: string]: { name: string; startDate: string; endD
   "New Zealand universities": [
     /* 2024 dates */
     {
+      name: "Full Academic Year, 2024",
+      startDate: "2024-02-26",
+      endDate: "2024-11-09",
+    },
+    {
       name: "Trimester 1, 2024",
       startDate: "2024-02-26",
       endDate: "2024-06-22",
@@ -18,6 +23,11 @@ export const templates: { [key: string]: { name: string; startDate: string; endD
     },
     /* 2025 dates */
     {
+      name: "Full Academic Year, 2025",
+      startDate: "2025-02-24",
+      endDate: "2025-11-08",
+    },
+    {
       name: "Trimester 1, 2025",
       startDate: "2025-02-24",
       endDate: "2025-06-23",
@@ -33,6 +43,11 @@ export const templates: { [key: string]: { name: string; startDate: string; endD
       endDate: "2026-02-08",
     },
     /* 2026 dates */
+    {
+      name: "Full Academic Year, 2026",
+      startDate: "2026-02-23",
+      endDate: "2026-11-08",
+    },
     {
       name: "Trimester 1, 2026",
       startDate: "2026-02-23",
